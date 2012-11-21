@@ -29,16 +29,12 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.I
+ * DEALINGS IN THE SOFTWARE.
  */
 
 var Classical                           = require('classical');
-var Dust                                = require('dustjs-linkedin');
 var Net                                 = require('net');
 var Util                                = require(BASE_PATH + '/src/Utilities');
-var YAML                                = require('js-yaml');
-
-var Messages                            = require(BASE_PATH + '/config/messages.yml');
 
 /**
  * The telnet server

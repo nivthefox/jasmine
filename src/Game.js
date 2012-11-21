@@ -33,41 +33,16 @@
  */
 
 var Classical                           = require('classical');
-var FileSystem                          = require('fs');
+var Config                              = require(BASE_PATH + '/src/Config');
 
 /**
- * Nodem base class.
- */
-var Main = Class(function() {
+ * Sets up configuration files, starts the game server, and loads modules.
+ **/
+var Game = Class(function() {
+
     this.constructor = Public(function() {
-        console.log('Main.constructor');
 
-        // Assign the base path to be used in require throughout the system.
-        global.BASE_PATH                = FileSystem.realpathSync(__dirname + '/../');
-
-        // Set up process hooks.
-        process.on('SIGHUP',    this.reload);
-        process.on('SIGTERM',   this.shutdown);
-
-        require('./Game' );
-    });
-
-    /**
-     * Reloads the server without stopping it.
-     * Useful for configuration file changes.
-     */
-    this.reload = Private(function() {
-        console.log('Main.restart');
-    });
-
-    /**
-     * Gracefully shuts down the server.
-     */
-    this.shutdown = Private(function() {
-        console.log('Main.shutdown');
-
-        process.exit();
     });
 });
 
-new Main;
+module.exports                          = new Game;
