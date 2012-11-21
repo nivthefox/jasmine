@@ -56,9 +56,9 @@ test('Connect', function(done) {
         connect                         = true;
     });
 
-    client.on('data', function(data) {
-        data                            = true;
-        Assert.equal(data.toString(), 'Welcome to test.');
+    client.on('data', function(d) {
+        d                               = true;
+        Assert.equal(d.toString(), 'Welcome to test.');
     });
 
     client.connect(config.port);
