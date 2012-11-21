@@ -31,13 +31,5 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.I
  */
-require('./setup');
-var Assert                              = require('assert');
-var Config                              = require('../src/Config');
 
-suite('Config');
-
-test('Get', function() {
-    var gameConfig                      = Config.getConfig('game');
-    Assert.strictEqual(gameConfig.port, 4201);
-});
+global.BASE_PATH                        = require('fs').realpathSync(__dirname + '/../');
