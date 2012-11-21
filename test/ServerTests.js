@@ -35,7 +35,7 @@
 require('./setup');
 var Assert                              = require('assert');
 var Net                                 = require('net');
-var Server                              = require('../src/Server');
+var Server                              = require(BASE_PATH + '/src/Server');
 var srv                                 = null;
 var client                              = new Net.Socket({type : 'tcp4'});
 var config                              = require('./fixtures/gameConfig.js');
@@ -58,7 +58,7 @@ test('Connect', function(done) {
 
     client.on('data', function(data) {
         data                            = true;
-        Assert.equals(data.toString(), 'Welcome to test.');
+        Assert.equal(data.toString(), 'Welcome to test.');
     });
 
     client.connect(config.port);

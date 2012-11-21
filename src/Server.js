@@ -33,7 +33,12 @@
  */
 
 var Classical                           = require('classical');
+var Dust                                = require('dustjs-linkedin');
 var Net                                 = require('net');
+var Util                                = require(BASE_PATH + '/src/Utilities');
+var YAML                                = require('js-yaml');
+
+var Messages                            = require(BASE_PATH + '/config/messages.yml');
 
 /**
  * The telnet server
@@ -41,17 +46,28 @@ var Net                                 = require('net');
 var Server = Class(function() {
     this.options                        = Protected({});
     this.connecting                     = Protected([]);
+    this.messages                       = Protected({});
     this.server                         = Protected({});
 
     this.constructor = Public(function(options) {
-        this.options                    = options;
+        this.options                    = Util.extend(require(BASE_PATH + '/config/game.yml'), options);
+
+        for (var i in Messages) {
+            this.messages[i]            = Dust.compile(Messages[i], i);
+            Dust.loadSource(this.messages[i]);
+        }
+
         this.server                     = Net.createServer();
         this.server.on('connection', this.handleConnection);
         this.server.listen(this.options.port);
     });
 
     this.handleConnection = Public(function(socket) {
-        console.log('connected');
+        this.connecting.push(socket);
+
+        Dust.render('connect', this.options, function(err, out) {
+            socket.write(out);
+        });
     });
 });
 
