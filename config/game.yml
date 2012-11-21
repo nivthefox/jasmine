@@ -1,0 +1,4 @@
+port                                    : 4201
+name                                    : NodeMud
+conn_timeout                            : 300
+idle_timeout                            : -1

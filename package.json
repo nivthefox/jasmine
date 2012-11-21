@@ -9,7 +9,8 @@
         "url"                           : "git://github.com/Writh/nodem.git"
     },
     "dependencies" : {
-        "classical"                     : "2.x.x"
+        "classical"                     : "2.x.x",
+        "js-yaml"                       : "1.0.x"
     },
     "devDependencies" : {
         "mocha"                         : "x.x.x"
