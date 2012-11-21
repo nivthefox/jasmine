@@ -40,8 +40,8 @@ suite('Utilties');
 
 test('Extend', function() {
     var foo                             = Utilities.extend({}, {foo: 'foo', bar: 'foo'});
-    Assert.deepEquals(foo, {foo: 'foo', bar: 'foo'});
+    Assert.deepEqual(foo, {foo: 'foo', bar: 'foo'});
 
     var bar                             = Utilities.extend(foo, {bar: 'bar'});
-    Assert.deepEquals(foo, {foo: 'foo', bar: 'bar'});
+    Assert.deepEqual(foo, {foo: 'foo', bar: 'bar'});
 });
