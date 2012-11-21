@@ -57,7 +57,7 @@ test('Connect', function(done) {
     });
 
     client.on('data', function(d) {
-        d                               = true;
+        data                            = true;
         Assert.equal(d.toString(), 'Welcome to test.');
     });
 
