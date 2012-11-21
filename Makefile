@@ -1,5 +1,5 @@
-SRC					= src/
-TESTS				= test/
+SRC					= src
+TESTS				= test
 INTERFACE			= qunit
 REPORTER			= spec
 TIMEOUT				= 5000
@@ -19,17 +19,20 @@ test-watch:
 		--watch \
 		$(TESTS)
 
+clean:
+	rm -rf coverage
+	rm -f coverage.html
+
 coverage.html:
-	mkdir -p ./coverage/noop
-	rm -r ./coverage/*
-	if [ -d fixtures ]; then
-		cp -r fixtures ./coverage/fixtures
-	fi
+	mkdir -p ./coverage
 	cp -r $(TESTS) ./coverage/$(TESTS)
 	jscoverage $(SRC) ./coverage/$(SRC)
-	test REPORTER=html-cov TESTS=coverage/$(TESTS) > coverage.html
-	rm -r coverage
+	@NODE_ENV=test NOLOG=1 ./node_modules/.bin/mocha \
+		--ui $(INTERFACE) \
+		--reporter html-cov \
+		--timeout $(TIMEOUT) \
+		./coverage/$(TESTS) > coverage.html
 
-coverage: coverage.html
+coverage: clean coverage.html
 
-.PHONY: coverage test test-watch
+.PHONY: clean coverage test test-watch
