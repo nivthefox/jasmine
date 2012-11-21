@@ -45,30 +45,35 @@ var Messages                            = require(BASE_PATH + '/config/messages.
  */
 var Server = Class(function() {
     this.options                        = Protected({});
-    this.connecting                     = Protected([]);
-    this.messages                       = Protected({});
     this.server                         = Protected({});
 
+    /**
+     * Loads the options and messages, then creates a socket server.
+     *
+     * If the options are specified, it will override the options in game.yml;
+     * this is useful for unit tests, but probably won't see production use.
+     *
+     * @param   {Object}        options     Options overrides.
+     * @constructor
+     */
     this.constructor = Public(function(options) {
         this.options                    = Util.extend(require(BASE_PATH + '/config/game.yml'), options);
-
-        for (var i in Messages) {
-            this.messages[i]            = Dust.compile(Messages[i], i);
-            Dust.loadSource(this.messages[i]);
-        }
 
         this.server                     = Net.createServer();
         this.server.on('connection', this.handleConnection);
         this.server.listen(this.options.port);
     });
 
-    this.handleConnection = Public(function(socket) {
-        this.connecting.push(socket);
-
-        Dust.render('connect', this.options, function(err, out) {
-            socket.write(out);
-        });
-    });
+    /**
+     * Handles new socket connections.
+     *
+     * Incoming sockets are translated to the Socket wrapper (which assigns a
+     * data handler) before they are sent the connect message.
+     *
+     * @param   {Net.Socket}    socket      The incoming socket.
+     * @return  {undefined}
+     */
+    this.handleConnection = Public(function(socket) {});
 });
 
 module.exports                          = Server;

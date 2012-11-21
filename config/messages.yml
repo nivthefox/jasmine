@@ -1,2 +1,4 @@
 connect : |
   Welcome to {mudname}.
+timeout : |
+  *** Your connection has timed out.

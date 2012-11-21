@@ -34,5 +34,8 @@
 
 module.exports = {
     port            : 14201,
-    mudname         : 'test'
+    mudname         : 'test',
+    timeout : {
+        connect     : 1
+    }
 };
