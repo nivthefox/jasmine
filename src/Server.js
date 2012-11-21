@@ -45,7 +45,7 @@ var Server = Class(function() {
 
     this.constructor = Public(function(options) {
         this.options                    = options;
-        this.server                     = net.createServer();
+        this.server                     = Net.createServer();
         this.server.on('connection', this.handleConnection);
     });
 
