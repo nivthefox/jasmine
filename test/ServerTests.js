@@ -66,5 +66,6 @@ test('Connect', function(done) {
     setTimeout(function() {
         Assert.ok(connect);
         Assert.ok(data);
+        done();
     }, 100);
 });

@@ -33,7 +33,7 @@
  */
 require('./setup');
 var Assert                              = require('assert');
-var Config                              = require('../src/Config');
+var Config                              = require(BASE_PATH + 'src/Config');
 
 suite('Config');
 
