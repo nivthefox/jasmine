@@ -47,6 +47,7 @@ var Server = Class(function() {
         this.options                    = options;
         this.server                     = Net.createServer();
         this.server.on('connection', this.handleConnection);
+        this.server.listen(this.options.port);
     });
 
     this.handleConnection = Public(function(socket) {
