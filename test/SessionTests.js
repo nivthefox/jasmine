@@ -47,3 +47,8 @@ test('Create', function() {
     Assert.ok(sess instanceof Session);
     Assert.equal(sess.getStatus(), Session.Status.NEW);
 });
+
+test('Change status', function() {
+    sess.getSocket().emit('connect');
+    Assert.equal(sess.getStatus(), Session.Status.CONNECTING);
+});

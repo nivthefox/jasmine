@@ -63,7 +63,7 @@ var Session = Class(function() {
     this.constructor = Public(function(socket) {
         this.socket                     = socket;
 
-        this.socket.on('close', function() { this.status = Status.DISCONNECTED;}.bind(this));
+        this.socket.on('close', function() { this.status = Status.DISCONNECTED; }.bind(this));
         this.socket.on('connect', function() { this.status = Status.CONNECTING; }.bind(this));
         this.socket.on('timeout', function() { this.status = Status.TIMEDOUT; }.bind(this));
     });
