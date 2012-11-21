@@ -67,5 +67,5 @@ test('Connect', function(done) {
         Assert.ok(connect);
         Assert.ok(data);
         done();
-    }, 100);
+    }, 10);
 });
