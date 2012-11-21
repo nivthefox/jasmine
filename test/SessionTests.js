@@ -45,4 +45,5 @@ test('Create', function() {
     sess                                = new Session(socket);
 
     Assert.ok(sess instanceof Session);
+    Assert.equal(sess.getStatus(), Session.Status.NEW);
 });

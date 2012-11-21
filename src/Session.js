@@ -36,10 +36,23 @@ var Classical                           = require('classical');
 var Net                                 = require('net');
 
 /**
+ * An enum of available statuses.
+ * @type {Object}
+ */
+var Status = {
+    NEW                                 : 0,
+    CONNECTING                          : 1,
+    CONNECTED                           : 2,
+    DISCONNECTED                        : 4,
+    TIMEDOUT                            : 8
+};
+
+/**
  * A socket wrapper class.
  */
 var Session = Class(function() {
     this.socket                         = Protected({});
+    this.status                         = Protected(Status.NEW);
 
     /**
      * Instantiates the Session and stores the socket.
@@ -49,6 +62,10 @@ var Session = Class(function() {
      */
     this.constructor = Public(function(socket) {
         this.socket                     = socket;
+
+        this.socket.on('close', function() { this.status = Status.DISCONNECTED;}.bind(this));
+        this.socket.on('connect', function() { this.status = Status.CONNECTING; }.bind(this));
+        this.socket.on('timeout', function() { this.status = Status.TIMEDOUT; }.bind(this));
     });
 
     /**
@@ -57,6 +74,15 @@ var Session = Class(function() {
     this.getSocket = Public(function() {
         return this.socket;
     });
+
+    /**
+     * Returns the current status of the socket.
+     * @return      {Status:value}
+     */
+    this.getStatus = Public(function() {
+        return this.status;
+    });
 });
 
 module.exports                          = Session;
+module.exports.Status                   = Status;
