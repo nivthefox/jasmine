@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-20
- * @edited      2012-11-20
+ * @edited      2012-11-21
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
@@ -32,42 +32,39 @@
  * DEALINGS IN THE SOFTWARE.I
  */
 
-var Classical                           = require('classical');
-var FileSystem                          = require('fs');
+require('./setup');
+var Assert                              = require('assert');
+var Net                                 = require('net');
+var Server                              = require('../src/Server');
+var srv                                 = null;
+var client                              = new Net.Socket({type : 'tcp4'});
+var config                              = require('./fixtures/gameConfig.js');
 
-/**
- * Nodem base class.
- */
-var Main = Class(function() {
-    this.constructor = Public(function() {
-        console.log('Main.constructor');
+suite('Server');
 
-        // Assign the base path to be used in require throughout the system.
-        global.BASE_PATH                = FileSystem.realpathSync(__dirname + '/../');
+test('Create', function() {
+    srv                                 = new Server(config);
 
-        // Set up process hooks.
-        process.on('SIGHUP',    this.reload);
-        process.on('SIGTERM',   this.shutdown);
-
-        require('./Game' );
-    });
-
-    /**
-     * Reloads the server without stopping it.
-     * Useful for configuration file changes.
-     */
-    this.reload = Private(function() {
-        console.log('Main.restart');
-    });
-
-    /**
-     * Gracefully shuts down the server.
-     */
-    this.shutdown = Private(function() {
-        console.log('Main.shutdown');
-
-        process.exit();
-    });
+    Assert.ok(srv instanceof Server);
 });
 
-new Main;
+test('Connect', function(done) {
+    var connect                         = false;
+    var data                            = false
+
+    client.on('connect', function() {
+        connect                         = true;
+    });
+
+    client.on('data', function(data) {
+        data                            = true;
+        Assert.equals(data.toString(), 'Welcome to test.');
+    });
+
+    client.connect(config.port);
+
+    setTimeout(function() {
+        Assert.ok(connect);
+        Assert.ok(data);
+    }, 100);
+});

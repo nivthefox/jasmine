@@ -10,6 +10,7 @@
     },
     "dependencies" : {
         "classical"                     : "2.x.x",
+        "dustjs-linkedin"               : "1.1.x",
         "js-yaml"                       : "1.0.x"
     },
     "devDependencies" : {

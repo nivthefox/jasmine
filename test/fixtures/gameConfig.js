@@ -6,8 +6,8 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2012-11-20
- * @edited      2012-11-20
+ * @created     2012-11-21
+ * @edited      2012-11-21
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
@@ -32,42 +32,7 @@
  * DEALINGS IN THE SOFTWARE.I
  */
 
-var Classical                           = require('classical');
-var FileSystem                          = require('fs');
-
-/**
- * Nodem base class.
- */
-var Main = Class(function() {
-    this.constructor = Public(function() {
-        console.log('Main.constructor');
-
-        // Assign the base path to be used in require throughout the system.
-        global.BASE_PATH                = FileSystem.realpathSync(__dirname + '/../');
-
-        // Set up process hooks.
-        process.on('SIGHUP',    this.reload);
-        process.on('SIGTERM',   this.shutdown);
-
-        require('./Game' );
-    });
-
-    /**
-     * Reloads the server without stopping it.
-     * Useful for configuration file changes.
-     */
-    this.reload = Private(function() {
-        console.log('Main.restart');
-    });
-
-    /**
-     * Gracefully shuts down the server.
-     */
-    this.shutdown = Private(function() {
-        console.log('Main.shutdown');
-
-        process.exit();
-    });
-});
-
-new Main;
+module.exports = {
+    port            : 14201,
+    mudname         : 'test'
+};

@@ -26,7 +26,8 @@ clean:
 coverage.html:
 	mkdir -p ./coverage
 	cp -r $(TESTS) ./coverage/$(TESTS)
-	jscoverage $(SRC) ./coverage/$(SRC)
+	cp -r config ./coverage/config
+	jscoverage src ./coverage/src
 	@NODE_ENV=test NOLOG=1 ./node_modules/.bin/mocha \
 		--ui $(INTERFACE) \
 		--reporter html-cov \

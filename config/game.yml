@@ -1,4 +1,4 @@
 port                                    : 4201
-name                                    : NodeMud
+mudname                                 : NodeMud
 conn_timeout                            : 300
 idle_timeout                            : -1
