@@ -64,7 +64,7 @@ var Session = Class(function() {
         this.socket                     = socket;
 
         this.socket.on('close', function() { this.status = Status.DISCONNECTED; }.bind(this));
-        this.socket.on('connect', function() { this.status = Status.CONNECTING; }.bind(this));
+        this.socket.on('login', function() { this.status = Status.CONNECTING; }.bind(this));
         this.socket.on('timeout', function() { this.status = Status.TIMEDOUT; }.bind(this));
     });
 
@@ -81,6 +81,13 @@ var Session = Class(function() {
      */
     this.getStatus = Public(function() {
         return this.status;
+    });
+
+    /**
+     * Sends a message along the socket.
+     */
+    this.send = Public(function(message) {
+        this.socket.write(message);
     });
 });
 

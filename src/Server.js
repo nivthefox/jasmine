@@ -33,7 +33,9 @@
  */
 
 var Classical                           = require('classical');
+var Messages                            = require(BASE_PATH + '/src/Messages');
 var Net                                 = require('net');
+var Session                             = require(BASE_PATH + '/src/Session');
 var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
@@ -69,7 +71,25 @@ var Server = Class(function() {
      * @param   {Net.Socket}    socket      The incoming socket.
      * @return  {undefined}
      */
-    this.handleConnection = Public(function(socket) {});
+    this.handleConnection = Public(function(socket) {
+
+        // Create the session object.
+        var session                     = new Session(socket);
+
+        // Acknowledge the connection.
+        session.getSocket().emit('login');
+
+        // Set the timeout.
+        session.getSocket().setTimeout(this.options.timeout.connect);
+
+        // TODO: Set up the login parser.
+        //session.getSocket().on('data', session.parseLoginData);
+
+        // Send the connect message to the session.
+        Messages.render('connect', this.options, function(err, out) {
+            session.send(out);
+        });
+    });
 });
 
 module.exports                          = Server;

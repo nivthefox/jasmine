@@ -49,6 +49,6 @@ test('Create', function() {
 });
 
 test('Change status', function() {
-    sess.getSocket().emit('connect');
+    sess.getSocket().emit('login');
     Assert.equal(sess.getStatus(), Session.Status.CONNECTING);
 });

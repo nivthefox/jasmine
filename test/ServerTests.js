@@ -49,10 +49,24 @@ test('Create', function() {
 });
 
 test('Connect', function(done) {
+    var connected                       = false;
+    var received                        = false;
+
     client.on('connect', function() {
+        connected                       = true;
         Assert.ok(true);
-        done();
     });
+
+    client.on('data', function(data) {
+        received                        = true;
+        Assert.equal(data.toString(), "Welcome to test.");
+    });
+
+    setTimeout(function() {
+        Assert.ok(connected);
+        Assert.ok(received);
+        done();
+    }, 10);
 
     client.connect(config.port);
 });
