@@ -6,7 +6,7 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2012-11-20
+ * @created     2012-11-27
  * @edited      2012-11-27
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
@@ -33,17 +33,22 @@
  */
 
 var Classical                           = require('classical');
-var Util                                = require('util');
-var YAML                                = require('js-yaml');
+var Log                                 = require('log4js');
+var Config                              = require(BASE_PATH + '/src/Config');
+var Util                                = require(BASE_PATH+  '/src/Utilities');
 
-/**
- * Loads a configuration file.
- */
-var Config = Class(function() {
+var logConfig = {appenders : []};
 
-    this.getConfig = Static(Public(function(file) {
-        return require(Util.format('%s/config/%s.yml', BASE_PATH, file));
-    }));
-});
+if (!process.env.NODE_ENV) {
+    // Development mode.
+    logConfig.appenders.push({type : 'console'});
+}
 
-module.exports                          = Config;
+if (process.env.NODE_ENV === 'production') {
+    // Production.
+    logConfig.appenders.push({ type: 'file', filename: Util.format('%s/%s', BASE_PATH, Config.get('game').log) });
+}
+
+Log.configure(logConfig);
+
+module.exports                          = Log;

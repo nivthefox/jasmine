@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-11-21
+ * @edited      2012-11-27
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
@@ -33,6 +33,7 @@
  */
 
 var Classical                           = require('classical');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Server');
 var Messages                            = require(BASE_PATH + '/src/Messages');
 var Net                                 = require('net');
 var Session                             = require(BASE_PATH + '/src/Session');
@@ -55,6 +56,8 @@ var Server = Class(function() {
      * @constructor
      */
     this.constructor = Public(function(options) {
+        Log.debug('constructor');
+
         this.options                    = Util.extend(require(BASE_PATH + '/config/game.yml'), options);
 
         this.server                     = Net.createServer();
@@ -71,7 +74,8 @@ var Server = Class(function() {
      * @param   {Net.Socket}    socket      The incoming socket.
      * @return  {undefined}
      */
-    this.handleConnection = Public(function(socket) {
+    this.handleConnection = Protected(function(socket) {
+        Log.debug('handleConnection');
 
         // Create the session object.
         var session                     = new Session(socket);
@@ -86,9 +90,25 @@ var Server = Class(function() {
         //session.getSocket().on('data', session.parseLoginData);
 
         // Send the connect message to the session.
-        Messages.render('connect', this.options, function(err, out) {
+        Messages.render('connect', this.options, this.renderHandler.bind(this, session));
+    });
+
+    /**
+     * Sends rendered messages to a session.
+     * @param   {Session}       session     The session to receive the message.
+     * @param   {Error}         err         Errors from the renderer.
+     * @param   {String}        out         Output from the renderer.
+     * @return  {undefined}
+     */
+    this.renderHandler = Protected(function(session, err, out) {
+        Log.debug('renderHandler', err, out);
+
+        if (!err) {
             session.send(out);
-        });
+        }
+        else {
+            console.warn(err);
+        }
     });
 });
 

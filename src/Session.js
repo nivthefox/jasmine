@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-11-21
+ * @edited      2012-11-27
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
@@ -33,6 +33,7 @@
  */
 
 var Classical                           = require('classical');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Session');
 var Net                                 = require('net');
 
 /**
@@ -61,6 +62,8 @@ var Session = Class(function() {
      * @constructor
      */
     this.constructor = Public(function(socket) {
+        Log.debug('constructor');
+
         this.socket                     = socket;
 
         this.socket.on('close',     function() { this.status = Status.DISCONNECTED; }.bind(this));
@@ -72,6 +75,8 @@ var Session = Class(function() {
      * Retrieves the underlying socket.
      */
     this.getSocket = Public(function() {
+        Log.debug('getSocket');
+
         return this.socket;
     });
 
@@ -80,6 +85,8 @@ var Session = Class(function() {
      * @return      {Status:value}
      */
     this.getStatus = Public(function() {
+        Log.debug('getStatus');
+
         return this.status;
     });
 
@@ -87,6 +94,8 @@ var Session = Class(function() {
      * Sends a message along the socket.
      */
     this.send = Public(function(message) {
+        Log.debug('send', message);
+
         this.socket.write(message);
     });
 });

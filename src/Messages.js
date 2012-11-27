@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-11-21
+ * @edited      2012-11-27
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
@@ -34,6 +34,7 @@
 
 var Classical                           = require('classical');
 var Dust                                = require('dustjs-linkedin');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Messages');
 var Util                                = require(BASE_PATH + '/src/Utilities');
 var YAML                                = require('js-yaml');
 
@@ -52,6 +53,8 @@ var Messages = Extend(Dust, function() {
      * @constructor
      */
     this.constructor = Protected(function() {
+        Log.debug('constructor');
+
         this.load(messagesConfig);
     });
 
@@ -61,6 +64,8 @@ var Messages = Extend(Dust, function() {
      * @return  {Messages}
      */
     this.getInstance = Static(Public(function() {
+        Log.debug('getInstance');
+
         if (!(this.instance instanceof Messages)) {
             this.instance               = new Messages;
         }
@@ -73,6 +78,8 @@ var Messages = Extend(Dust, function() {
      * @return  {undefined}
      */
     this.load = Public(function(messages) {
+        Log.debug('load');
+
         for (var i in messages) {
             if (messages.hasOwnProperty(i)) {
                 this.messages[i]        = this.compile(messages[i], i);
