@@ -1,11 +1,28 @@
 #!/bin/bash
 
+NODE_ENV="production"
 NODE=$(which node)
 PID_FILE="./nodem.pid"
 
 if [ -e "${PID_FILE}" ]; then
     PID=$(cat "${PID_FILE}")
 fi
+
+for i in $*; do
+    case $i in
+        --develop|-D)
+            NODE_ENV="development"
+            ;;
+        --help|-?)
+            echo "Usage: ./nodem [options]"
+            echo ""
+            echo "Options:"
+            echo "  -D, --develop           print debug messages to the console"
+            echo "  -?, --help              print this help message"
+            exit
+            ;;
+    esac
+done
 
 function check_status {
         if [ -e "${PID_FILE}" ]; then
@@ -25,32 +42,32 @@ case "$1" in
         if [ -e "${PID_FILE}" ]; then
             echo "Nodem is already running."
         else
-            "${NODE}" ./src/Main.js&
+            NODE_ENV=${NODE_ENV} "${NODE}" ./src/Main.js&
             PID=$!
             echo ${PID} > "${PID_FILE}"
         fi
-    ;;
+        ;;
 
     "stop")
         kill -TERM ${PID}
         rm "${PID_FILE}"
-    ;;
+        ;;
 
     "reload")
         kill -HUP ${PID}
-    ;;
+        ;;
 
     "restart")
         ./nodem stop
         ./nodem start
-    ;;
+        ;;
 
     "status")
         STATUS=$(check_status)
         case "${STATUS}" in
             0)
                 echo "Nodem is running."
-            ;;
+                ;;
 
             [1-2])
                 echo "Nodem is not running."
@@ -58,11 +75,11 @@ case "$1" in
                 if [ -e ${PID_FILE} ]; then
                     rm ${PID_FILE}
                 fi
-            ;;
+                ;;
         esac
-    ;;
+        ;;
 
     *)
         echo "Usage: ./nodem (start|stop|restart)"
-    ;;
+        ;;
 esac

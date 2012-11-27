@@ -39,7 +39,7 @@ var Util                                = require(BASE_PATH+  '/src/Utilities');
 
 var logConfig = {appenders : []};
 
-if (!process.env.NODE_ENV) {
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // Development mode.
     logConfig.appenders.push({type : 'console'});
 }
