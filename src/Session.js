@@ -39,6 +39,7 @@ var Net                                 = require('net');
 /**
  * An enum of available statuses.
  * @type {Object}
+ * @enum
  */
 var Status = {
     NEW                                 : 0,
