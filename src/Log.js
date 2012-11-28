@@ -37,16 +37,24 @@ var Log                                 = require('log4js');
 var Config                              = require(BASE_PATH + '/src/Config');
 var Util                                = require(BASE_PATH+  '/src/Utilities');
 
-var logConfig = {appenders : []};
+var logConfig = {
+    appenders                           : [],
+    levels                              : []
+};
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // Development mode.
     logConfig.appenders.push({type : 'console'});
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'test') {
     // Production.
-    logConfig.appenders.push({ type: 'file', filename: Util.format('%s/%s', BASE_PATH, Config.get('game').log) });
+    logConfig.appenders.push({
+        type                            : 'file',
+        filename                        : Util.format('%s/%s', BASE_PATH, Config.get('game').log),
+        maxLogSize                      : (2 * 1024 * 1024),    // TODO: Magic number. This is the log size. 2M.
+        backups                         : 10                    // TODO: Magic number. This is the number of times to rotate a log.
+    });
 }
 
 Log.configure(logConfig);

@@ -107,7 +107,7 @@ var Server = Class(function() {
             session.send(out);
         }
         else {
-            console.warn(err);
+            Log.warn('renderHandler', err);
         }
     });
 });
