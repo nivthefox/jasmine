@@ -1,6 +1,7 @@
 port                                    : 4201
 mudname                                 : NodeMud
-log                                     : log/NodeMud.log
+log:
+  file                                  : log/NodeMud.log
 timeout:
   connect                               : 300
   idle                                  : -1
