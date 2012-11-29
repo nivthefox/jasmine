@@ -62,6 +62,15 @@ var Tokenizer = Class(function() {
     });
 
     /**
+     * Adds a rule to the tokenizer.
+     * @param   {String}    rule        The name of the rule.
+     * @param   {RegExp}    expression  The expression for the rule.
+     */
+    this.addRule = Public(function(rule, expression) {
+        this.types[rule]                = expression;
+    });
+
+    /**
      * Flushes the remaining stream.
      * @return {undefined}
      */
@@ -106,7 +115,7 @@ var Tokenizer = Class(function() {
 
                 if (matches) {
                     var match           = matches[1];
-                    this.stream         = this.stream.substring(this.stream.indexOf(match) + match.length);
+                    this.stream         = this.stream.substring(matches[0].length);
                     return new Token(match, type);
                 }
             }

@@ -77,10 +77,11 @@ test('Flush Stream', function() {
 test('Add rules', function() {
     testTokenizer.prepare('connect "moo goo" gaipan');
 
-    testTokenizer.addRule('Connect', /^connect/i);
-    testTokenizer.addRule('Username', /^(?:"(.+?)"|(\w+?))/);
-    testTokenizer.addRule('Password', /^\w+/);
+    testTokenizer.addRule('Connect', /^(connect)/i);
+    testTokenizer.addRule('Username', /^\s*"(.+?)"/);
+    testTokenizer.addRule('Word', /^\s*(\w+)/);
+
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Connect', value: 'connect'});
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Username', value: 'moo goo'});
-    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Password', value: 'gaipan'});
+    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Word', value: 'gaipan'});
 });
