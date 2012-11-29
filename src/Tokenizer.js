@@ -54,11 +54,11 @@ var Tokenizer = Class(function() {
 
     /**
      * Prepares the tokenizer for string handling.
-     * @param   {Object}    definitions     A series of named regular expressions used to tokenize the string.
+     * @param   {Object}    rules       A series of named regular expressions used to tokenize the string.
      */
-    this.constructor = Public(function(definitions) {
+    this.constructor = Public(function(rules) {
         Log.debug('constructor');
-        this.types                      = definitions;
+        this.types                      = rules;
     });
 
     /**

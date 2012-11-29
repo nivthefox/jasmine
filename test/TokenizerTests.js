@@ -48,7 +48,7 @@ test('Token', function() {
 });
 
 test('Tokenize', function() {
-    var definitions = {
+    var rules = {
         'Repeat'                        : /^\s*(\d+x)/i,
         'Roll'                          : /^\s*(\d+d\d+)/i,
         'Subtract'                      : /^\s*(-)/i,
@@ -58,7 +58,7 @@ test('Tokenize', function() {
         'Target'                        : /^\s*(>=|<=|<|>|=)/
     };
 
-    testTokenizer                       = new Tokenizer(definitions);
+    testTokenizer                       = new Tokenizer(rules);
     testTokenizer.prepare('2x 3d8+2d6 +12 = 5');
 
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Repeat', value: '2x'});
@@ -74,6 +74,13 @@ test('Flush Stream', function() {
     Assert.ok(testTokenizer.getStream().length === 0);
 });
 
-test('Add definitions', function() {
+test('Add rules', function() {
+    testTokenizer.prepare('connect "moo goo" gaipan');
 
+    testTokenizer.addRule('Connect', /^connect/i);
+    testTokenizer.addRule('Username', /^(?:"(.+?)"|(\w+?))/);
+    testTokenizer.addRule('Password', /^\w+/);
+    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Connect', value: 'connect'});
+    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Username', value: 'moo goo'});
+    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Password', value: 'gaipan'});
 });
