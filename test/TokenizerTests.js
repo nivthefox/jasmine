@@ -48,7 +48,7 @@ test('Token', function() {
 });
 
 test('Tokenize', function() {
-    var types = {
+    var definitions = {
         'Repeat'                        : /^\s*(\d+x)/i,
         'Roll'                          : /^\s*(\d+d\d+)/i,
         'Subtract'                      : /^\s*(-)/i,
@@ -58,7 +58,7 @@ test('Tokenize', function() {
         'Target'                        : /^\s*(>=|<=|<|>|=)/
     };
 
-    testTokenizer                       = new Tokenizer(types);
+    testTokenizer                       = new Tokenizer(definitions);
     testTokenizer.prepare('2x 3d8+2d6 +12 = 5');
 
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Repeat', value: '2x'});
@@ -66,4 +66,14 @@ test('Tokenize', function() {
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Add', value: '+'});
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Roll', value: '2d6'});
     Assert.equal(testTokenizer.getStream(), ' +12 = 5');
+});
+
+test('Flush Stream', function() {
+    Assert.ok(testTokenizer.getStream().length > 0);
+    testTokenizer.flush();
+    Assert.ok(testTokenizer.getStream().length === 0);
+});
+
+test('Add definitions', function() {
+
 });

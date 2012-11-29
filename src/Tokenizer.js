@@ -62,6 +62,14 @@ var Tokenizer = Class(function() {
     });
 
     /**
+     * Flushes the remaining stream.
+     * @return {undefined}
+     */
+    this.flush = Public(function() {
+        this.stream                     = '';
+    });
+
+    /**
      * Returns the remaining stream.
      * @return  {String}
      */
@@ -77,12 +85,7 @@ var Tokenizer = Class(function() {
     this.prepare = Public(function(input) {
         Log.debug('prepare', input);
 
-        if (this.stream === null) {
-            this.stream                 = input;
-        }
-        else {
-            this.stream                += input;
-        }
+        this.stream                    += input;
     });
 
     /**
@@ -113,7 +116,7 @@ var Tokenizer = Class(function() {
     });
 
     this.EOSTOKEN                       = Static(Public(new Token(null, 'EOS')));
-    this.stream                         = Protected(null);
+    this.stream                         = Protected('');
     this.types                          = Protected({})
 });
 
