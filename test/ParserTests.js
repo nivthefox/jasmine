@@ -44,12 +44,6 @@ test('Setup', function() {
     testParser                          = new Parser;
     Assert.ok(testParser instanceof Parser);
 
-    var connect                         = new Parser.Rule;
-    connect.name                        = 'connect';
-    connect.expression                  = /^(connect)/i;
-    connect.priority                    = 0;
-    connect.handler                     = Handlers.connect;
-    testParser.addRule(connect);
 
     var string                          = new Parser.Rule;
     string.name                         = 'string';
@@ -57,6 +51,13 @@ test('Setup', function() {
     string.priority                     = 10;
     string.handler                      = Handlers.string;
     testParser.addRule(string);
+
+    var connect                         = new Parser.Rule;
+    connect.name                        = 'connect';
+    connect.expression                  = /^(connect)/i;
+    connect.priority                    = 0;
+    connect.handler                     = Handlers.connect;
+    testParser.addRule(connect);
 
     Assert.equal(testParser.getRules().length, 2);
 });
