@@ -41,26 +41,30 @@ var testParser                          = null;
 suite('Parser');
 
 test('Setup', function() {
-    var testParser                      = new Parser;
+    testParser                          = new Parser;
     Assert.ok(testParser instanceof Parser);
 
     var connect                         = new Parser.Rule;
     connect.name                        = 'connect';
     connect.expression                  = /^(connect)/i;
     connect.priority                    = 0;
-    connect.handler                     = Handlers.connect.bind(testParser);
+    connect.handler                     = Handlers.connect;
     testParser.addRule(connect);
 
     var string                          = new Parser.Rule;
     string.name                         = 'string';
-    string.expression                   = /^\s*(?:"(.+?)"|(.+?))/;
+    string.expression                   = /^\s*(?:"(.+?)"|(\S+))/;
     string.priority                     = 10;
-    string.handler                      = Handlers.string.bind(testParser);
+    string.handler                      = Handlers.string;
     testParser.addRule(string);
 
     Assert.equal(testParser.getRules().length, 2);
 });
 
-test('Parse', function() {
-
+test('Parse', function(done) {
+    process.on('parserTest.connect', function(obj) {
+        Assert.deepEqual(obj, {username : 'test user', password : 'test'});
+        done();
+    });
+    testParser.parse('connect "test user" test');
 });

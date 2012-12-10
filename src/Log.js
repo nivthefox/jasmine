@@ -51,7 +51,7 @@ if (process.env.NODE_ENV !== 'test') {
     // Production.
     logConfig.appenders.push({
         type                            : 'file',
-        filename                        : Util.format('%s/%s', BASE_PATH, Config.get('game').log.file),
+        filename                        : Util.format('%s/%s', BASE_PATH, Config.getConfig('game').log.file),
         maxLogSize                      : (2 * 1024 * 1024),    // TODO: Magic number. This is the log size. 2M.
         backups                         : 10                    // TODO: Magic number. This is the number of times to rotate a log.
     });

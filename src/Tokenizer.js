@@ -114,7 +114,12 @@ var Tokenizer = Class(function() {
                 var matches             = expression.exec(this.stream);
 
                 if (matches) {
-                    var match           = matches[1];
+                    var match           = null;
+                    var i = 1;
+                    while (match == null) {
+                        match           = matches[i] || null;
+                        i++;
+                    }
                     this.stream         = this.stream.substring(matches[0].length);
                     return new Token(match, rule);
                 }

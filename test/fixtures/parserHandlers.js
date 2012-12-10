@@ -34,12 +34,13 @@
 
 module.exports = {
     connect : function() {
-        var username                    = this.stack.pop();
-        var password                    = this.stack.pop();
+        var username                    = this.stack.shift();
+        var password                    = this.stack.shift();
 
-        return {username : username, password : password};
+        process.emit('parserTest.connect', {username : username, password : password});
     },
+
     string : function(value) {
-        this.stack.push(value);
+        this.stack.unshift(value);
     }
 };

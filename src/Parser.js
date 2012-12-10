@@ -94,6 +94,29 @@ var Parser = Class(function() {
     });
 
     /**
+     * Parses a phrase into tokens using the currently defined rules.
+     * @param   {String}    phrase
+     * @return  {undefined}
+     */
+    this.parse = Public(function(phrase) {
+        Log.debug('parse');
+
+        this.tokenizer.prepare(phrase);
+
+        var token;
+        while (token != Tokenizer.EOSTOKEN) {
+            token                       = this.tokenizer.getNextToken();
+            Log.debug('parse', 'type =', token.type);
+
+            if (token != Tokenizer.EOSTOKEN) {
+                this.stack.push(token);
+            }
+        }
+
+        this.reduce();
+    });
+
+    /**
      * Injects the rules into the Tokenizer.
      * @return  {undefined}
      */
@@ -108,6 +131,24 @@ var Parser = Class(function() {
             if (this.rules.hasOwnProperty(i)) {
                 this.tokenizer.addRule(this.rules[i].name, this.rules[i].expression);
             }
+        }
+    });
+
+    /**
+     * Reduces the current stack recursively right to left.
+     * @return  {undefined}
+     */
+    this.reduce = Protected(function() {
+        if (this.stack.length > 0) {
+            var token               = this.stack.pop();
+
+            for (var i in this.rules) {
+                if (this.rules.hasOwnProperty(i) && token.type == this.rules[i].name) {
+                    this.rules[i].handler.call(this, token.value);
+                }
+            }
+
+            this.reduce();
         }
     });
 
