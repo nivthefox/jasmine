@@ -62,7 +62,7 @@ test('Setup', function() {
 });
 
 test('Parse', function(done) {
-    process.on('parserTest.connect', function(obj) {
+    process.once('parserTest.connect', function(obj) {
         Assert.deepEqual(obj, {username : 'test user', password : 'test'});
         done();
     });
