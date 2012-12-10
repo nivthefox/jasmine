@@ -39,7 +39,7 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
 /**
  * Holds data about a tokenized value from the parser.
  * @type {Object}
- * @enum
+ * @struct
  */
 var Token = function(value, type) {
     this.value                          = value;
