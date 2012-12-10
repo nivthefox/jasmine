@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-28
- * @edited      2012-11-28
+ * @edited      2012-12-10
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
