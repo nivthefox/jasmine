@@ -48,7 +48,7 @@ var Token = function(value, type) {
 };
 
 /**
- * Converts a string into a series of tokens and types.
+ * Converts a string into a series of tokens and rules.
  */
 var Tokenizer = Class(function() {
 
@@ -58,7 +58,7 @@ var Tokenizer = Class(function() {
      */
     this.constructor = Public(function(rules) {
         Log.debug('constructor');
-        this.types                      = rules;
+        this.rules                      = rules || {};
     });
 
     /**
@@ -67,7 +67,7 @@ var Tokenizer = Class(function() {
      * @param   {RegExp}    expression  The expression for the rule.
      */
     this.addRule = Public(function(rule, expression) {
-        this.types[rule]                = expression;
+        this.rules[rule]                = expression;
     });
 
     /**
@@ -108,15 +108,15 @@ var Tokenizer = Class(function() {
             return this.EOSTOKEN;
         }
 
-        for (var type in this.types) {
-            if (this.types.hasOwnProperty(type)) {
-                var expression          = this.types[type];
+        for (var rule in this.rules) {
+            if (this.rules.hasOwnProperty(rule)) {
+                var expression          = this.rules[rule];
                 var matches             = expression.exec(this.stream);
 
                 if (matches) {
                     var match           = matches[1];
                     this.stream         = this.stream.substring(matches[0].length);
-                    return new Token(match, type);
+                    return new Token(match, rule);
                 }
             }
         }
@@ -126,7 +126,7 @@ var Tokenizer = Class(function() {
 
     this.EOSTOKEN                       = Static(Public(new Token(null, 'EOS')));
     this.stream                         = Protected('');
-    this.types                          = Protected({})
+    this.rules                          = Protected({})
 });
 
 module.exports                          = Tokenizer;

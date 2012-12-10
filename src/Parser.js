@@ -33,7 +33,8 @@
  */
 
 var Classical                           = require('classical');
-var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Tokenizer');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Parser');
+var Tokenizer                           = require(BASE_PATH + '/src/Tokenizer');
 var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
@@ -59,6 +60,7 @@ var Parser = Class(function() {
      * @return  {undefined}
      */
     this.addRule = Public(function(rule) {
+        Log.debug('addRule');
 
         if (this.validateRule(rule)) {
             var added                   = false;
@@ -73,9 +75,39 @@ var Parser = Class(function() {
             if (!added) {
                 this.rules.push(rule);
             }
+
+            this.prepareTokenizer();
         }
         else {
-            throw new Error('Rule is invalid.');
+            Log.error('addRule', 'Invalid rule.');
+        }
+    });
+
+    /**
+     * Returns the current rules.
+     * @return  {Rule[]}
+     */
+    this.getRules = Public(function() {
+        Log.debug('getRule');
+
+        return this.rules;
+    });
+
+    /**
+     * Injects the rules into the Tokenizer.
+     * @return  {undefined}
+     */
+    this.prepareTokenizer = Protected(function() {
+        if (this.tokenizer instanceof Tokenizer) {
+            delete this.tokenizer;
+        }
+
+        this.tokenizer                  = new Tokenizer;
+
+        for (var i in this.rules) {
+            if (this.rules.hasOwnProperty(i)) {
+                this.tokenizer.addRule(this.rules[i].name, this.rules[i].expression);
+            }
         }
     });
 
@@ -85,6 +117,8 @@ var Parser = Class(function() {
      * @return  {Bool}
      */
     this.validateRule = Protected(function(rule) {
+        Log.debug('validateRule');
+
         if (!(rule instanceof Rule)) {
             return false;
         }
@@ -108,16 +142,9 @@ var Parser = Class(function() {
         return true;
     });
 
-    /**
-     * Returns the current rules.
-     * @return  {Rule[]}
-     */
-    this.getRules = Public(function() {
-        return this.rules;
-    });
-
-    this.stack                          = Protected([]);
     this.rules                          = Protected([]);
+    this.stack                          = Protected([]);
+    this.tokenizer                      = Protected({});
 });
 
 module.exports                          = Parser;

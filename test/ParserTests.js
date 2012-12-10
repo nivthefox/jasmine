@@ -60,3 +60,7 @@ test('Setup', function() {
 
     Assert.equal(testParser.getRules().length, 2);
 });
+
+test('Parse', function() {
+
+});
