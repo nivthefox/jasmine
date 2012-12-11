@@ -11,7 +11,8 @@
     "dependencies" : {
         "classical"                     : "2.x.x",
         "dustjs-linkedin"               : "1.1.x",
-        "js-yaml"                       : "1.0.x"
+        "js-yaml"                       : "1.0.x",
+        "log4js"                        : "0.5.x"
     },
     "devDependencies" : {
         "mocha"                         : "x.x.x"
