@@ -11,25 +11,21 @@ After login:
   2. Custom command parsers (see below) are checked by priority.
   3. The global command parser is checked last.
 
-Individual command implementations may, optionally, call the "function" parser
-with a specific phrase to allow for softcode parsing.
+Individual command implementations may, optionally, call the "function" parser with a specific phrase to allow for softcode parsing.
 
 ### Custom Parsers
 ```javascript
 Parser.getParser(<context>[, <priority>, <test>]);
 ```
 
-   **<context>:** (String) The name of the parser (can be used to fetch a
-        parser which already exists)
-   **<priority>:** (Integer) The parser's priority.  A lower number means it
-        will be checked sooner.
-   **<test>:** (Function) A boolean to determine whether the parser is
-        appropriate for the current situation.
+  * **context** (String) The name of the parser (can be used to fetch a parser which already exists)
+  * **priority** (Integer) The parser's priority.  A lower number means it will be checked sooner.
+  * **test** (Function) A boolean to determine whether the parser is appropriate for the current situation.
 
 Some additional parsers which might make sense:
-* "Local" or "Room" parsers.
-* "Nearby" parsers.
-* "Zone" parsers.
+  * "Local" or "Room" parsers.
+  * "Nearby" parsers.
+  * "Zone" parsers.
 
 ### Examples
 ```javascript
