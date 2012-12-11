@@ -36,12 +36,11 @@ require('./setup');
 var Assert                              = require('assert');
 var Handlers                            = require('./fixtures/parserHandlers.js');
 var Parser                              = require(BASE_PATH + '/src/Parser');
-var testParser                          = null;
 
 suite('Parser');
 
 test('Setup', function() {
-    testParser                          = new Parser;
+    var testParser                      = Parser.getParser('test', 100);
     Assert.ok(testParser instanceof Parser);
 
 
@@ -60,9 +59,14 @@ test('Setup', function() {
     testParser.addRule(connect);
 
     Assert.equal(testParser.getRules().length, 2);
+
+    var validateParser                  = Parser.getParser('test');
+    Assert.strictEqual(validateParser, testParser);
 });
 
 test('Parse', function(done) {
+    var testParser                      = Parser.getParser('test');
+
     process.once('parserTest.connect', function(obj) {
         Assert.deepEqual(obj, {username : 'test user', password : 'test'});
         done();

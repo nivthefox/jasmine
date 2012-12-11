@@ -63,25 +63,46 @@ var Parser = Class(function() {
         Log.debug('addRule');
 
         if (this.validateRule(rule)) {
-            var added                   = false;
-
-            for (var i in this.rules) {
-                if (this.rules[i].priority > rule.priority) {
-                    this.rules.splice(i, 0, rule);
-                    added               = true;
-                }
-            }
-
-            if (!added) {
-                this.rules.push(rule);
-            }
-
+            this.rules.push(rule);
+            this.rules.sort(this.prioritySort);
             this.prepareTokenizer();
         }
         else {
             Log.error('addRule', 'Invalid rule.');
         }
     });
+
+    /**
+     * Returns the named parser.
+     *
+     * If the named parser does not exist, it will be created.
+     *
+     * @param   {String}        name
+     * @param   {Integer}       [priority=1]
+     * @param   {Function}      [test=function() {return true;}]
+     * @return  {Parser}
+     */
+    this.getParser = Static(Public(function(name, priority, test) {
+        Log.debug('getParser');
+
+        for (var i in this.parsers) {
+            if (this.parsers.hasOwnProperty(i) && this.parsers[i].name == name) {
+                return this.parsers[i].parser;
+            }
+        }
+
+        var newParser = {
+            name                        : name,
+            priority                    : (Classical.type.INT(priority) ? priority : 1),
+            test                        : (Classical.type.FUNCTION(test) ? test : function() { return true; }),
+            parser                      : new Parser
+        };
+
+        this.parsers.push(newParser);
+        this.parsers.sort(this.prioritySort);
+
+        return newParser.parser;
+    }));
 
     /**
      * Returns the current rules.
@@ -121,6 +142,8 @@ var Parser = Class(function() {
      * @return  {undefined}
      */
     this.prepareTokenizer = Protected(function() {
+        Log.debug('prepareTokenizer');
+
         if (this.tokenizer instanceof Tokenizer) {
             delete this.tokenizer;
         }
@@ -132,6 +155,13 @@ var Parser = Class(function() {
                 this.tokenizer.addRule(this.rules[i].name, this.rules[i].expression);
             }
         }
+    });
+
+    /**
+     * Sorts an array of objects by priority, lowest to highest.
+     */
+    this.prioritySort = Protected(function(a, b) {
+        return (a.priority - b.priority);
     });
 
     /**
@@ -183,6 +213,7 @@ var Parser = Class(function() {
         return true;
     });
 
+    this.parsers                        = Static(Public([]));
     this.rules                          = Protected([]);
     this.stack                          = Protected([]);
     this.tokenizer                      = Protected({});

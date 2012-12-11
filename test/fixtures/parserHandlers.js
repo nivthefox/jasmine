@@ -41,6 +41,12 @@ module.exports = {
     },
 
     string : function(value) {
-        this.stack.unshift(value);
+        var matches                     = /^\s*"(.*?)"/.exec(value);
+
+        if (matches) {
+            value                       = matches[1];
+        }
+
+        this.stack.unshift(value.replace(/(^\s+|\s+$)/, ''));
     }
 };
