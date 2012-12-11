@@ -35,6 +35,7 @@
 var Classical                           = require('classical');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Session');
 var Net                                 = require('net');
+var Parser                              = require(BASE_PATH + '/src/Parser');
 
 /**
  * An enum of available statuses.
@@ -67,9 +68,10 @@ var Session = Class(function() {
 
         this.socket                     = socket;
 
-        this.socket.on('close',     function() { this.status = Status.DISCONNECTED; }.bind(this));
-        this.socket.on('login',     function() { this.status = Status.CONNECTING;   }.bind(this));
-        this.socket.on('timeout',   function() { this.status = Status.TIMEDOUT;     }.bind(this));
+		this.socket.on('data',    this.parse);
+        this.socket.on('close',   this.setStatus.bind(this, Status.DISCONNECTED));
+        this.socket.on('login',   this.setStatus.bind(this, Status.CONNECTING));
+        this.socket.on('timeout', this.setStatus.bind(this, Status.TIMEDOUT));
     });
 
     /**
@@ -83,12 +85,21 @@ var Session = Class(function() {
 
     /**
      * Returns the current status of the socket.
-     * @return      {Status:value}
+     * @return  {Status:value}
      */
     this.getStatus = Public(function() {
         Log.debug('getStatus');
 
         return this.status;
+    });
+
+    /**
+     * Hands incoming socket data to the parser.
+     * @param   {Stream}    data
+     * @return  {undefined}
+     */
+    this.parse = Public(function(data) {
+        Parser.parseInput(this, data.toString);
     });
 
     /**
@@ -98,6 +109,15 @@ var Session = Class(function() {
         Log.debug('send', message);
 
         this.socket.write(message);
+    });
+
+    /**
+     * Sets the current session status.
+     * @param   {Status:value}      status
+     * @return  {undefined}
+     */
+    this.setStatus = Public(function(status) {
+        this.status                     = status;
     });
 });
 
