@@ -62,7 +62,7 @@ test('Tokenize', function() {
     testTokenizer.prepare('2x 3d8+2d6 +12 = 5');
 
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Repeat', value: '2x'});
-    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Roll', value: '3d8'});
+    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Roll', value: ' 3d8'});
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Add', value: '+'});
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Roll', value: '2d6'});
     Assert.equal(testTokenizer.getStream(), ' +12 = 5');
@@ -82,6 +82,6 @@ test('Add rules', function() {
     testTokenizer.addRule('Word', /^\s*(\w+)/);
 
     Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Connect', value: 'connect'});
-    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Username', value: 'moo goo'});
-    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Word', value: 'gaipan'});
+    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Username', value: ' "moo goo"'});
+    Assert.deepEqual(testTokenizer.getNextToken(), {type: 'Word', value: ' gaipan'});
 });
