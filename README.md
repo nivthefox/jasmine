@@ -44,7 +44,6 @@ Some additional command lists which might make sense:
   * "Zone" lists.
 
 ### Adding a command to a list
-
 Commands are added to lists as a regex and a handler.
 
 ```javascript
