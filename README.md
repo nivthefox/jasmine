@@ -23,13 +23,9 @@ of rules (in order):
   4. The command is treated as an unhandled command, and the session receives
       a "failed" event.
 
-Once a command is matched, the interpreter will determine whether that expects
-the parser to be invoked (default: false).  If it should invoke the parser, it
-does so, then passes the tokenized stream to the handler as an array.  If it
-should not, then the untokenized stream is passed to the handler as an array of
-a single string.
-
 ### Custom Command Lists
+Custom command lists can be defined.
+
 ```javascript
 Interpreter.getList(<name>[, <priority>, <test>]);
 ```
@@ -46,3 +42,15 @@ Some additional command lists which might make sense:
   * "Local" or "Room" lists.
   * "Nearby" lists.
   * "Zone" lists.
+
+### Adding a command to a list
+
+Commands are added to lists as a regex and a handler.
+
+```javascript
+Interpreter.getList(<list>).addCommand(<test>, <handler>);
+```
+
+  * **list** (String) The name of the command list (see above)
+  * **test** (RegExp) A regular expression to match to the command.
+  * **handler** (Function) The function to pass off evaluation to on a match.
