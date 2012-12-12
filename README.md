@@ -27,7 +27,7 @@ of rules (in order):
 Custom command lists can be defined.
 
 ```javascript
-Interpreter.getList(<name>[, <priority>, <test>]);
+Interpreter.addList(<name>[, <priority>, <test>]);
 ```
 
   * **name** (String) The name of the command list (can be used to fetch a
@@ -37,7 +37,11 @@ Interpreter.getList(<name>[, <priority>, <test>]);
   * **test** (Function) A boolean to determine whether the command list is
       appropriate for the current situation.
 
-Some additional command lists which might make sense:
+By default, the following command lists are defined:
+  * _login_: Handles commands while Session.CONNECTING === TRUE.
+  * _general_: Generic command list while Session.CONNECTED === TRUE.
+
+Some additional command lists which might make sense, but are not defined by default:
   * "Personal" lists. (Aliases, Channel Aliases, etc.)
   * "Local" or "Room" lists.
   * "Nearby" lists.
@@ -47,9 +51,9 @@ Some additional command lists which might make sense:
 Commands are added to lists as a regex and a handler.
 
 ```javascript
-Interpreter.getList(<list>).addCommand(<test>, <handler>);
+Interpreter.addCommand(<test>, <handler>[, <list>]);
 ```
 
-  * **list** (String) The name of the command list (see above)
   * **test** (RegExp) A regular expression to match to the command.
   * **handler** (Function) The function to pass off evaluation to on a match.
+  * **list** (String) The name of the command list (default: general).
