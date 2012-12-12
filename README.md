@@ -56,4 +56,6 @@ Interpreter.addCommand(<test>, <handler>[, <list>]);
 
   * **test** (RegExp) A regular expression to match to the command.
   * **handler** (Function) The function to pass off evaluation to on a match.
-  * **list** (String) The name of the command list (default: general).
+  * **list** (String) The name of the command list (default: general).  If the
+      specified list does not exist, it will instead add the command to the
+      _general_ list.
