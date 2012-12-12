@@ -2,7 +2,7 @@ Nodem
 -----
 A NodeJS MUD server.
 
-## How Commands are Handled
+### How Commands are Handled
 All commands pass through the Interpreter, which consists of a series of
 regular expression command lists.  The Interpreter goes through each command
 list, testing until it finds a match.  When a match is found, the Interpreter
@@ -23,7 +23,7 @@ of rules (in order):
   4. The command is treated as an unhandled command, and the session receives
       a "failed" event.
 
-### Custom Command Lists
+#### Custom Command Lists
 Custom command lists can be defined.
 
 ```javascript
@@ -43,7 +43,7 @@ Some additional command lists which might make sense:
   * "Nearby" lists.
   * "Zone" lists.
 
-### Adding a command to a list
+#### Adding a command to a list
 Commands are added to lists as a regex and a handler.
 
 ```javascript
