@@ -94,15 +94,6 @@ var Session = Extend(EventEmitter, function() {
     });
 
     /**
-     * Hands incoming socket data to the parser.
-     * @param   {Stream}    data
-     * @return  {undefined}
-     */
-    this.parse = Public(function(data) {
-        Parser.parseInput(this, data.toString);
-    });
-
-    /**
      * Sends a message along the socket.
      */
     this.send = Public(function(message) {
