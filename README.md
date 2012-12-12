@@ -2,49 +2,47 @@ Nodem
 -----
 A NodeJS MUD server.
 
-## How Commands are Parsed
-Prior to login:
-  1. The login parser is the only command parser that is checked.
+## How Commands are Handled
+All commands pass through the Interpreter, which consists of a series of
+regular expression command lists.  The Interpreter goes through each command
+list, testing until it finds a match.  When a match is found, the Interpreter
+hands off evaluation of the command to the appropriate handler, then stops
+searching.
 
-After login:
-  1. The user's personal command parser is checked first.
-  2. Custom command parsers (see below) are checked by priority.
-  3. The global command parser is checked last.
+Each command list has an collective rule which determines whether that list
+should be tested at all, as well as a priority to determine in what order
+the list should be tested.  Lower numbered priorities are more important.
 
-Individual command implementations may, optionally, call the "function" parser with a specific phrase to allow for softcode parsing.
+An individual command is, therefore, tested according to the following set
+of rules (in order):
+  1. If the session is in CONNECTING status, the login command list is
+      checked.
+  2. If any custom command lists have been defined (see below), they are
+      checked by ascending priority.
+  3. The general command list is checked.
+  4. The command is treated as an unhandled command, and the session receives
+      a "failed" event.
 
-### Custom Parsers
+Once a command is matched, the interpreter will determine whether that expects
+the parser to be invoked (default: false).  If it should invoke the parser, it
+does so, then passes the tokenized stream to the handler as an array.  If it
+should not, then the untokenized stream is passed to the handler as an array of
+a single string.
+
+### Custom Command Lists
 ```javascript
-Parser.getParser(<context>[, <priority>, <test>]);
+Interpreter.getList(<name>[, <priority>, <test>]);
 ```
 
-  * **context** (String) The name of the parser (can be used to fetch a parser which already exists)
-  * **priority** (Integer) The parser's priority.  A lower number means it will be checked sooner.
-  * **test** (Function) A boolean to determine whether the parser is appropriate for the current situation.
+  * **name** (String) The name of the command list (can be used to fetch a
+      command list which already exists)
+  * **priority** (Integer) The list's priority.  A lower number means it will
+      be checked sooner.
+  * **test** (Function) A boolean to determine whether the command list is
+      appropriate for the current situation.
 
-Some additional parsers which might make sense:
-  * "Local" or "Room" parsers.
-  * "Nearby" parsers.
-  * "Zone" parsers.
-
-### Examples
-```javascript
-var loginParser     = Parser.getParser('login');
-var connect         = new Parser.Rule;
-connect.name        = 'Connect';
-connect.expression  = /^connect\s+(?:"(.+?)"|(\S+))\s+(?:"(.+?)"|(\S+))/i
-connect.priority    = 1;
-connect.handler     = function(session, value) {
-    parts           = this.expression.exec(value);
-
-    if (parts) {
-        var user    = parts[1] || parts[2];
-        var pass    = parts[3] || parts[4];
-    }
-
-    if (User.getByCredentials(user, pass) instanceof User) {
-        session.setStatus(Session.Status.CONNECTED);
-    }
-}
-loginParser.addRule(connect);
-```
+Some additional command lists which might make sense:
+  * "Personal" lists. (Aliases, Channel Aliases, etc.)
+  * "Local" or "Room" lists.
+  * "Nearby" lists.
+  * "Zone" lists.

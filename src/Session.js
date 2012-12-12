@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-11-27
+ * @edited      2012-12-12
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
@@ -33,9 +33,9 @@
  */
 
 var Classical                           = require('classical');
+var EventEmitter                        = require('events' ).EventEmitter;
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Session');
 var Net                                 = require('net');
-var Parser                              = require(BASE_PATH + '/src/Parser');
 
 /**
  * An enum of available statuses.
@@ -53,7 +53,7 @@ var Status = {
 /**
  * A socket wrapper class.
  */
-var Session = Class(function() {
+var Session = Extend(EventEmitter, function() {
     this.socket                         = Protected({});
     this.status                         = Protected(Status.NEW);
 
@@ -68,7 +68,7 @@ var Session = Class(function() {
 
         this.socket                     = socket;
 
-		this.socket.on('data',    this.parse);
+		this.socket.on('data',    this.emit.bind(this, 'data'));
         this.socket.on('close',   this.setStatus.bind(this, Status.DISCONNECTED));
         this.socket.on('login',   this.setStatus.bind(this, Status.CONNECTING));
         this.socket.on('timeout', this.setStatus.bind(this, Status.TIMEDOUT));
