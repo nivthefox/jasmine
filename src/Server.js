@@ -43,9 +43,6 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
  * The telnet server
  */
 var Server = Class(function() {
-    this.options                        = Protected({});
-    this.server                         = Protected({});
-
     /**
      * Loads the options and messages, then creates a socket server.
      *
@@ -87,10 +84,13 @@ var Server = Class(function() {
         session.getSocket().setTimeout(this.options.timeout.connect);
 
         // TODO: Set up the login parser.
-        //session.getSocket().on('data', session.parseLoginData);
 
         // Send the connect message to the session.
+        // TODO: This is probably better put in the Messages class as a generic method like Messages.send(<session>, <message>, [,..., <arg-n>]).
         Messages.render('connect', this.options, this.renderHandler.bind(this, session));
+
+        // Add the session to the list of available sessions.
+        this.sessions.push(session);
     });
 
     /**
@@ -110,6 +110,11 @@ var Server = Class(function() {
             Log.warn('renderHandler', err);
         }
     });
+
+
+    this.options                        = Protected({});
+    this.server                         = Protected({});
+    this.sessions                       = Protected({});
 });
 
 module.exports                          = Server;
