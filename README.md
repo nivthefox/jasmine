@@ -34,8 +34,8 @@ Interpreter.configure(<list>, <priority>[, <test>]);
 
   * **list** (String) The name of the command list (can be used to fetch a
       command list which already exists)
-  * **priority** (Integer) The list's priority.  A lower number means it will
-      be checked sooner.
+  * **priority** (Integer) The list's priority, defined as the order in which
+      it will be tested. E.g. priority 1 is tested before priority 2.
   * **test** (Function) A boolean to determine whether the command list is
       appropriate for the current situation. This method takes two arguments:
       * **session** (Session) The session which initiated the command.
