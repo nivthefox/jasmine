@@ -34,6 +34,7 @@ coverage.html:
 		--reporter html-cov \
 		--timeout $(TIMEOUT) \
 		./coverage/$(TESTS) > coverage.html
+	rm -rf coverage
 
 coverage: clean coverage.html
 

@@ -35,7 +35,9 @@ Interpreter.addList(<name>[, <priority>, <test>]);
   * **priority** (Integer) The list's priority.  A lower number means it will
       be checked sooner.
   * **test** (Function) A boolean to determine whether the command list is
-      appropriate for the current situation.
+      appropriate for the current situation. This method takes two arguments:
+      * **session** (Session) The session which initiated the command.
+      * **phrase** (String) The phrase which is going to be parsed by a command.
 
 By default, the following command lists are defined:
   * _login_: Handles commands while Session.CONNECTING === TRUE.
@@ -56,6 +58,9 @@ Interpreter.addCommand(<test>, <handler>[, <list>]);
 
   * **test** (RegExp) A regular expression to match to the command.
   * **handler** (Function) The function to pass off evaluation to on a match.
+      This handler will be passed two arguments:
+      * **session** (Session) The session which initiated the command.
+      * **phrase** (String) The phrase which is going to be parsed by a command.
   * **list** (String) The name of the command list (default: general).  If the
       specified list does not exist, it will instead add the command to the
       _general_ list.
