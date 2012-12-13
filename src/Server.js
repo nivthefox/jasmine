@@ -83,8 +83,6 @@ var Server = Class(function() {
         // Set the timeout.
         session.getSocket().setTimeout(this.options.timeout.connect);
 
-        // TODO: Set up the login parser.
-
         // Send the connect message to the session.
         // TODO: This is probably better put in the Messages class as a generic method like Messages.send(<session>, <message>, [,..., <arg-n>]).
         Messages.render('connect', this.options, this.renderHandler.bind(this, session));
