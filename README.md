@@ -24,20 +24,24 @@ of rules (in order):
       a "failed" event.
 
 #### Custom Command Lists
-Custom command lists can be defined.
+Custom command lists can be defined at any time.  Calling this method more
+than once updates the settings for the command list in question, allowing
+commands to be assigned to a list that doesn't yet exist.
 
 ```javascript
-Interpreter.addList(<name>[, <priority>, <test>]);
+Interpreter.configure(<list>, <priority>[, <test>]);
 ```
 
-  * **name** (String) The name of the command list (can be used to fetch a
+  * **list** (String) The name of the command list (can be used to fetch a
       command list which already exists)
   * **priority** (Integer) The list's priority.  A lower number means it will
       be checked sooner.
   * **test** (Function) A boolean to determine whether the command list is
       appropriate for the current situation. This method takes two arguments:
       * **session** (Session) The session which initiated the command.
-      * **phrase** (String) The phrase which is going to be parsed by a command.
+      * **phrase** (String) The phrase which is going to be handled by a
+          command.
+      If no test is specified, the list will default to TRUE.
 
 By default, the following command lists are defined:
   * _login_: Handles commands while Session.CONNECTING === TRUE.
@@ -60,7 +64,7 @@ Interpreter.addCommand(<test>, <handler>[, <list>]);
   * **handler** (Function) The function to pass off evaluation to on a match.
       This handler will be passed two arguments:
       * **session** (Session) The session which initiated the command.
-      * **phrase** (String) The phrase which is going to be parsed by a command.
+      * **phrase** (String) The phrase which needs to be handled.
   * **list** (String) The name of the command list (default: general).  If the
-      specified list does not exist, it will instead add the command to the
-      _general_ list.
+      specified list does not already exist, it will be created using the default
+      priority and test.
