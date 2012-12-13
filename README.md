@@ -57,20 +57,20 @@ Some additional command lists which might make sense, but are not defined by def
 Commands are added to lists as a regex and a handler.
 
 ```javascript
-Interpreter.addCommand(<test>, <handler>[, <list>]);
+Interpreter.addCommand(<list>, <test>, <handler>);
 ```
 
+  * **list** (String) The name of the command list to place the command on.
+      If the specified list does not already exist, it will be created using
+      the default priority and test.
   * **test** (RegExp) A regular expression to match to the command.
   * **handler** (Function) The function to pass off evaluation to on a match.
       This handler will be passed two arguments:
       * **session** (Session) The session which initiated the command.
       * **phrase** (String) The phrase which needs to be handled.
-  * **list** (String) The name of the command list (default: general).  If the
-      specified list does not already exist, it will be created using the
-      default priority and test.
 
 #### Evaluation
-_TODO: Add information about the softcode parser._
+_TODO: Describe the softcode parser._
 
 #### Recursive Interpretation
 _TODO: Explain recursive calls to the command parser; e.g. how the ] command
