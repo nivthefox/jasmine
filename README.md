@@ -66,5 +66,13 @@ Interpreter.addCommand(<test>, <handler>[, <list>]);
       * **session** (Session) The session which initiated the command.
       * **phrase** (String) The phrase which needs to be handled.
   * **list** (String) The name of the command list (default: general).  If the
-      specified list does not already exist, it will be created using the default
-      priority and test.
+      specified list does not already exist, it will be created using the
+      default priority and test.
+
+#### Evaluation
+_TODO: Add information about the softcode parser._
+
+#### Recursive Interpretation
+_TODO: Explain recursive calls to the command parser; e.g. how the ] command
+disengages the sofcode parser, or how the ic command prefixes all output lines
+with "(ic)"_
