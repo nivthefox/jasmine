@@ -1,13 +1,13 @@
 /**
  * __          __   _ _   _                  _
- * \ \        / /  (_) | | |                | |
+ * \ \        / /  (_) | | |                | |12
  *  \ \  /\  / / __ _| |_| |__    _ __   ___| |_
  *   \ \/  \/ / '__| | __| '_ \  | '_ \ / _ \ __|
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-11-27
+ * @edited      2012-12-12
  * @package     Nodem
  * @see         https://github.com/Writh/nodem
  *
@@ -27,7 +27,7 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, asfdTORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
