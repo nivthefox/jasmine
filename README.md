@@ -1,8 +1,7 @@
-JaSMINE
------
+# JaSMINE
 JavaScript Mass Interactive Narrative Environment.
 
-### How Commands are Handled
+## How Commands are Handled
 All commands pass through the Interpreter, which consists of a series of
 regular expression command lists.  The Interpreter goes through each command
 list, testing until it finds a match.  When a match is found, the Interpreter
@@ -23,7 +22,7 @@ of rules (in order):
   4. The command is treated as an unhandled command, and the session receives
       a "failed" event.
 
-#### Custom Command Lists
+### Custom Command Lists
 Custom command lists can be defined at any time.  Calling this method more
 than once updates the settings for the command list in question, allowing
 commands to be assigned to a list that doesn't yet exist.
@@ -68,7 +67,7 @@ Interpreter.addCommand(<list>, <command>);
       defines the command's structure as well as handles any calls to the
       command.
 
-#### Implemented Commands
+### Implemented Commands
 When fully implemented, a Command will have a Regular Expression which is
 tested by the Interpreter to determine if the Command is appropriate, and a
 handler which is called by the Interpreter when a match is found.
@@ -91,7 +90,7 @@ These arguments are actually first passed to the Interpreter when it is Invoked:
 Interpreter.interpret(<Session>, <phrase>, <callback>)
 ```
 
-#### Evaluation
+### Evaluation
 Some commands may have input which is intended to be parsed as code. For
 example, most commands which create output will respect substitution codes
 such as new line (%r) or tab (%t).
