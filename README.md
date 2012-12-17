@@ -68,7 +68,35 @@ Interpreter.addCommand(<list>, <command>);
       command.
 
 #### Evaluation
-_TODO: Describe the softcode parser._
+Some commands may have portions which are intended to be parsed as code. For
+example, most commands which create output will respect substitution codes
+such as new line (%r) or tab (%t).
+
+Although any module can add additional parsers, it is generally encouraged
+that evaluation of phrases as softcode be done using the default parser.
+
+```javascript
+var out = Parser.parse(<session>, <phrase>[, <parser>])
+```
+
+  * **session** (Session) The session which created the phrase.
+  * **phrase** (Phrase) The phrase which needs to be evaluated.
+  * **parser** (String) The name of the parser to invoke. (default: 'default')
+
+Modules can easily extend the softcode parser:
+
+```javascript
+Parser.addRule(<rule>[, <parser>])
+```
+
+  * **rule** (Rule) The rule to be added.  Rules are an instance of the Rule
+      struct found in src/Parser.js:
+      * **name** (String) The name of the rule.
+      * **test** (RegExp) The tokenizing match for the rule.
+      * **handler** (Function) The method to run when the parser encounters
+          this rule.
+  * **parser** (String) The name of the parser to update. (default: 'default')
+
 
 #### Recursive Interpretation
 _TODO: Explain recursive calls to the command parser; e.g. how the ] command
