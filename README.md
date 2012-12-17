@@ -157,7 +157,7 @@ when it is initialized.  When performed, it would filter the active Sessions
 to find those which have the same location as the originator Session and
 output the selected phrase.
 
-### Defining an Instruction
+#### Defining an Instruction
 Instructions are defined by creating a new class, and then adding that class
 to the Controller:
 ```javascript
@@ -168,7 +168,7 @@ Controller.define(<name>, myInstruction);
   * **definition** (Class) The definition of the Instruction.
   * **name** (String) The name of the Instruction.
 
-### Invoking an Instruction
+#### Invoking an Instruction
 Instructions are invoked and prepared by calling the Controller:
 ```javascript
 var Set = [];
