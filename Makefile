@@ -4,16 +4,18 @@ INTERFACE			= qunit
 REPORTER			= spec
 TIMEOUT				= 5000
 ENV					= test
+JSDOC				= /usr/lib/node_modules/jsdoc/jsdoc
+MOCHA				= ./node_modules/.bin/mocha
 
 test:
-	@NODE_ENV=$(ENV) NOLOG=1 ./node_modules/.bin/mocha \
+	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
 		--ui $(INTERFACE) \
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
 		$(TESTS)
 
 test-watch:
-	@NODE_ENV=$(ENV) NOLOG=1 ./node_modules/.bin/mocha \
+	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
 		--ui $(INTERFACE) \
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
@@ -29,7 +31,7 @@ coverage.html:
 	cp -r $(TESTS) ./coverage/$(TESTS)
 	cp -r config ./coverage/config
 	jscoverage src ./coverage/src
-	@NODE_ENV=$(ENV) NOLOG=1 ./node_modules/.bin/mocha \
+	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
 		--ui $(INTERFACE) \
 		--reporter html-cov \
 		--timeout $(TIMEOUT) \
