@@ -28,7 +28,6 @@ of rules (in order):
 Custom command lists can be defined at any time.  Calling this method more
 than once updates the settings for the command list in question, allowing
 commands to be assigned to a list that doesn't yet exist.
-
 ```javascript
 Interpreter.configure(<list>, <priority>[, <test>]);
 ```
@@ -57,7 +56,6 @@ default:
 
 #### Adding a command to a list
 Commands are added to lists as a regex and a handler.
-
 ```javascript
 Interpreter.addCommand(<list>, <command>);
 ```
@@ -95,7 +93,6 @@ Interpreter.interpret(<Session>, <phrase>, <callback>)
 When input is received from a session, the initial callback will iterate
 through the resulting Instruction Set and perform each Instruction in
 sequence.
-
 ```javascript
 // Internal code in the Session interpret callback
 for (var i in instructions) {
@@ -110,7 +107,6 @@ such as new line (%r) or tab (%t).
 
 Although any module can add additional parsers, it is generally encouraged
 that evaluation of phrases as softcode be done using the default parser.
-
 ```javascript
 var out = Parser.parse(<session>, <phrase>[, <parser>])
 ```
@@ -120,7 +116,6 @@ var out = Parser.parse(<session>, <phrase>[, <parser>])
   * **parser** (String) The name of the parser to invoke. (default: 'default')
 
 Modules can easily extend the softcode parser:
-
 ```javascript
 Parser.addRule(<rule>[, <parser>])
 ```
@@ -161,3 +156,24 @@ then require the originator Session and the Phrase to be output as parameters
 when it is initialized.  When performed, it would filter the active Sessions
 to find those which have the same location as the originator Session and
 output the selected phrase.
+
+### Defining an Instruction
+Instructions are defined by creating a new class, and then adding that class
+to the Controller:
+```javascript
+var myInstruction = Implement(Instruction, <definition>);
+Controller.define(<name>, myInstruction);
+```
+
+  * **definition** (Class) The definition of the Instruction.
+  * **name** (String) The name of the Instruction.
+
+### Invoking an Instruction
+Instructions are invoked and prepared by calling the Controller:
+```javascript
+var Set = [];
+Set.push(Controller.instruction(<instruction>, <arguments>));
+```
+
+  * **instruction** (String) The name of the instruction to be prepared.
+  * **arguments** (*[]) Any arguments required to prepare the Instruction.
