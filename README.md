@@ -1,7 +1,9 @@
-# JaSMINE
+JaSMINE
+=====
 JavaScript Mass Interactive Narrative Environment.
 
-## How Commands are Handled
+How Commands are Handled
+-----
 All commands pass through the Interpreter, which consists of a series of
 regular expression command lists.  The Interpreter goes through each command
 list, testing until it finds a match.  When a match is found, the Interpreter
@@ -82,12 +84,23 @@ if (Command.test(<phrase>)) {
   * **<Session>** The session which created the phrase.
   * **<callback>** A callback to run when the command has been fully handled.
       This method takes one argument:
-      * **instructions** (Instruction[]) The instructions (see below) to be
+      * **instructions** (Instruction[]) The Instruction Set (see below) to be
           followed to generate output, manipulate objects, etc.
 
 These arguments are actually first passed to the Interpreter when it is Invoked:
 ```javascript
 Interpreter.interpret(<Session>, <phrase>, <callback>)
+```
+
+When input is received from a session, the initial callback will iterate
+through the resulting Instruction Set and perform each Instruction in
+sequence.
+
+```javascript
+// Internal code in the Session interpret callback
+for (var i in instructions) {
+    instructions[i].perform();
+}
 ```
 
 ### Evaluation
@@ -120,7 +133,31 @@ Parser.addRule(<rule>[, <parser>])
           this rule.
   * **parser** (String) The name of the parser to update. (default: 'default')
 
-#### Recursive Interpretation
-_TODO: Explain recursive calls to the command parser; e.g. how the ] command
-disengages the sofcode parser, or how the ic command prefixes all output lines
-with "(ic)"_
+### Recursive Interpretation
+Some commands might choose to call the Interpreter a second time with a subset
+of the phrase they were given to handle.  These commands must implement their
+own callback to handle the resulting Instruction Set, but can be used to alter
+the Instruction Set however necessary before handing off their own Instruction
+Set to the original callback.
+
+For example, a command might be defined which disables the parser for the rest
+of the phrase (in MUSHes, this command is "]"), or a command might be defined
+which prefixes all output with another phrase (such as an "OOC" command).
+
+Instruction Sets
+-----
+Any generation of output or modification of objects is handled through the
+creation of an Instruction Set.  Generating an Instruction Set is as simple as
+creating an array of Instructions using the Instruction API.
+
+### Instructions
+Instructions are specific classes which perform some action like modifying an
+object in memory, or performing output.  Each Instruction is unique, and
+requires a different set of parameters to initialize and perform it.
+
+For example, an Instruction "oemit" might be defined to output a string to all
+Sessions with a location near another Session.  The "oemit" Instruction would
+then require the originator Session and the Phrase to be output as parameters
+when it is initialized.  When performed, it would filter the active Sessions
+to find those which have the same location as the originator Session and
+output the selected phrase.
