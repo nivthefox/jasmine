@@ -73,7 +73,7 @@ tested by the Interpreter to determine if the Command is appropriate, and a
 handler which is called by the Interpreter when a match is found.
 ```javascript
 // Internal code in the Interpreter.
-if (Command.test(<phrase>)) {
+if (Command.expression.test(<phrase>)) {
     Command.handle(<Session>, <phrase>, <callback>);
 }
 ```
