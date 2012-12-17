@@ -2,7 +2,7 @@
 
 NODE_ENV="production"
 NODE=$(which node)
-PID_FILE="./nodem.pid"
+PID_FILE="./jasmine.pid"
 
 if [ -e "${PID_FILE}" ]; then
     PID=$(cat "${PID_FILE}")
@@ -14,7 +14,8 @@ for i in $*; do
             NODE_ENV="development"
             ;;
         --help|-?)
-            echo "Usage: ./nodem [options]"
+            echo "Usage: ./jasmine [options] (start)"
+            echo "       ./jasmine (stop|restart)"
             echo ""
             echo "Options:"
             echo "  -D, --develop           print debug messages to the console"
@@ -40,7 +41,7 @@ function check_status {
 case "$1" in
     "start")
         if [ -e "${PID_FILE}" ]; then
-            echo "Nodem is already running."
+            echo "Jasmine is already running."
         else
             NODE_ENV=${NODE_ENV} "${NODE}" ./src/Main.js&
             PID=$!
@@ -58,19 +59,19 @@ case "$1" in
         ;;
 
     "restart")
-        ./nodem stop
-        ./nodem start
+        ./jasmine stop
+        ./jasmine $* start
         ;;
 
     "status")
         STATUS=$(check_status)
         case "${STATUS}" in
             0)
-                echo "Nodem is running."
+                echo "Jasmine is running."
                 ;;
 
             [1-2])
-                echo "Nodem is not running."
+                echo "Jasmine is not running."
 
                 if [ -e ${PID_FILE} ]; then
                     rm ${PID_FILE}
@@ -80,6 +81,6 @@ case "$1" in
         ;;
 
     *)
-        echo "Usage: ./nodem (start|stop|restart)"
+        echo "Usage: ./jasmine (start|stop|restart)"
         ;;
 esac

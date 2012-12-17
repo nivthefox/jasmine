@@ -8,8 +8,8 @@
  *
  * @created     2012-11-20
  * @edited      2012-11-21
- * @package     Nodem
- * @see         https://github.com/Writh/nodem
+ * @package     JaSMINE
+ * @see         https://github.com/Writh/jasmine
  *
  * Copyright (C) 2012 Kevin Kragenbrink <kevin@writh.net>
  *

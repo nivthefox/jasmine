@@ -1,6 +1,6 @@
-Nodem
+JaSMINE
 -----
-A NodeJS MUD server.
+JavaScript Mass Interactive Narrative Environment.
 
 ### How Commands are Handled
 All commands pass through the Interpreter, which consists of a series of
@@ -68,7 +68,7 @@ Interpreter.addCommand(<list>, <command>);
       command.
 
 #### Evaluation
-Some commands may have portions which are intended to be parsed as code. For
+Some commands may have input which is intended to be parsed as code. For
 example, most commands which create output will respect substitution codes
 such as new line (%r) or tab (%t).
 

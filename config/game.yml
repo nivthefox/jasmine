@@ -1,7 +1,7 @@
-port                                    : 4201
-mudname                                 : NodeMud
+port                                    : 7445
+mudname                                 : Jasmine
 log:
-  file                                  : log/NodeMud.log
+  file                                  : log/jasmine.log
 timeout:
   connect                               : 300
   idle                                  : -1

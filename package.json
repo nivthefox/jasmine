@@ -1,12 +1,12 @@
 {
-    "name"                              : "nodem",
+    "name"                              : "JaSMINE",
     "version"                           : "0.1.0",
-    "description"                       : "A NodeJS MUD server.",
-    "keywords"                          : ["mud"],
+    "description"                       : "JavaScript Mass Interactive Narrative Environment",
+    "keywords"                          : ["mud", "interactive", "narrative"],
     "author"                            : "Kevin Kragenbrink <kevin@writh.net>",
     "repository" : {
         "type"                          : "git",
-        "url"                           : "git://github.com/Writh/nodem.git"
+        "url"                           : "git://github.com/Writh/jasmine.git"
     },
     "dependencies" : {
         "classical"                     : "2.x.x",
