@@ -47,7 +47,8 @@ By default, the following command lists are defined:
   * _login_: Handles commands while Session.CONNECTING === TRUE.
   * _general_: Generic command list while Session.CONNECTED === TRUE.
 
-Some additional command lists which might make sense, but are not defined by default:
+Some additional command lists which might make sense, but are not defined by
+default:
   * "Personal" lists. (Aliases, Channel Aliases, etc.)
   * "Local" or "Room" lists.
   * "Nearby" lists.
@@ -66,6 +67,29 @@ Interpreter.addCommand(<list>, <command>);
   * **command** (Command) An implementation of the Command interface, which
       defines the command's structure as well as handles any calls to the
       command.
+
+#### Implemented Commands
+When fully implemented, a Command will have a Regular Expression which is
+tested by the Interpreter to determine if the Command is appropriate, and a
+handler which is called by the Interpreter when a match is found.
+```javascript
+// Internal code in the Interpreter.
+if (Command.test(<phrase>)) {
+    Command.handle(<Session>, <phrase>, <callback>);
+}
+```
+
+  * **<phrase>** The command phrase which needs to be handled.
+  * **<Session>** The session which created the phrase.
+  * **<callback>** A callback to run when the command has been fully handled.
+      This method takes one argument:
+      * **instructions** (Instruction[]) The instructions (see below) to be
+          followed to generate output, manipulate objects, etc.
+
+These arguments are actually first passed to the Interpreter when it is Invoked:
+```javascript
+Interpreter.interpret(<Session>, <phrase>, <callback>)
+```
 
 #### Evaluation
 Some commands may have input which is intended to be parsed as code. For
@@ -96,7 +120,6 @@ Parser.addRule(<rule>[, <parser>])
       * **handler** (Function) The method to run when the parser encounters
           this rule.
   * **parser** (String) The name of the parser to update. (default: 'default')
-
 
 #### Recursive Interpretation
 _TODO: Explain recursive calls to the command parser; e.g. how the ] command
