@@ -39,5 +39,5 @@ suite('Config');
 
 test('Get', function() {
     var gameConfig                      = Config.getConfig('game');
-    Assert.strictEqual(gameConfig.port, 4201);
+    Assert.strictEqual(gameConfig.port, 7445);
 });
