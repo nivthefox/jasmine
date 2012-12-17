@@ -112,7 +112,7 @@ var Server = Class(function() {
 
     this.options                        = Protected({});
     this.server                         = Protected({});
-    this.sessions                       = Protected({});
+    this.sessions                       = Protected([]);
 });
 
 module.exports                          = Server;
