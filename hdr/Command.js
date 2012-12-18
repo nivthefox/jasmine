@@ -35,24 +35,24 @@
 var Classical                           = require('classical');
 
 /**
- * An interface to define the handling for controlled instructions.
+ * An interface to define the handling of user input.
  */
-var Instruction = Interface(function() {
+var Command = Interface(function() {
 
     /**
-     * Initializes parameters for an instruction.
-     * Called when the instruction is created and assigned to an Instruction
-     * Set with all parameters needed to perform the instruction.
+     * An expression tested to determine command matches.
+     * @type    {RegExp}
+     */
+    this.expression = Static(Public(/^/));
+
+    /**
+     * Runs the matched command.
+     * @param   {Session}   session
+     * @param   {String}    phrase
+     * @param   {Function}  callback
      * @return  {undefined}
      */
-    this.initialize = Public(function() {});
-
-    /**
-     * Performs the instruction during the instruction set.
-     * @param   {Function}  callback
-     * @return {undefined}
-     */
-    this.perform = Public(function(callback) {});
+    this.run = Public(function(session, phrase, callback) {});
 });
 
-module.exports                          = Instruction;
+module.exports                          = Command;

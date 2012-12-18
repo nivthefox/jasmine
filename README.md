@@ -74,7 +74,7 @@ handler which is called by the Interpreter when a match is found.
 ```javascript
 // Internal code in the Interpreter.
 if (Command.expression.test(<phrase>)) {
-    Command.handle(<Session>, <phrase>, <callback>);
+    Command.run(<Session>, <phrase>, <callback>);
 }
 ```
 
@@ -169,7 +169,7 @@ Controller.define(<name>, myInstruction);
   * **name** (String) The name of the Instruction.
 
 #### Invoking an Instruction
-Instructions are invoked and prepared by calling the Controller:
+Instructions are invoked and prepared by calling the Conƒtroller:
 ```javascript
 var Set = [];
 Set.push(Controller.instruction(<instruction>, <arguments>));
