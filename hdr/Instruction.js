@@ -6,8 +6,8 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2012-11-27
- * @edited      2012-11-27
+ * @created     2012-12-17
+ * @edited      2012-12-17
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -32,30 +32,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-var Log                                 = require('log4js');
-var Config                              = require(BASE_PATH + '/src/Config');
-var Util                                = require(BASE_PATH+  '/src/Utilities');
+var Classical                           = require('classical');
 
-var logConfig = {
-    appenders                           : [],
-    levels                              : []
-};
+/**
+ * An interface to control the handling of controlled instructions.
+ */
+var Instruction = Interface(function() {
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    // Development mode.
-    logConfig.appenders.push({type : 'console'});
-}
+    /**
+     * Initializes parameters for an instruction.
+     * Called when the instruction is created and assigned to an Instruction
+     * Set with all parameters needed to perform the instruction.
+     * @return  {undefined}
+     */
+    this.initialize = Public(function() {});
 
-if (process.env.NODE_ENV !== 'test') {
-    // Production.
-    logConfig.appenders.push({
-        type                            : 'file',
-        filename                        : Util.format('%s/%s', BASE_PATH, Config.getConfig('game').log.file),
-        maxLogSize                      : (2 * 1024 * 1024),    // TODO: Magic number. This is the log size. 2M.
-        backups                         : 10                    // TODO: Magic number. This is the number of times to rotate a log.
-    });
-}
-
-Log.configure(logConfig);
-
-module.exports                          = Log;
+    /**
+     * Performs the instruction during the instruction set.
+     * @param   {Function}  callback
+     * @return {undefined}
+     */
+    this.perform = Public(function(callback) {});
+});

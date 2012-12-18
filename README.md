@@ -96,7 +96,7 @@ sequence.
 ```javascript
 // Internal code in the Session interpret callback
 for (var i in instructions) {
-    instructions[i].perform();
+    instructions[i].perform(callback);
 }
 ```
 
