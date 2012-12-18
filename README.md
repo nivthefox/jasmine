@@ -168,11 +168,11 @@ Controller.define(<name>, myInstruction);
   * **definition** (Class) The definition of the Instruction.
   * **name** (String) The name of the Instruction.
 
-#### Invoking an Instruction
-Instructions are invoked and prepared by calling the Conƒtroller:
+#### Preparing an Instruction
+Instructions are prepared by calling the Conƒtroller:
 ```javascript
 var Set = [];
-Set.push(Controller.instruction(<instruction>, <arguments>));
+Set.push(Controller.prepare(<instruction>, <arguments>));
 ```
 
   * **instruction** (String) The name of the instruction to be prepared.

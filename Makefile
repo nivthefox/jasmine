@@ -30,6 +30,7 @@ coverage.html:
 	mkdir -p ./coverage
 	cp -r $(TESTS) ./coverage/$(TESTS)
 	cp -r config ./coverage/config
+	jscoverage hdr ./coverage/hdr
 	jscoverage src ./coverage/src
 	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
 		--ui $(INTERFACE) \
