@@ -3,6 +3,7 @@
 NODE_ENV="production"
 NODE=$(which node)
 PID_FILE="./jasmine.pid"
+SERVER="./src/Main.js"
 
 if [ -e "${PID_FILE}" ]; then
     PID=$(cat "${PID_FILE}")
@@ -43,7 +44,7 @@ case "$1" in
         if [ -e "${PID_FILE}" ]; then
             echo "Jasmine is already running."
         else
-            NODE_ENV=${NODE_ENV} "${NODE}" ./src/Main.js&
+            NODE_ENV=${NODE_ENV} "${NODE}" ${SERVER}&
             PID=$!
             echo ${PID} > "${PID_FILE}"
         fi
