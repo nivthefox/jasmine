@@ -44,7 +44,7 @@ var Utilities = Extend(Util, function() {
      * Extends an object with any other objects, overwriting variables along the way.
      *
      * The first argument becomes the 'base'; additional arguments will be used to
-     * overwrite or extend the base object.  This is very basic inheritence.
+     * overwrite or extend the base object.  This is very basic inheritance.
      *
      * @param   {Object...}     arguments   The objects to extend.
      * @return  {Object}
