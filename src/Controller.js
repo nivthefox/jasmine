@@ -36,7 +36,6 @@ var Classical                           = require('classical');
 var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Controller');
 
-
 /**
  * Manages internal instructions.
  * @singleton
@@ -56,6 +55,7 @@ var Controller = Class(function() {
         }
 
         // TODO: This section should work, but is presently failing. Likely 'Implement' is not maintaining the inheritance chain.
+        //      @see
 //        if (!(new instruction instanceof Instruction)) {
 //            throw new Error('Attempted to define non-Instruction as an Instruction.');
 //        }

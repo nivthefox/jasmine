@@ -32,7 +32,7 @@ commands to be assigned to a list that doesn't yet exist.
 Interpreter.configure(<list>, <priority>[, <test>]);
 ```
 
-  * **list** (String) The name of the command list (can be used to fetch a
+  * **list** (String) The name of the command list (can be used to configure a
       command list which already exists)
   * **priority** (Integer) The list's priority, defined as the order in which
       it will be tested. E.g. priority 1 is tested before priority 2.
