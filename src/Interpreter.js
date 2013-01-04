@@ -52,6 +52,8 @@ var InterpreterList = function() {
 /**
  * The command interpreter.
  * @singleton
+ * @emits   phrase.match.failure        A phrase could not be matched to a currently available command.
+ * @emits   phrase.match.success        A phrase was matched to a command and is being handled.
  */
 var Interpreter = Extend(EventEmitter, function() {
 
