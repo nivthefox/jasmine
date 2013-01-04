@@ -28,9 +28,9 @@ of rules (in order):
 Custom command lists can be defined at any time.  Calling this method more
 than once updates the settings for the command list in question, allowing
 commands to be assigned to a list that doesn't yet exist.
-```javascript
-Interpreter.configure(<list>, <priority>[, <test>]);
-```
+
+    Interpreter.configure(<list>, <priority>[, <test>]);
+
 
   * **list** (String) The name of the command list (can be used to configure a
       command list which already exists)
@@ -56,9 +56,8 @@ default:
 
 #### Adding a command to a list
 Commands are added to lists as a regex and a handler.
-```javascript
-Interpreter.addCommand(<list>, <command>);
-```
+
+    Interpreter.addCommand(<list>, <command>);
 
   * **list** (String) The name of the command list to place the command on.
       If the specified list does not already exist, it will be created using
@@ -71,12 +70,11 @@ Interpreter.addCommand(<list>, <command>);
 When fully implemented, a Command will have a Regular Expression which is
 tested by the Interpreter to determine if the Command is appropriate, and a
 handler which is called by the Interpreter when a match is found.
-```javascript
-// Internal code in the Interpreter.
-if (Command.expression.test(<phrase>)) {
-    Command.run(<Session>, <phrase>, <callback>);
-}
-```
+
+    // Internal code in the Interpreter.
+    if (Command.expression.test(<phrase>)) {
+        Command.run(<Session>, <phrase>, <callback>);
+    }
 
   * **<phrase>** The command phrase which needs to be handled.
   * **<Session>** The session which created the phrase.
@@ -86,19 +84,18 @@ if (Command.expression.test(<phrase>)) {
           followed to generate output, manipulate objects, etc.
 
 These arguments are actually first passed to the Interpreter when it is Invoked:
-```javascript
-Interpreter.interpret(<Session>, <phrase>, <callback>)
-```
+
+    Interpreter.interpret(<Session>, <phrase>, <callback>)
 
 When input is received from a session, the initial callback will iterate
 through the resulting Instruction Set and perform each Instruction in
 sequence.
-```javascript
-// Internal code in the Session interpret callback
-for (var i in instructions) {
-    instructions[i].perform(callback);
-}
-```
+
+    // Internal code in the Session interpret callback
+    for (var i in instructions) {
+        instructions[i].perform(callback);
+    }
+
 
 ### Evaluation
 Some commands may have input which is intended to be parsed as code. For
@@ -107,18 +104,16 @@ such as new line (%r) or tab (%t).
 
 Although any module can add additional parsers, it is generally encouraged
 that evaluation of phrases as softcode be done using the default parser.
-```javascript
-var out = Parser.parse(<session>, <phrase>[, <parser>])
-```
+
+    var out = Parser.parse(<session>, <phrase>[, <parser>])
 
   * **session** (Session) The session which created the phrase.
   * **phrase** (Phrase) The phrase which needs to be evaluated.
   * **parser** (String) The name of the parser to invoke. (default: 'default')
 
 Modules can easily extend the softcode parser:
-```javascript
-Parser.addRule(<rule>[, <parser>])
-```
+
+    Parser.addRule(<rule>[, <parser>])
 
   * **rule** (Rule) The rule to be added.  Rules are an instance of the Rule
       struct found in src/Parser.js:
@@ -160,20 +155,19 @@ output the selected phrase.
 #### Defining an Instruction
 Instructions are defined by creating a new class, and then adding that class
 to the Controller:
-```javascript
-var myInstruction = Implement(Instruction, <definition>);
-Controller.define(<name>, myInstruction);
-```
+
+    var myInstruction = Implement(Instruction, <definition>);
+    Controller.define(<name>, myInstruction);
 
   * **definition** (Class) The definition of the Instruction.
   * **name** (String) The name of the Instruction.
 
 #### Preparing an Instruction
 Instructions are prepared by calling the Conƒtroller:
-```javascript
-var Set = [];
-Set.push(Controller.prepare(<instruction>, <arguments>));
-```
+
+    var Set = [];
+    Set.push(Controller.prepare(<instruction>, <arguments>));
+
 
   * **instruction** (String) The name of the instruction to be prepared.
   * **arguments** (*[]) Any arguments required to prepare the Instruction.
