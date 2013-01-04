@@ -45,9 +45,6 @@ var messagesConfig                      = require(BASE_PATH + '/config/messages.
  * @singleton
  */
 var Messages = Extend(Dust, function() {
-    this.instance                       = Static(Public({}));
-    this.messages                       = Protected({});
-
     /**
      * Loads the messages from config.
      * @constructor
@@ -87,6 +84,9 @@ var Messages = Extend(Dust, function() {
             }
         }
     });
+
+    this.instance                       = Static(Public({}));
+    this.messages                       = Protected({});
 });
 
 module.exports                          = Messages.getInstance();
