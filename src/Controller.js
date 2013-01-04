@@ -55,7 +55,6 @@ var Controller = Class(function() {
         }
 
         // TODO: This section should work, but is presently failing. Likely 'Implement' is not maintaining the inheritance chain.
-        //      @see
 //        if (!(new instruction instanceof Instruction)) {
 //            throw new Error('Attempted to define non-Instruction as an Instruction.');
 //        }

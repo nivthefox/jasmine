@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-12-24
- * @edited      2012-12-24
+ * @edited      2013-01-04
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -35,11 +35,15 @@
 require('./setup');
 var Assert                              = require('assert');
 var Interpreter                         = require(BASE_PATH + '/src/Interpreter');
+var Net                                 = require('net');
 var Session                             = require(BASE_PATH + '/src/Session');
+
+var sess                                = null;
+var cmds 								= require('./fixtures/commands');
 
 suite('Interpreter');
 
-test('configure', function() {
+test('Configure', function() {
     var test = function(session, phrase) {
         return session.getStatus() === Session.Status.CONNECTED;
     };
@@ -48,4 +52,48 @@ test('configure', function() {
     Assert.equal(tl.priority, 10);
     Assert.equal(tl.commands.length, 0);
     Assert.strictEqual(tl.test, test);
+});
+
+test('Add Commands', function() {
+	var err;
+	
+	Interpreter.addCommand('test', cmds.Arith);
+	try {
+		Interpreter.addCommand('test', null);
+	}
+	catch (e) { err = e; }
+	finally {
+		Assert.ok(err instanceof TypeError);
+		Assert.equal(err.message, 'Attempted to add an invalid command.');
+	}
+
+	var tl 								= Interpreter.configure('test');
+	Assert.equal(tl.commands.length, 1);
+});
+
+test('Run Commands', function(done) {
+	var socket                          = new Net.Socket;
+    sess                                = new Session(socket);
+    var success 						= false;
+
+    Interpreter.on('phrase.match.failure', function(session, phrase, callback) {
+    	Assert.equal(phrase, 'arith 1 + 1');
+    	callback('caught failure');
+    });
+
+    Interpreter.on('phrase.match.success', function(session, phrase, callback) {
+    	success 						= true;
+    });
+
+    Interpreter.interpret(sess, 'arith 1 + 1', function(f) {
+    	Assert.equal(f, 'caught failure');
+    });
+
+    sess.setStatus(Session.Status.CONNECTED);
+
+    Interpreter.interpret(sess, 'arith 1 + 1', function(f) {
+    	Assert.equal(f, '1 + 1');
+    	Assert.ok(success);
+    	done();
+    });
 });
