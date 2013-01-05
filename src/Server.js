@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-12-12
+ * @edited      2013-01-04
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -34,6 +34,7 @@
 
 /** @ignore */
 var Classical                           = require('classical');
+var EventEmitter                        = require('events').EventEmitter;
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Server');
 var Messages                            = require(BASE_PATH + '/src/Messages');
 var Net                                 = require('net');
@@ -44,7 +45,7 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
  * The telnet server
  * @class Server
  */
-var Server = Class(function() {
+var Server = Extend(EventEmitter, function() {
     /**
      * Loads the options and messages, then creates a socket server.
      *
@@ -90,12 +91,11 @@ var Server = Class(function() {
         // Set the timeout.
         session.getSocket().setTimeout(this.options.timeout.connect);
 
-        // Send the connect message to the session.
-        // TODO: This is probably better put in the Messages class as a generic method like Messages.send(<session>, <message>, [,..., <arg-n>]).
-        Messages.render('connect', this.options, this.renderHandler.bind(this, session));
-
         // Add the session to the list of available sessions.
         this.sessions.push(session);
+
+        // Notify that the connection has been established.
+        this.emit('session.connected', session);
     });
 
     /**

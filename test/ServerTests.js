@@ -57,6 +57,10 @@ test('Connect', function(done) {
         Assert.ok(true);
     });
 
+    srv.on('session.connected', function(session) {
+        session.send('Welcome to test.');
+    });
+
     client.on('data', function(data) {
         received                        = true;
         Assert.equal(data.toString(), "Welcome to test.");
