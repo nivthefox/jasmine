@@ -125,7 +125,7 @@ var Server = Extend(EventEmitter, function() {
 
         for (var i in this.sessions) {
             /**
-             * Notify that the connection has been established.
+             * Notify that the connection is closing.
              *
              * @event Server#session&period;close
              * @property {Session}  session

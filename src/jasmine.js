@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var FileSystem                          = require('fs');
 global.BASE_PATH                        = FileSystem.realpathSync(__dirname + '/../');
 
@@ -46,6 +47,13 @@ var Server                              = require(BASE_PATH + '/src/Server');
  */
 var jasmine = Class(function() {
 
+    /**
+     * Adds signal handling and then calls startup.
+     * 
+     * @name jasmine#constructor
+     * @public
+     * @method
+     */
     this.constructor = Public(function() {
         Log.debug('constructor');
 
@@ -55,7 +63,14 @@ var jasmine = Class(function() {
         this.startup();
     });
 
-    this.sigTerm = Public(function() {
+    /**
+     * Shuts down the server and removes the pid file before exiting the process.
+     *
+     * @name jasmine#sigTerm
+     * @protected
+     * @method
+     */
+    this.sigTerm = Protected(function() {
         Log.debug('sigTerm');
         this.server.shutdown();
 
@@ -66,24 +81,58 @@ var jasmine = Class(function() {
         process.exit();
     });
 
-    this.sigHup = Public(function() {
+    /**
+     * Shuts down the server, then starts it back up, without terminating the node process.
+     *
+     * @name jasmine#sigHup
+     * @protected
+     * @method
+     */
+    this.sigHup = Protected(function() {
         Log.debug('sigHup');
         
+        // TODO: Calling shutdown will kill all active sessions, which is undesireable.  It would be beneficial to 
+        //          instead PAUSE the connections, unload plugins and reload them, then re-establish the connections.
         this.shutdown();
+        // TOOD: It would probably be beneficial to unload the plugins, here, and reload them; allowing a soft "code update".
         this.startup();
     });
 
-    this.shutdown = Protected(function() {
+    /**
+     * Calls the server shutdown process.
+     *
+     * @name jasmine#shutdown
+     * @public
+     * @method
+     */
+    this.shutdown = Public(function() {
+        Log.debug('shutdown');
+
         if (this.server instanceof Server) {
             this.server.shutdown();
         }
     });
 
-    this.startup = Protected(function() {
+    /**
+     * Creates a new instance of the Server class.
+     *
+     * @name jasmine#startup
+     * @public
+     * @method
+     */
+    this.startup = Public(function() {
         Log.debug('startup');
         this.server                     = new Server;
     });
 
+    /**
+     * The currently active Server.
+     *
+     * @name jasmine#server
+     * @protected
+     * @member
+     * @type    {Server}
+     */
     this.server                         = Protected({});
 });
 

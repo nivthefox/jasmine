@@ -7,6 +7,8 @@ ENV					= test
 JSDOC				= /usr/lib/node_modules/jsdoc/jsdoc
 MOCHA				= ./node_modules/.bin/mocha
 
+all: coverage docs
+
 clean:
 	rm -rf coverage
 	rm -f coverage.html
@@ -24,9 +26,9 @@ coverage.html:
 		./coverage/$(TESTS) > coverage.html
 	rm -rf coverage
 
-coverage: clean coverage.html
+coverage: coverage.html
 
-docs: clean documentation
+docs: documentation
 
 documentation:
 	mkdir -p ./doc
@@ -56,4 +58,4 @@ test-watch:
 		--watch \
 		$(TESTS)
 
-.PHONY: clean coverage docs documentation install node_modules realclean test test-watch
+.PHONY: all clean coverage docs documentation install node_modules realclean test test-watch

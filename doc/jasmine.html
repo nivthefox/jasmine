@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Messages</title>
+    <title>JSDoc: Class: jasmine</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Messages</h1>
+    <h1 class="page-title">Class: jasmine</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    Messages
+    jasmine
     </h2>
     
 </header>  
@@ -39,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="Messages"><span class="type-signature"></span>new Messages<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="jasmine"><span class="type-signature"></span>new jasmine<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -47,7 +47,7 @@
     
     
     <div class="description">
-        A central messages class.
+        Starts up the server
     </div>
     
 
@@ -79,7 +79,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>Messages.js, line 42</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>jasmine.js, line 48</li></ul></dd>
 	
     
     
@@ -118,14 +118,14 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="instance"><span class="type-signature"></span>instance<span class="type-signature"> :<a href="Messages.html">Messages</a></span></h4>
+    <h4 class="name" id="server"><span class="type-signature">&lt;protected> </span>server<span class="type-signature"> :<a href="Server.html">Server</a></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        The singleton of this class.
+        The currently active Server.
     </div>
     
     
@@ -151,57 +151,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>Messages.js, line 79</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="messages"><span class="type-signature">&lt;protected> </span>messages<span class="type-signature"> :Object</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The loaded messages.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>Messages.js, line 90</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>jasmine.js, line 128</li></ul></dd>
 	
     
     
@@ -224,7 +174,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="constructor"><span class="type-signature">&lt;protected> </span>constructor<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="constructor"><span class="type-signature"></span>constructor<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -232,7 +182,7 @@
     
     
     <div class="description">
-        Loads the messages from config.
+        Adds signal handling and then calls startup.
     </div>
     
 
@@ -264,7 +214,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>Messages.js, line 49</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>jasmine.js, line 50</li></ul></dd>
 	
     
     
@@ -287,7 +237,7 @@
         
             
 <dt>
-    <h4 class="name" id="load"><span class="type-signature"></span>load<span class="signature">(messages)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="shutdown"><span class="type-signature"></span>shutdown<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -295,7 +245,7 @@
     
     
     <div class="description">
-        Compiles and registers message templates.
+        Calls the server shutdown process.
     </div>
     
 
@@ -303,54 +253,6 @@
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>messages</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The message templates to compile and register.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -375,7 +277,196 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>Messages.js, line 60</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>jasmine.js, line 101</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sigHup"><span class="type-signature">&lt;protected> </span>sigHup<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Shuts down the server, then starts it back up, without terminating the node process.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>jasmine.js, line 84</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sigTerm"><span class="type-signature">&lt;protected> </span>sigTerm<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Shuts down the server and removes the pid file before exiting the process.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>jasmine.js, line 66</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="startup"><span class="type-signature"></span>startup<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a new instance of the Server class.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>jasmine.js, line 116</li></ul></dd>
 	
     
     
