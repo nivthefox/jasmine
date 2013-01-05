@@ -74,3 +74,11 @@ test('Connect', function(done) {
 
     client.connect(config.port);
 });
+
+test('Shutdown', function(done) {
+    srv.on('server.shutdown', function() {
+        done();
+    });
+
+    srv.shutdown();
+});

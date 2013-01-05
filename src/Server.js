@@ -86,7 +86,6 @@ var Server = Extend(EventEmitter, function() {
      * @protected
      * @method
      * @param   {Net.Socket}    socket      The incoming socket.
-     * @return  {undefined}
      * @fires   Server#session&period;connected
      */
     this.handleConnection = Protected(function(socket) {
@@ -111,6 +110,36 @@ var Server = Extend(EventEmitter, function() {
          * @property {Session}  session
          */
         this.emit('session.connected', session);
+    });
+
+    /**
+     * Shuts down the current server.
+     * 
+     * @name Server#shutdown
+     * @public
+     * @method
+     * @fires   Server#session&period;close
+     * @fires   Server#server&period;shutdown
+     */
+    this.shutdown = Public(function() {
+        Log.debug('close');
+
+        for (var i in this.sessions) {
+            /**
+             * Notify that the connection has been established.
+             *
+             * @event Server#session&period;close
+             * @property {Session}  session
+             */
+            this.emit('session.close', this.sessions[i]);
+            this.sessions[i].getSocket().end();
+        }
+        /**
+         * Notify that the connection has been established.
+         *
+         * @event Server#server&period;shutdown
+         */
+        this.emit('server.shutdown');
     });
 
     /**
