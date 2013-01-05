@@ -10,7 +10,6 @@ MOCHA				= ./node_modules/.bin/mocha
 clean:
 	rm -rf coverage
 	rm -f coverage.html
-	rm -rf doc
 
 coverage.html:
 	mkdir -p ./coverage
@@ -39,6 +38,7 @@ node_modules:
 	@NODE_ENV="$(ENV)" npm install
 
 realclean: clean
+	rm -rf doc
 	rm -rf node_modules
 
 test:
