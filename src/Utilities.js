@@ -32,11 +32,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 var Util                                = require('util');
 
 /**
  * Common utility methods.
+ * @class
+ * @extends Util
  */
 var Utilities = Extend(Util, function() {
 
@@ -46,7 +49,10 @@ var Utilities = Extend(Util, function() {
      * The first argument becomes the 'base'; additional arguments will be used to
      * overwrite or extend the base object.  This is very basic inheritance.
      *
-     * @param   {Object...}     arguments   The objects to extend.
+     * @name Utilities#extend
+     * @public
+     * @method
+     * @param   {...Object|Array}     [arguments]   The objects to extend.
      * @return  {Object}
      */
     this.extend = Public(function() {

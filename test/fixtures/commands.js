@@ -6,8 +6,8 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2012-11-20
- * @edited      2012-11-27
+ * @created     2013-01-04
+ * @edited      2013-01-04
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -32,31 +32,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-/** @ignore */
-var Classical                           = require('classical');
-var Util                                = require('util');
-var YAML                                = require('js-yaml');
+var Command 							= require(BASE_PATH + '/hdr/Command');
 
-/**
- * Loads a configuration file.
- *
- * @class Config
- */
-var Config = Class(function() {
-
-    /**
-     * Loads a yaml configuration file and returns its contents.
-     *
-     * @name Config#getConfig
-     * @static
-     * @public
-     * @method
-     * @param   {String}    file
-     * @return  {Object}
-     **/
-    this.getConfig = Static(Public(function(file) {
-        return require(Util.format('%s/config/%s.yml', BASE_PATH, file));
-    }));
+module.exports.Arith = Implement(Command, function() {
+	this.expression					= Static(Public(/^arith ([0-9. +-\/*^\(\)]+)/));
+	
+	this.run = Public(function(session, phrase, callback) {
+		var matches 				= this.expression.exec(phrase);
+		if (matches && matches[1]) {
+			callback(matches[1]);
+		}
+	});
 });
-
-module.exports                          = Config;

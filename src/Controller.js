@@ -32,18 +32,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Controller');
 
 /**
  * Manages internal instructions.
+ *
+ * @class Controller
  * @singleton
  */
 var Controller = Class(function() {
 
     /**
      * Defines a new instruction which can be used in Instruction Sets.
+     *
+     * @name Controller#define
+     * @public
+     * @method
      * @param   {String}        name
      * @param   {Class}         instruction
      */
@@ -55,7 +62,6 @@ var Controller = Class(function() {
         }
 
         // TODO: This section should work, but is presently failing. Likely 'Implement' is not maintaining the inheritance chain.
-        //      @see
 //        if (!(new instruction instanceof Instruction)) {
 //            throw new Error('Attempted to define non-Instruction as an Instruction.');
 //        }
@@ -65,6 +71,10 @@ var Controller = Class(function() {
 
     /**
      * Prepares an instruction for later processing.
+     *
+     * @name Controller#prepare
+     * @public
+     * @method
      * @param   {String}        name
      * @param   {*}             [...]
      * @return  {Instruction}
@@ -84,6 +94,14 @@ var Controller = Class(function() {
         return instruction;
     });
 
+    /**
+     * The collection of available instructions.
+     *
+     * @name Controller#instructions
+     * @private
+     * @member
+     * @type    {Object}
+     */
     this.instructions                   = Private({});
 });
 

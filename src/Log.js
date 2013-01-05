@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Log                                 = require('log4js');
 var Config                              = require(BASE_PATH + '/src/Config');
 var Util                                = require(BASE_PATH+  '/src/Utilities');

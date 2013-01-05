@@ -7,24 +7,10 @@ ENV					= test
 JSDOC				= /usr/lib/node_modules/jsdoc/jsdoc
 MOCHA				= ./node_modules/.bin/mocha
 
-test:
-	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
-		--ui $(INTERFACE) \
-		--reporter $(REPORTER) \
-		--timeout $(TIMEOUT) \
-		$(TESTS)
-
-test-watch:
-	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
-		--ui $(INTERFACE) \
-		--reporter $(REPORTER) \
-		--timeout $(TIMEOUT) \
-		--watch \
-		$(TESTS)
-
 clean:
 	rm -rf coverage
 	rm -f coverage.html
+	rm -rf doc
 
 coverage.html:
 	mkdir -p ./coverage
@@ -41,4 +27,33 @@ coverage.html:
 
 coverage: clean coverage.html
 
-.PHONY: clean coverage test test-watch
+docs: clean documentation
+
+documentation:
+	mkdir -p ./doc
+	./node_modules/jsdoc/jsdoc hdr src -r -p -d doc README.md
+
+install: clean node_modules
+
+node_modules:
+	@NODE_ENV="$(ENV)" npm install
+
+realclean: clean
+	rm -rf node_modules
+
+test:
+	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
+		--ui $(INTERFACE) \
+		--reporter $(REPORTER) \
+		--timeout $(TIMEOUT) \
+		$(TESTS)
+
+test-watch:
+	@NODE_ENV=$(ENV) NOLOG=1 $(MOCHA) \
+		--ui $(INTERFACE) \
+		--reporter $(REPORTER) \
+		--timeout $(TIMEOUT) \
+		--watch \
+		$(TESTS)
+
+.PHONY: clean coverage docs documentation install node_modules realclean test test-watch

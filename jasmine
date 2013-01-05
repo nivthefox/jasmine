@@ -42,7 +42,7 @@ function check_status {
 case "$1" in
     "start")
         if [ -e "${PID_FILE}" ]; then
-            echo "Jasmine is already running."
+            echo "jasmine is already running."
         else
             NODE_ENV=${NODE_ENV} "${NODE}" ${SERVER}&
             PID=$!
@@ -68,11 +68,11 @@ case "$1" in
         STATUS=$(check_status)
         case "${STATUS}" in
             0)
-                echo "Jasmine is running."
+                echo "jasmine is running."
                 ;;
 
             [1-2])
-                echo "Jasmine is not running."
+                echo "jasmine is not running."
 
                 if [ -e ${PID_FILE} ]; then
                     rm ${PID_FILE}

@@ -32,10 +32,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 
 /**
  * An interface to define the handling for controlled instructions.
+ *
+ * @class
  */
 var Instruction = Interface(function() {
 
@@ -43,14 +46,20 @@ var Instruction = Interface(function() {
      * Initializes parameters for an instruction.
      * Called when the instruction is created and assigned to an Instruction
      * Set with all parameters needed to perform the instruction.
-     * @return  {undefined}
+     *
+     * @name Instruction#initialize
+     * @method
+     * @public
      */
     this.initialize = Public(function() {});
 
     /**
      * Performs the instruction during the instruction set.
+     *
+     * @name Instruction#perform
+     * @method
+     * @public
      * @param   {Function}  callback
-     * @return {undefined}
      */
     this.perform = Public(function(callback) {});
 });
