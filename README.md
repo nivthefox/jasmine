@@ -16,6 +16,7 @@ the list should be tested.  Lower numbered priorities are more important.
 
 An individual command is, therefore, tested according to the following set
 of rules (in order):
+
   1. If the session is in CONNECTING status, the login command list is
       checked.
   2. If any custom command lists have been defined (see below), they are
@@ -44,11 +45,13 @@ commands to be assigned to a list that doesn't yet exist.
       If no test is specified, the list will default to TRUE.
 
 By default, the following command lists are defined:
+
   * _login_: Handles commands while Session.CONNECTING === TRUE.
   * _general_: Generic command list while Session.CONNECTED === TRUE.
 
 Some additional command lists which might make sense, but are not defined by
 default:
+
   * "Personal" lists. (Aliases, Channel Aliases, etc.)
   * "Local" or "Room" lists.
   * "Nearby" lists.
