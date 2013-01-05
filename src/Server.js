@@ -78,6 +78,7 @@ var Server = Extend(EventEmitter, function() {
      * @method
      * @param   {Net.Socket}    socket      The incoming socket.
      * @return  {undefined}
+     * @fires   Server#session&period;connected
      */
     this.handleConnection = Protected(function(socket) {
         Log.debug('handleConnection');
@@ -94,7 +95,12 @@ var Server = Extend(EventEmitter, function() {
         // Add the session to the list of available sessions.
         this.sessions.push(session);
 
-        // Notify that the connection has been established.
+        /**
+         * Notify that the connection has been established.
+         *
+         * @event Server#session&period;connected
+         * @property {Session}  session
+         */
         this.emit('session.connected', session);
     });
 
