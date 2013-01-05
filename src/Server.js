@@ -36,7 +36,6 @@
 var Classical                           = require('classical');
 var EventEmitter                        = require('events').EventEmitter;
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Server');
-var Messages                            = require(BASE_PATH + '/src/Messages');
 var Net                                 = require('net');
 var Session                             = require(BASE_PATH + '/src/Session');
 var Util                                = require(BASE_PATH + '/src/Utilities');
@@ -47,7 +46,7 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
  */
 var Server = Extend(EventEmitter, function() {
     /**
-     * Loads the options and messages, then creates a socket server.
+     * Loads the options, then creates a socket server.
      *
      * If the options are specified, it will override the options in game.yml;
      * this is useful for unit tests, but probably won't see production use.

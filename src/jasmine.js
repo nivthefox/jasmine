@@ -6,12 +6,12 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2012-11-27
- * @edited      2012-11-27
+ * @created     2013-01-04
+ * @edited      2013-01-05
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
- * Copyright (C) 2012 Kevin Kragenbrink <kevin@writh.net>
+ * Copyright (C) 2013 Kevin Kragenbrink <kevin@writh.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,37 +32,59 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-/** @ignore */
 var FileSystem                          = require('fs');
-var Log                                 = require('log4js');
-var Config                              = require(BASE_PATH + '/src/Config');
-var Util                                = require(BASE_PATH +  '/src/Utilities');
+global.BASE_PATH                        = FileSystem.realpathSync(__dirname + '/../');
 
-var logConfig = {
-    appenders                           : [],
-    levels                              : []
-};
+/** @ignore */
+var Classical                           = require('classical');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('jasmine');
+var Server                              = require(BASE_PATH + '/src/Server');
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    // Development mode.
-    logConfig.appenders.push({type : 'console'});
-}
+/**
+ * Starts up the server
+ * @class
+ */
+var jasmine = Class(function() {
 
-if (process.env.NODE_ENV !== 'test') {
-    var logDir                          = BASE_PATH + '/log/';
+    this.constructor = Public(function() {
+        Log.debug('constructor');
 
-    // Production.
-    if (!FileSystem.existsSync(logDir)) {
-        FileSystem.mkdirSync(logDir, '0750');
-    }
-    logConfig.appenders.push({
-        type                            : 'file',
-        filename                        : Util.format('%s/%s', BASE_PATH, Config.getConfig('game').log.file),
-        maxLogSize                      : (2 * 1024 * 1024),    // TODO: Magic number. This is the log size. 2M.
-        backups                         : 10                    // TODO: Magic number. This is the number of times to rotate a log.
+        process.on('SIGTERM',   this.sigTerm);
+        process.on('SIGHUP',    this.sigHup);
+
+        this.startup();
     });
-}
 
-Log.configure(logConfig);
+    this.sigTerm = Public(function() {
+        Log.debug('sigTerm');
+        this.server.shutdown();
 
-module.exports                          = Log;
+        if (FileSystem.existsSync(BASE_PATH + '/jasmine.pid')) {
+            FileSystem.unlinkSync(BASE_PATH + '/jasmine.pid');
+        }
+
+        process.exit();
+    });
+
+    this.sigHup = Public(function() {
+        Log.debug('sigHup');
+        
+        this.shutdown();
+        this.startup();
+    });
+
+    this.shutdown = Protected(function() {
+        if (this.server instanceof Server) {
+            this.server.shutdown();
+        }
+    });
+
+    this.startup = Protected(function() {
+        Log.debug('startup');
+        this.server                     = new Server;
+    });
+
+    this.server                         = Protected({});
+});
+
+new jasmine;

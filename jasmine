@@ -3,7 +3,7 @@
 NODE_ENV="production"
 NODE=$(which node)
 PID_FILE="./jasmine.pid"
-SERVER="./src/Main.js"
+SERVER="./src/jasmine.js"
 
 if [ -e "${PID_FILE}" ]; then
     PID=$(cat "${PID_FILE}")
@@ -52,7 +52,6 @@ case "$1" in
 
     "stop")
         kill -TERM ${PID}
-        rm "${PID_FILE}"
         ;;
 
     "reload")
@@ -61,7 +60,7 @@ case "$1" in
 
     "restart")
         ./jasmine stop
-        ./jasmine $* start
+        ./jasmine start $*
         ;;
 
     "status")
