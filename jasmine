@@ -17,7 +17,7 @@ for i in $*; do
         --help|-?)
             echo "Usage: ./jasmine [options] (start)"
             echo "       ./jasmine (stop|restart)"
-            echo ""
+            echo " "
             echo "Options:"
             echo "  -D, --develop           print debug messages to the console"
             echo "  -?, --help              print this help message"

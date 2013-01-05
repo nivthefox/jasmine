@@ -35,6 +35,7 @@
 /** @ignore */
 var Classical                           = require('classical');
 var EventEmitter                        = require('events' ).EventEmitter;
+var Interpreter                         = require(BASE_PATH + '/src/Interpreter');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Session');
 var Net                                 = require('net');
 
@@ -72,7 +73,6 @@ var Session = Extend(EventEmitter, function() {
 
         this.socket                     = socket;
 
-		this.socket.on('data',    this.emit.bind(this, 'data'));
         this.socket.on('close',   this.setStatus.bind(this, Status.DISCONNECTED));
         this.socket.on('login',   this.setStatus.bind(this, Status.CONNECTING));
         this.socket.on('timeout', this.setStatus.bind(this, Status.TIMEDOUT));
@@ -103,6 +103,14 @@ var Session = Extend(EventEmitter, function() {
         Log.debug('getStatus');
 
         return this.status;
+    });
+
+    this.handleData = Public(function(session, data) {
+        Log.debug('handleData');
+
+        var data                        = data.toString();
+
+        Interpreter.interpret(session, data, function() {});
     });
 
     /**

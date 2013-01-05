@@ -40,6 +40,7 @@ var Util                                = require('util');
  * Common utility methods.
  * @class
  * @extends Util
+ * @singleton
  */
 var Utilities = Extend(Util, function() {
 

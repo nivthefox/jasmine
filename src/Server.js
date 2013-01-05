@@ -56,6 +56,7 @@ var Server = Extend(EventEmitter, function() {
      * @public
      * @method
      * @param   {Object}        options     Options overrides.
+     * @fires   Server#server&period;opened
      */
     this.constructor = Public(function(options) {
         Log.debug('constructor');
@@ -65,6 +66,14 @@ var Server = Extend(EventEmitter, function() {
         this.server                     = Net.createServer();
         this.server.on('connection', this.handleConnection);
         this.server.listen(this.options.port);
+
+        /**
+         * Notify that the connection has been established.
+         *
+         * @event Server#server&period;opened
+         * @property {Integer}  port
+         */
+        this.emit('server.opened', this.options.port);
     });
 
     /**
@@ -102,28 +111,6 @@ var Server = Extend(EventEmitter, function() {
          * @property {Session}  session
          */
         this.emit('session.connected', session);
-    });
-
-    /**
-     * Sends rendered messages to a session.
-     *
-     * @name Server#renderHandler
-     * @protected
-     * @method
-     * @param   {Session}       session     The session to receive the message.
-     * @param   {Error}         err         Errors from the renderer.
-     * @param   {String}        out         Output from the renderer.
-     * @return  {undefined}
-     */
-    this.renderHandler = Protected(function(session, err, out) {
-        Log.debug('renderHandler', err, out);
-
-        if (!err) {
-            session.send(out);
-        }
-        else {
-            Log.warn('renderHandler', err);
-        }
     });
 
     /**
