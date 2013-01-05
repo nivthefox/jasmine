@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 var EventEmitter                        = require('events' ).EventEmitter;
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Session');

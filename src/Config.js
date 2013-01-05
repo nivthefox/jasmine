@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 var Util                                = require('util');
 var YAML                                = require('js-yaml');

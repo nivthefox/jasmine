@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 
 /**

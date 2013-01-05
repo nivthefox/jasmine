@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 var Dust                                = require('dustjs-linkedin');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Messages');

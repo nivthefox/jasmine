@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Tokenizer');
 var Util                                = require(BASE_PATH + '/src/Utilities');

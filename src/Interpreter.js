@@ -32,6 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/** @ignore */
 var Classical                           = require('classical');
 var Command                             = require(BASE_PATH + '/hdr/Command');
 var EventEmitter                        = require('events').EventEmitter;
