@@ -41,6 +41,7 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
  * The telnet server
+ * @class Server
  */
 var Server = Class(function() {
     /**
@@ -49,8 +50,10 @@ var Server = Class(function() {
      * If the options are specified, it will override the options in game.yml;
      * this is useful for unit tests, but probably won't see production use.
      *
+     * @name Server#constructor
+     * @public
+     * @method
      * @param   {Object}        options     Options overrides.
-     * @constructor
      */
     this.constructor = Public(function(options) {
         Log.debug('constructor');
@@ -68,6 +71,9 @@ var Server = Class(function() {
      * Incoming sockets are translated to the Socket wrapper (which assigns a
      * data handler) before they are sent the connect message.
      *
+     * @name Server#handleConnection
+     * @protected
+     * @method
      * @param   {Net.Socket}    socket      The incoming socket.
      * @return  {undefined}
      */
@@ -93,6 +99,10 @@ var Server = Class(function() {
 
     /**
      * Sends rendered messages to a session.
+     *
+     * @name Server#renderHandler
+     * @protected
+     * @method
      * @param   {Session}       session     The session to receive the message.
      * @param   {Error}         err         Errors from the renderer.
      * @param   {String}        out         Output from the renderer.
@@ -109,9 +119,34 @@ var Server = Class(function() {
         }
     });
 
-
+    /**
+     * The server configuration options.
+     *
+     * @name Server#options
+     * @protected
+     * @member
+     * @type    {Object}
+     */
     this.options                        = Protected({});
+
+    /**
+     * The net server instance.
+     *
+     * @name Server#server
+     * @protected
+     * @member
+     * @type    {Net.Server}
+     */
     this.server                         = Protected({});
+
+    /**
+     * The list of server sessions.
+     *
+     * @name Server#sessions
+     * @protected
+     * @member
+     * @type    {Session[]}
+     */
     this.sessions                       = Protected([]);
 });
 

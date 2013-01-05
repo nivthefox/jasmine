@@ -39,19 +39,20 @@ var Net                                 = require('net');
 
 /**
  * An enum of available statuses.
- * @type {Object}
- * @enum
+ * @memberof Session
+ * @enum {Integer}
  */
 var Status = {
     NEW                                 : 0,
     CONNECTING                          : 1,
     CONNECTED                           : 2,
-    DISCONNECTED                        : 4,
-    TIMEDOUT                            : 8
+    DISCONNECTED                        : 3,
+    TIMEDOUT                            : 4
 };
 
 /**
  * A socket wrapper class.
+ * @class
  */
 var Session = Extend(EventEmitter, function() {
     this.socket                         = Protected({});
@@ -60,8 +61,10 @@ var Session = Extend(EventEmitter, function() {
     /**
      * Instantiates the Session and stores the socket.
      *
-     * @param   {Net.Socket}        socket     The socket to wrap.
-     * @constructor
+     * @name Session#constructor
+     * @public
+     * @method
+     * @param   {Net.Socket}        socket
      */
     this.constructor = Public(function(socket) {
         Log.debug('constructor');
@@ -76,6 +79,10 @@ var Session = Extend(EventEmitter, function() {
 
     /**
      * Retrieves the underlying socket.
+     *
+     * @name Session#getSocket
+     * @public
+     * @method
      */
     this.getSocket = Public(function() {
         Log.debug('getSocket');
@@ -85,7 +92,11 @@ var Session = Extend(EventEmitter, function() {
 
     /**
      * Returns the current status of the socket.
-     * @return  {Status:value}
+     *
+     * @name Session#getStatus
+     * @public
+     * @method
+     * @return  {Status}
      */
     this.getStatus = Public(function() {
         Log.debug('getStatus');
@@ -95,6 +106,10 @@ var Session = Extend(EventEmitter, function() {
 
     /**
      * Sends a message along the socket.
+     *
+     * @name Session#send
+     * @public
+     * @method
      */
     this.send = Public(function(message) {
         Log.debug('send', message);

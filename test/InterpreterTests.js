@@ -56,7 +56,7 @@ test('Configure', function() {
 
 test('Add Commands', function() {
 	var err;
-	
+
 	Interpreter.addCommand('test', cmds.Arith);
 	try {
 		Interpreter.addCommand('test', null);
@@ -76,12 +76,12 @@ test('Run Commands', function(done) {
     sess                                = new Session(socket);
     var success 						= false;
 
-    Interpreter.on('phrase.match.failure', function(session, phrase, callback) {
+    Interpreter.on('phrase.unmatched', function(session, phrase, callback) {
     	Assert.equal(phrase, 'arith 1 + 1');
     	callback('caught failure');
     });
 
-    Interpreter.on('phrase.match.success', function(session, phrase, callback) {
+    Interpreter.on('phrase.matched', function(session, phrase, callback) {
     	success 						= true;
     });
 

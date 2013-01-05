@@ -38,12 +38,18 @@ var Log                                 = require(BASE_PATH + '/src/Log').getLog
 
 /**
  * Manages internal instructions.
+ *
+ * @class Controller
  * @singleton
  */
 var Controller = Class(function() {
 
     /**
      * Defines a new instruction which can be used in Instruction Sets.
+     *
+     * @name Controller#define
+     * @public
+     * @method
      * @param   {String}        name
      * @param   {Class}         instruction
      */
@@ -64,6 +70,10 @@ var Controller = Class(function() {
 
     /**
      * Prepares an instruction for later processing.
+     *
+     * @name Controller#prepare
+     * @public
+     * @method
      * @param   {String}        name
      * @param   {*}             [...]
      * @return  {Instruction}
@@ -83,6 +93,14 @@ var Controller = Class(function() {
         return instruction;
     });
 
+    /**
+     * The collection of available instructions.
+     *
+     * @name Controller#instructions
+     * @private
+     * @member
+     * @type    {Object}
+     */
     this.instructions                   = Private({});
 });
 

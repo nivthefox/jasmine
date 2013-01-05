@@ -16,6 +16,7 @@
         "mongoose"                      : "3.5.x"
     },
     "devDependencies" : {
+        "jsdoc"                         : "git://github.com/jsdoc3/jsdoc.git",
         "mocha"                         : "x.x.x"
     },
     "main"                              : "./src/Main.js"

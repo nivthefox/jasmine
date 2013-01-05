@@ -38,26 +38,35 @@ var Log                                 = require(BASE_PATH + '/src/Log').getLog
 var Util                                = require(BASE_PATH + '/src/Utilities');
 var YAML                                = require('js-yaml');
 
-var messagesConfig                      = require(BASE_PATH + '/config/messages.yml');
+var messageFile                         = require(BASE_PATH + '/config/messages.yml');
 
 /**
  * A central messages class.
+ * @class Messages
  * @singleton
  */
 var Messages = Extend(Dust, function() {
+
     /**
      * Loads the messages from config.
-     * @constructor
+     *
+     * @name Messages#constructor
+     * @protected
+     * @method
      */
     this.constructor = Protected(function() {
         Log.debug('constructor');
 
-        this.load(messagesConfig);
+        this.load(messageFile);
     });
 
     /**
      * Returns the singleton of the class.
+     *
+     * @name Messages#getInstance
      * @static
+     * @public
+     * @method
      * @return  {Messages}
      */
     this.getInstance = Static(Public(function() {
@@ -71,8 +80,11 @@ var Messages = Extend(Dust, function() {
 
     /**
      * Compiles and registers message templates.
+     *
+     * @name Messages#load
+     * @public
+     * @method
      * @param   {Object}    messages        The message templates to compile and register.
-     * @return  {undefined}
      */
     this.load = Public(function(messages) {
         Log.debug('load');
@@ -85,7 +97,25 @@ var Messages = Extend(Dust, function() {
         }
     });
 
+    /**
+     * The singleton of this class.
+     *
+     * @name Messages#instance
+     * @static
+     * @public
+     * @member
+     * @type    {Messages}
+     */
     this.instance                       = Static(Public({}));
+
+    /**
+     * The loaded messages.
+     *
+     * @name Messages#messages
+     * @protected
+     * @member
+     * @type    {Object}
+     */
     this.messages                       = Protected({});
 });
 

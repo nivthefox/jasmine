@@ -38,9 +38,21 @@ var YAML                                = require('js-yaml');
 
 /**
  * Loads a configuration file.
+ *
+ * @class Config
  */
 var Config = Class(function() {
 
+    /**
+     * Loads a yaml configuration file and returns its contents.
+     *
+     * @name Config#getConfig
+     * @static
+     * @public
+     * @method
+     * @param   {String}    file
+     * @return  {Object}
+     **/
     this.getConfig = Static(Public(function(file) {
         return require(Util.format('%s/config/%s.yml', BASE_PATH, file));
     }));

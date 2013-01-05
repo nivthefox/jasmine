@@ -38,22 +38,38 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
  * Holds data about a tokenized value from the parser.
- * @type {Object}
+ * @name Token
+ * @memberof Tokenizer
+ * @class
  * @struct
  */
 var Token = function(value, type) {
+    /**
+     * The value of the token
+     * @name Token#value
+     * @type {String}
+     */
     this.value                          = value;
+
+    /**
+     * The type of the token
+     * @name Token#type
+     * @type {String}
+     */
     this.type                           = type;
-    return this;
 };
 
 /**
  * Converts a string into a series of tokens and rules.
+ * @class
  */
 var Tokenizer = Class(function() {
 
     /**
      * Prepares the tokenizer for string handling.
+     * @name Tokenizer#constructor
+     * @public
+     * @method
      * @param   {Object}    rules       A series of named regular expressions used to tokenize the string.
      */
     this.constructor = Public(function(rules) {
@@ -63,6 +79,9 @@ var Tokenizer = Class(function() {
 
     /**
      * Adds a rule to the tokenizer.
+     * @name Tokenizer#addRule
+     * @public
+     * @method
      * @param   {String}    rule        The name of the rule.
      * @param   {RegExp}    expression  The expression for the rule.
      */
@@ -72,7 +91,9 @@ var Tokenizer = Class(function() {
 
     /**
      * Flushes the remaining stream.
-     * @return {undefined}
+     * @name Tokenizer#flush
+     * @public
+     * @method
      */
     this.flush = Public(function() {
         this.stream                     = '';
@@ -80,6 +101,9 @@ var Tokenizer = Class(function() {
 
     /**
      * Returns the remaining stream.
+     * @name Tokenizer#getStream
+     * @public
+     * @method
      * @return  {String}
      */
     this.getStream = Public(function() {
@@ -89,6 +113,9 @@ var Tokenizer = Class(function() {
 
     /**
      * Appends to the stream being tokenized.
+     * @name Tokenizer#prepare
+     * @public
+     * @method
      * @param   {String}    input       The stream to be tokenized.
      */
     this.prepare = Public(function(input) {
@@ -99,6 +126,9 @@ var Tokenizer = Class(function() {
 
     /**
      * Advances the next stream to the end of the next token and returns that token.
+     * @name Tokenizer#getNextToken
+     * @public
+     * @method
      * @return  {Token}
      */
     this.getNextToken = Public(function() {
@@ -124,8 +154,33 @@ var Tokenizer = Class(function() {
         throw new Error('Tokenizer error');
     });
 
+    /**
+     * The End Of String token.
+     * @name Tokenizer#EOSTOKEN
+     * @static
+     * @public
+     * @constant
+     * @member
+     * @type {Token}
+     */
     this.EOSTOKEN                       = Static(Public(new Token(null, 'EOS')));
+
+    /**
+     * The remaining stream.
+     * @name Tokenizer#stream
+     * @protected
+     * @member
+     * @type    {String}
+     */
     this.stream                         = Protected('');
+
+    /**
+     * The list of rules for the tokenizer.
+     * @name Tokenizer#rules
+     * @protected
+     * @member
+     * @type    {Object}
+     */
     this.rules                          = Protected({})
 });
 

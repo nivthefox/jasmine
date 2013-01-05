@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Index</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Index</h1>
+    
+    
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>JaSMINE</h1>
+
+<p>JavaScript Mass Interactive Narrative Environment.</p>
+
+<h2>How Commands are Handled</h2>
+
+<p>All commands pass through the Interpreter, which consists of a series of
+regular expression command lists.  The Interpreter goes through each command
+list, testing until it finds a match.  When a match is found, the Interpreter
+hands off evaluation of the command to the appropriate handler, then stops
+searching.</p>
+
+<p>Each command list has an collective rule which determines whether that list
+should be tested at all, as well as a priority to determine in what order
+the list should be tested.  Lower numbered priorities are more important.</p>
+
+<p>An individual command is, therefore, tested according to the following set
+of rules (in order):
+  1. If the session is in CONNECTING status, the login command list is
+      checked.
+  2. If any custom command lists have been defined (see below), they are
+      checked by ascending priority.
+  3. The general command list is checked.
+  4. The command is treated as an unhandled command, and the session receives
+      a &quot;failed&quot; event.</p>
+
+<h3>Custom Command Lists</h3>
+
+<p>Custom command lists can be defined at any time.  Calling this method more
+than once updates the settings for the command list in question, allowing
+commands to be assigned to a list that doesn&#39;t yet exist.</p>
+
+<pre><code>Interpreter.configure(&lt;list&gt;, &lt;priority&gt;[, &lt;test&gt;]);</code></pre>
+
+<ul><li><strong>list</strong> (String) The name of the command list (can be used to configure a
+command list which already exists)</li><li><strong>priority</strong> (Integer) The list&#39;s priority, defined as the order in which
+it will be tested. E.g. priority 1 is tested before priority 2.</li><li><strong>test</strong> (Function) A boolean to determine whether the command list is
+appropriate for the current situation. This method takes two arguments:<ul><li><strong>session</strong> (Session) The session which initiated the command.</li><li><strong>phrase</strong> (String) The phrase which is going to be handled by a
+  command.
+If no test is specified, the list will default to TRUE.</li></ul></li></ul>
+
+<p>By default, the following command lists are defined:
+  * <em>login</em>: Handles commands while Session.CONNECTING === TRUE.
+  * <em>general</em>: Generic command list while Session.CONNECTED === TRUE.</p>
+
+<p>Some additional command lists which might make sense, but are not defined by
+default:
+  <em> &quot;Personal&quot; lists. (Aliases, Channel Aliases, etc.)
+  </em> &quot;Local&quot; or &quot;Room&quot; lists.
+  <em> &quot;Nearby&quot; lists.
+  </em> &quot;Zone&quot; lists.</p>
+
+<h4>Adding a command to a list</h4>
+
+<p>Commands are added to lists as a regex and a handler.</p>
+
+<pre><code>Interpreter.addCommand(&lt;list&gt;, &lt;command&gt;);</code></pre>
+
+<ul><li><strong>list</strong> (String) The name of the command list to place the command on.
+If the specified list does not already exist, it will be created using
+the default priority and test.</li><li><strong>command</strong> (Command) An implementation of the Command interface, which
+defines the command&#39;s structure as well as handles any calls to the
+command.</li></ul>
+
+<h3>Implemented Commands</h3>
+
+<p>When fully implemented, a Command will have a Regular Expression which is
+tested by the Interpreter to determine if the Command is appropriate, and a
+handler which is called by the Interpreter when a match is found.</p>
+
+<pre><code>// Internal code in the Interpreter.
+if (Command.expression.test(&lt;phrase&gt;)) {
+    Command.run(&lt;Session&gt;, &lt;phrase&gt;, &lt;callback&gt;);
+}</code></pre>
+
+<ul><li><strong>&lt;phrase&gt;</strong> The command phrase which needs to be handled.</li><li><strong>&lt;Session&gt;</strong> The session which created the phrase.</li><li><strong>&lt;callback&gt;</strong> A callback to run when the command has been fully handled.
+This method takes one argument:<ul><li><strong>instructions</strong> (Instruction[]) The Instruction Set (see below) to be
+  followed to generate output, manipulate objects, etc.</li></ul></li></ul>
+
+<p>These arguments are actually first passed to the Interpreter when it is Invoked:</p>
+
+<pre><code>Interpreter.interpret(&lt;Session&gt;, &lt;phrase&gt;, &lt;callback&gt;)</code></pre>
+
+<p>When input is received from a session, the initial callback will iterate
+through the resulting Instruction Set and perform each Instruction in
+sequence.</p>
+
+<pre><code>// Internal code in the Session interpret callback
+for (var i in instructions) {
+    instructions[i].perform(callback);
+}</code></pre>
+
+<h3>Evaluation</h3>
+
+<p>Some commands may have input which is intended to be parsed as code. For
+example, most commands which create output will respect substitution codes
+such as new line (%r) or tab (%t).</p>
+
+<p>Although any module can add additional parsers, it is generally encouraged
+that evaluation of phrases as softcode be done using the default parser.</p>
+
+<pre><code>var out = Parser.parse(&lt;session&gt;, &lt;phrase&gt;[, &lt;parser&gt;])</code></pre>
+
+<ul><li><strong>session</strong> (Session) The session which created the phrase.</li><li><strong>phrase</strong> (Phrase) The phrase which needs to be evaluated.</li><li><strong>parser</strong> (String) The name of the parser to invoke. (default: &#39;default&#39;)</li></ul>
+
+<p>Modules can easily extend the softcode parser:</p>
+
+<pre><code>Parser.addRule(&lt;rule&gt;[, &lt;parser&gt;])</code></pre>
+
+<ul><li><strong>rule</strong> (Rule) The rule to be added.  Rules are an instance of the Rule
+struct found in src/Parser.js:<ul><li><strong>name</strong> (String) The name of the rule.</li><li><strong>test</strong> (RegExp) The tokenizing match for the rule.</li><li><strong>handler</strong> (Function) The method to run when the parser encounters
+  this rule.</li></ul></li><li><strong>parser</strong> (String) The name of the parser to update. (default: &#39;default&#39;)</li></ul>
+
+<h3>Recursive Interpretation</h3>
+
+<p>Some commands might choose to call the Interpreter a second time with a subset
+of the phrase they were given to handle.  These commands must implement their
+own callback to handle the resulting Instruction Set, but can be used to alter
+the Instruction Set however necessary before handing off their own Instruction
+Set to the original callback.</p>
+
+<p>For example, a command might be defined which disables the parser for the rest
+of the phrase (in MUSHes, this command is &quot;]&quot;), or a command might be defined
+which prefixes all output with another phrase (such as an &quot;OOC&quot; command).</p>
+
+<h2>Instruction Sets</h2>
+
+<p>Any generation of output or modification of objects is handled through the
+creation of an Instruction Set.  Generating an Instruction Set is as simple as
+creating an array of Instructions using the Instruction API.</p>
+
+<h3>Instructions</h3>
+
+<p>Instructions are specific classes which perform some action like modifying an
+object in memory, or performing output.  Each Instruction is unique, and
+requires a different set of parameters to initialize and perform it.</p>
+
+<p>For example, an Instruction &quot;oemit&quot; might be defined to output a string to all
+Sessions with a location near another Session.  The &quot;oemit&quot; Instruction would
+then require the originator Session and the Phrase to be output as parameters
+when it is initialized.  When performed, it would filter the active Sessions
+to find those which have the same location as the originator Session and
+output the selected phrase.</p>
+
+<h4>Defining an Instruction</h4>
+
+<p>Instructions are defined by creating a new class, and then adding that class
+to the Controller:</p>
+
+<pre><code>var myInstruction = Implement(Instruction, &lt;definition&gt;);
+Controller.define(&lt;name&gt;, myInstruction);</code></pre>
+
+<ul><li><strong>definition</strong> (Class) The definition of the Instruction.</li><li><strong>name</strong> (String) The name of the Instruction.</li></ul>
+
+<h4>Preparing an Instruction</h4>
+
+<p>Instructions are prepared by calling the Conƒtroller:</p>
+
+<pre><code>var Set = [];
+Set.push(Controller.prepare(&lt;instruction&gt;, &lt;arguments&gt;));</code></pre>
+
+<ul><li><strong>instruction</strong> (String) The name of the instruction to be prepared.</li><li><strong>arguments</strong> (*[]) Any arguments required to prepare the Instruction.</li></ul></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a></li><li><a href="Config.html">Config</a></li><li><a href="Controller.html">Controller</a></li><li><a href="Instruction.html">Instruction</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="Interpreter.CommandList.html">CommandList</a></li><li><a href="Messages.html">Messages</a></li><li><a href="Server.html">Server</a></li><li><a href="Session.html">Session</a></li><li><a href="Tokenizer.html">Tokenizer</a></li><li><a href="Tokenizer.Token.html">Token</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3>Events</h3><ul><li><a href="Interpreter.html#event:phrase&period;matched">phrase&period;matched</a></li><li><a href="Interpreter.html#event:phrase&period;unmatched">phrase&period;unmatched</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Classical">Classical</a></li><li><a href="global.html#Log">Log</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Jan 04 2013 17:18:19 GMT-0800 (PST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>

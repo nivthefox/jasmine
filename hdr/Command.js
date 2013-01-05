@@ -36,21 +36,31 @@ var Classical                           = require('classical');
 
 /**
  * An interface to define the handling of user input.
+ *
+ * @class
  */
 var Command = Interface(function() {
 
     /**
      * An expression tested to determine command matches.
+     *
+     * @name    Command#expression
+     * @member
+     * @static
+     * @public
      * @type    {RegExp}
      */
     this.expression = Static(Public(/^/));
 
     /**
      * Runs the matched command.
+     *
+     * @name    Command#run
+     * @method
+     * @public
      * @param   {Session}   session
      * @param   {String}    phrase
      * @param   {Function}  callback
-     * @return  {undefined}
      */
     this.run = Public(function(session, phrase, callback) {});
 });

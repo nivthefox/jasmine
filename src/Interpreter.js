@@ -40,28 +40,60 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
  * The definition of an interpreter list.
+ * @name CommandList
+ * @memberof Interpreter
+ * @class
  * @struct
  */
-var InterpreterList = function() {
+var CommandList = function() {
+    /**
+     * The Name of the command list
+     * @name CommandList#name
+     * @type {String}
+     */
     this.name                           = 'default';
+
+    /**
+     * The priority of the command list
+     * @name CommandList#priority
+     * @type {Integer}
+     */
     this.priority                       = 9999;
+
+    /**
+     * The test to determine whether the command list should be searched.
+     * @name CommandList#test
+     * @type {Function}
+     * @param   {Session}   session
+     * @param   {String}    phrase
+     * @return  {Boolean}
+     */
     this.test                           = function(session, phrase) { return true; };
+
+    /**
+     * The list of commands.
+     * @name CommandList#commands
+     * @type {Command[]}
+     */
     this.commands                       = [];
 };
 
 /**
  * The command interpreter.
+ *
+ * @class
  * @singleton
- * @emits   phrase.match.failure        A phrase could not be matched to a currently available command.
- * @emits   phrase.match.success        A phrase was matched to a command and is being handled.
  */
 var Interpreter = Extend(EventEmitter, function() {
 
     /**
-     * Adds a command to an InterpreterList.
+     * Adds a command to an CommandList.
+     *
+     * @name Interpreter#addCommand
+     * @public
+     * @method
      * @param   {String}        name
      * @param   {Command}       command
-     * @return  {undefined}
      */
     this.addCommand = Public(function(name, command) {
         Log.debug('addCommand');
@@ -80,6 +112,10 @@ var Interpreter = Extend(EventEmitter, function() {
 
     /**
      * Gets or configures a command list's priority and test.
+     *
+     * @name Interpreter#configure
+     * @public
+     * @method
      * @param   {String}        name
      * @param   {Integer}       [priority]
      * @param   {Function}      [test]
@@ -109,9 +145,13 @@ var Interpreter = Extend(EventEmitter, function() {
     });
 
     /**
-     * Gets an InterpreterList from those available or else creates a new one.
+     * Gets an CommandList from those available or else creates a new one.
+     *
+     * @name Interpreter#getListByName
+     * @protected
+     * @method
      * @param   {String}        name
-     * @return  {InterpreterList}
+     * @return  {CommandList}
      */
     this.getListByName = Protected(function(name) {
         Log.debug('getListByName');
@@ -127,16 +167,20 @@ var Interpreter = Extend(EventEmitter, function() {
 
         // If we still have an empty list, then it's new.
         if (list === null) {
-            var list                    = new InterpreterList;
+            var list                    = new CommandList;
         }
 
         return list;
     });
 
     /**
-     * Adds an InterpreterList to the store and organizes by priority.
+     * Adds an CommandList to the store and organizes by priority.
+     *
+     * @name Interpreter#setListByname
+     * @protected
+     * @method
      * @param   {String}            name
-     * @param   {InterpreterList}   list
+     * @param   {CommandList}   list
      * @return  {undefined}
      */
     this.setListByName = Protected(function(name, list) {
@@ -161,10 +205,15 @@ var Interpreter = Extend(EventEmitter, function() {
 
     /**
      * Attempts to interpret a provided phrase for a session.
+     *
+     * @name Interpreter#interpret
+     * @public
+     * @method
      * @param   {Session}       session
      * @param   {String}        phrase
      * @param   {Function}      callback
-     * @return  {undefined}
+     * @fires   Interpreter#phrase&period;unmatched
+     * @fires   Interpreter#phrase&period;matched
      */
     this.interpret = Public(function(session, phrase, callback) {
         Log.debug('interpret');
@@ -185,18 +234,38 @@ var Interpreter = Extend(EventEmitter, function() {
         }
 
         if (command === null) {
-            this.emit('phrase.match.failure', session, phrase, callback);
+            /**
+             * The interpreter was unable to match a phrase to a command.
+             *
+             * @event Interpreter#phrase&period;unmatched
+             * @property {Session}  session
+             * @property {String}   phrase
+             * @property {Function} callback
+             */
+            this.emit('phrase.unmatched', session, phrase, callback);
         }
         else {
-            this.emit('phrase.match.success', session, phrase, callback);
+            /**
+             * The interpreter successfully matched a phrase to a command.
+             *
+             * @event Interpreter#phrase&period;matched
+             * @property {Session}  session
+             * @property {String}   phrase
+             * @property {Function} callback
+             */
+            this.emit('phrase.matched', session, phrase, callback);
             command.run(session, phrase, callback);
         }
     });
 
     /**
-     * Sorts a series of InterpreterLists by priority.
-     * @param   {InterpreterList}   a
-     * @param   {InterpreterList}   b
+     * Sorts a series of CommandLists by priority.
+     *
+     * @name Interpreter#setByPriority
+     * @protected
+     * @method
+     * @param   {CommandList}   a
+     * @param   {CommandList}   b
      * @return  {Integer}
      */
     this.sortByPriority = Protected(function(a, b) {
@@ -205,6 +274,15 @@ var Interpreter = Extend(EventEmitter, function() {
         return a.priority - b.priority;
     });
 
+
+    /**
+     * The collection of command lists.
+     *
+     * @name Interpreter#lists
+     * @protected
+     * @member
+     * @type {CommandList[]}
+     */
     this.lists                          = Protected([]);
 });
 
