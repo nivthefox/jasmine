@@ -48,7 +48,7 @@ var Server                              = require(BASE_PATH + '/src/Server');
 var jasmine = Class(function() {
 
     /**
-     * Adds signal handling and then calls startup.
+     * Adds signal handling and then calls startup..
      * 
      * @name jasmine#constructor
      * @public
@@ -92,9 +92,9 @@ var jasmine = Class(function() {
         Log.debug('sigHup');
         
         // TODO: Calling shutdown will kill all active sessions, which is undesireable.  It would be beneficial to 
-        //          instead PAUSE the connections, unload plugins and reload them, then re-establish the connections.
+        //          instead PAUSE the connections, unload mods and reload them, then re-establish the connections.
         this.shutdown();
-        // TOOD: It would probably be beneficial to unload the plugins, here, and reload them; allowing a soft "code update".
+        // TOOD: It would probably be beneficial to unload the mods, here, and reload them; allowing a soft "code update".
         this.startup();
     });
 
@@ -136,4 +136,4 @@ var jasmine = Class(function() {
     this.server                         = Protected({});
 });
 
-new jasmine;
+module.exports                          = (process.env.NODE_ENV === 'test') ? jasmine : new jasmine;
