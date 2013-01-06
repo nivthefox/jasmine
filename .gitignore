@@ -1,6 +1,4 @@
-.idea/workspace.xml
 coverage
-coverage.html
 node_modules
 nodem.pid
 *.sublime-*

@@ -24,9 +24,8 @@ coverage.html:
 		--reporter html-cov \
 		--timeout $(TIMEOUT) \
 		./coverage/$(TESTS) > coverage.html
-	rm -rf coverage
 
-coverage: coverage.html
+coverage: clean coverage.html
 
 docs: documentation
 
@@ -40,6 +39,7 @@ node_modules:
 	@NODE_ENV="$(ENV)" npm install
 
 realclean: clean
+	rm -f coverage.html
 	rm -rf doc
 	rm -rf node_modules
 
