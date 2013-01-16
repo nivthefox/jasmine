@@ -4,6 +4,7 @@ NODE_ENV="production"
 NODE=$(which node)
 PID_FILE="./jasmine.pid"
 SERVER="./src/jasmine.js"
+ACTION="abort"
 
 if [ -e "${PID_FILE}" ]; then
     PID=$(cat "${PID_FILE}")
@@ -16,13 +17,17 @@ for i in $*; do
             ;;
         --help|-?)
             echo "Usage: ./jasmine [options] (start)"
-            echo "       ./jasmine (stop|restart)"
+            echo "       ./jasmine (stop|restart|reload|status)"
             echo " "
             echo "Options:"
             echo "  -D, --develop           print debug messages to the console"
             echo "  -?, --help              print this help message"
             exit
             ;;
+        start|stop|reload|restart|status)
+            ACTION="$i"
+            ;;
+
     esac
 done
 
@@ -39,7 +44,7 @@ function check_status {
         fi
 }
 
-case "$1" in
+case "$ACTION" in
     "start")
         if [ -e "${PID_FILE}" ]; then
             echo "jasmine is already running."
@@ -81,6 +86,6 @@ case "$1" in
         ;;
 
     *)
-        echo "Usage: ./jasmine (start|stop|restart)"
+        echo "Usage: ./jasmine (start|stop|restart|reset|status)"
         ;;
 esac

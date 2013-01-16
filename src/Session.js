@@ -38,6 +38,7 @@ var EventEmitter                        = require('events' ).EventEmitter;
 var Interpreter                         = require(BASE_PATH + '/src/Interpreter');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Session');
 var Net                                 = require('net');
+var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
  * An enum of available statuses.
@@ -57,8 +58,6 @@ var Status = {
  * @class
  */
 var Session = Extend(EventEmitter, function() {
-    this.socket                         = Protected({});
-    this.status                         = Protected(Status.NEW);
 
     /**
      * Instantiates the Session and stores the socket.
@@ -71,11 +70,18 @@ var Session = Extend(EventEmitter, function() {
     this.constructor = Public(function(socket) {
         Log.debug('constructor');
 
+        var id                          = process.hrtime();
+        this.id                         = Util.format('%s.%s', id[0], id[1]);
         this.socket                     = socket;
-
         this.socket.on('close',   this.setStatus.bind(this, Status.DISCONNECTED));
         this.socket.on('login',   this.setStatus.bind(this, Status.CONNECTING));
         this.socket.on('timeout', this.setStatus.bind(this, Status.TIMEDOUT));
+    });
+
+    this.getId = Public(function() {
+        Log.debug('getId');
+
+        return this.id;
     });
 
     /**
@@ -134,6 +140,10 @@ var Session = Extend(EventEmitter, function() {
     this.setStatus = Public(function(status) {
         this.status                     = status;
     });
+
+    this.id                             = Protected(null);
+    this.socket                         = Protected({});
+    this.status                         = Protected(Status.NEW);
 });
 
 module.exports                          = Session;

@@ -100,7 +100,10 @@ var Server = Extend(EventEmitter, function() {
         session.getSocket().setTimeout(this.options.timeout.connect);
 
         // Add the session to the list of available sessions.
-        this.sessions.push(session);
+        this.sessions[session.getId()]  = session;
+
+        Log.info('New connection (id:%s) from %s', session.getId(), socket.remoteAddress);
+
 
         /**
          * Notify that the connection has been established.
@@ -113,7 +116,7 @@ var Server = Extend(EventEmitter, function() {
 
     /**
      * Shuts down the current server.
-     * 
+     *
      * @name Server#shutdown
      * @public
      * @method
@@ -169,7 +172,7 @@ var Server = Extend(EventEmitter, function() {
      * @member
      * @type    {Session[]}
      */
-    this.sessions                       = Protected([]);
+    this.sessions                       = Protected({});
 });
 
 module.exports                          = Server;
