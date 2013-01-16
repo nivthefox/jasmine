@@ -66,6 +66,8 @@ var Server = Extend(EventEmitter, function() {
         this.server.on('connection', this.handleConnection);
         this.server.listen(this.options.port);
 
+        Log.info('Listening on port %d', this.options.port);
+
         /**
          * Notify that the connection has been established.
          *

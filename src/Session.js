@@ -70,12 +70,13 @@ var Session = Extend(EventEmitter, function() {
     this.constructor = Public(function(socket) {
         Log.debug('constructor');
 
-        var id                          = process.hrtime();
-        this.id                         = Util.format('%s.%s', id[0], id[1]);
+        var timestamp                   = process.hrtime();
+        this.id                         = Util.format('%s.%s', timestamp[0], timestamp[1]);
         this.socket                     = socket;
-        this.socket.on('close',   this.setStatus.bind(this, Status.DISCONNECTED));
-        this.socket.on('login',   this.setStatus.bind(this, Status.CONNECTING));
-        this.socket.on('timeout', this.setStatus.bind(this, Status.TIMEDOUT));
+        this.socket.on('close',         this.setStatus.bind(this, Status.DISCONNECTED));
+        this.socket.on('login',         this.setStatus.bind(this, Status.CONNECTING));
+        this.socket.on('timeout',       this.setStatus.bind(this, Status.TIMEDOUT));
+        this.socket.on('data',          this.handleData.bind(this, this.__classical_public));
     });
 
     this.getId = Public(function() {
