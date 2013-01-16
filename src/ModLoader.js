@@ -7,8 +7,8 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-07
- * @edited      2013-01-16
- * @package     JaSMINE
+<* @edited      2013-01-16
+=* @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
  * Copyright (C) 2013 Kevin Kragenbrink <kevin@writh.net>
@@ -34,13 +34,63 @@
 
 /** @ignore */
 var Classical                           = require('classical');
+var Config                              = require(BASE_PATH + '/src/Config')
+var FileSystem                          = require('fs');
 
 /**
- * Manages code modules
- *
+ * Manages code modules.
  * @class
  */
 var ModLoader = Class(function() {
+
+    /**
+     * Determines available modules to load.
+     * @public
+     * @method
+     * @param   {String}        [path]
+     */
+    this.load = Public(function(path) {
+
+        path                            = path || this.MOD_PATH;
+        this.config                     = Config.getConfig('game', true);
+
+        FileSystem.readDir(path, this.statAvailableMods.bind(this, path));
+    });
+
+    /**
+     * Analyzes and possibly loads a mod.
+     *
+     * This will also merge the main configuration object with the module's
+     * default configuration to setup the mod.
+     *
+     * @protected
+     * @method
+     * @param   {String}        mod
+     * @param   {String}        path
+     * @param   {Error|null}    err
+     * @param   {Stats}         stats
+     */
+    this.analyzeMod = Protected(function(mod, path, err, stats) {
+        if (stats.isDirectory()
+            && (this.config['mod'] && this.config['mod'][mod] && this.config['mod'][mod] !== FALSE)) {
+                // Load mod here.
+        }
+    });
+
+    /**
+     * Iterates through the available mods and processes their stats.
+     * @protected
+     * @method
+     * @param   {String}        path
+     * @param   {Error|null}    err
+     * @param   {String[]}      files
+     */
+    this.statAvailableMods = Protected(function(path, err, files) {
+        for (var i in files) {
+            path                        = path + '/' + files[i];
+            FileSystem.stat(path, this.analyzeMod.bind(this, files[i], path));
+        }
+    });
 
     /**
      * The default mod path.
@@ -57,9 +107,9 @@ var ModLoader = Class(function() {
 
     /**
      * A list of loaded modules.
-     * @type   {String[]}
+     * @type    {String[]}
      */
     this.modules                        = Protected([]);
 });
 
-module.exports                          = ModLoader;
+module.exports                          = new ModLoader;

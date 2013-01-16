@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-07
- * @edited      2013-01-16
+ * @edited      2013-01-07
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -34,28 +34,6 @@
 
 require('./setup');
 var Assert                              = require('assert');
-var ModLoader                           = require(BASE_PATH + '/src/ModLoader');
+var jasmine                             = require(BASE_PATH + '/src/jasmine');
 
-suite('ModLoader');
-
-test('Load', function() {
-    loader                              = new ModLoader();
-    ModLoader.load(BASE_PATH + '/test/fixtures/mod');
-
-    Assert.ok(ModLoader.isLoaded('test1'));
-    Assert.ok(ModLoader.isLoaded('test2'));
-});
-
-test('Unload', function() {
-    ModLoader.unload();
-
-    Assert.ifError(ModLoader.isLoaded('test1'));
-    Assert.ifError(ModLoader.isLoaded('test2'));
-});
-
-test('Reload', function() {
-    ModLoader.load(BASE_PATH + '/test/fixtures/mod');
-
-    Assert.ok(ModLoader.isLoaded('test1'));
-    Assert.ok(ModLoader.isLoaded('test2'));
-});
+suite('jasmine');

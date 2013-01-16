@@ -1,5 +1,5 @@
 port                                    : 7445
-mudname                                 : Jasmine
+mudname                                 : jasmine
 log:
   file                                  : log/jasmine.log
 timeout:
