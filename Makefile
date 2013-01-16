@@ -7,7 +7,7 @@ ENV					= test
 JSDOC				= /usr/lib/node_modules/jsdoc/jsdoc
 MOCHA				= ./node_modules/.bin/mocha
 
-all: coverage docs
+all: clean node_modules coverage docs
 
 clean:
 	rm -rf coverage
@@ -37,7 +37,11 @@ documentation:
 install: clean node_modules
 
 node_modules:
-	@NODE_ENV="$(ENV)" npm install
+	if test ! -d $(PWD)/node_modules ; then \
+		@NODE_ENV="$(ENV)" npm install ; \
+	else \
+		@NODE_ENV="$(ENV)" npm update ; \
+	fi
 
 realclean: clean
 	rm -rf doc
