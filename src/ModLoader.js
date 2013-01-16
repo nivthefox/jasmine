@@ -34,8 +34,9 @@
 
 /** @ignore */
 var Classical                           = require('classical');
-var Config                              = require(BASE_PATH + '/src/Config')
 var FileSystem                          = require('fs');
+
+var config                              = require(BASE_PATH + '/config/game.yml');
 
 /**
  * Manages code modules.
@@ -54,7 +55,7 @@ var ModLoader = Class(function() {
         path                            = path || this.MOD_PATH;
         this.config                     = Config.getConfig('game', true);
 
-        FileSystem.readDir(path, this.statAvailableMods.bind(this, path));
+        FileSystem.readdir(path, this.statAvailableMods.bind(this, path));
     });
 
     /**
@@ -73,7 +74,7 @@ var ModLoader = Class(function() {
     this.analyzeMod = Protected(function(mod, path, err, stats) {
         if (stats.isDirectory()
             && (this.config['mod'] && this.config['mod'][mod] && this.config['mod'][mod] !== FALSE)) {
-                // Load mod here.
+                var config              = Config.getConfig('')
         }
     });
 

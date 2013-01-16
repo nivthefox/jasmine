@@ -35,8 +35,9 @@
 /** @ignore */
 var FileSystem                          = require('fs');
 var Log                                 = require('log4js');
-var Config                              = require(BASE_PATH + '/src/Config');
 var Util                                = require(BASE_PATH +  '/src/Utilities');
+
+var config                              = require(BASE_PATH + '/config/game.yml');
 
 var logConfig = {
     appenders                           : [],
@@ -57,7 +58,7 @@ if (process.env.NODE_ENV !== 'test') {
     }
     logConfig.appenders.push({
         type                            : 'file',
-        filename                        : Util.format('%s/%s', BASE_PATH, Config.getConfig('game').log.file),
+        filename                        : Util.format('%s/%s', BASE_PATH, config.log.file),
         maxLogSize                      : (2 * 1024 * 1024),    // TODO: Magic number. This is the log size. 2M.
         backups                         : 10                    // TODO: Magic number. This is the number of times to rotate a log.
     });

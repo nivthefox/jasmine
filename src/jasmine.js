@@ -40,6 +40,7 @@ global.BASE_PATH                        = FileSystem.realpathSync(__dirname + '/
 var Classical                           = require('classical');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('jasmine');
 var Server                              = require(BASE_PATH + '/src/Server');
+var YAML                                = require('js-yaml');
 
 /**
  * Starts up the server
@@ -49,7 +50,7 @@ var jasmine = Class(function() {
 
     /**
      * Adds signal handling and then calls startup..
-     * 
+     *
      * @name jasmine#constructor
      * @public
      * @method
@@ -90,8 +91,8 @@ var jasmine = Class(function() {
      */
     this.sigHup = Protected(function() {
         Log.debug('sigHup');
-        
-        // TODO: Calling shutdown will kill all active sessions, which is undesireable.  It would be beneficial to 
+
+        // TODO: Calling shutdown will kill all active sessions, which is undesireable.  It would be beneficial to
         //          instead PAUSE the connections, unload mods and reload them, then re-establish the connections.
         this.shutdown();
         // TOOD: It would probably be beneficial to unload the mods, here, and reload them; allowing a soft "code update".

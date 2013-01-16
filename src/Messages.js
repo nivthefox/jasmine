@@ -47,17 +47,6 @@ var YAML                                = require('js-yaml');
 var Messages = Extend(Dust, function() {
 
     /**
-     * Loads the messages from config.
-     *
-     * @name Messages#constructor
-     * @protected
-     * @method
-     */
-    this.constructor = Protected(function() {
-        Log.debug('constructor');
-    });
-
-    /**
      * Compiles and registers message templates.
      *
      * @name Messages#load

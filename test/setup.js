@@ -33,3 +33,4 @@
  */
 
 global.BASE_PATH                        = require('fs').realpathSync(__dirname + '/../');
+var YAML                                = require('js-yaml');

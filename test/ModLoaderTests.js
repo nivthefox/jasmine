@@ -39,7 +39,6 @@ var ModLoader                           = require(BASE_PATH + '/src/ModLoader');
 suite('ModLoader');
 
 test('Load', function() {
-    loader                              = new ModLoader();
     ModLoader.load(BASE_PATH + '/test/fixtures/mod');
 
     Assert.ok(ModLoader.isLoaded('test1'));

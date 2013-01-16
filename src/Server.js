@@ -40,6 +40,8 @@ var Net                                 = require('net');
 var Session                             = require(BASE_PATH + '/src/Session');
 var Util                                = require(BASE_PATH + '/src/Utilities');
 
+var config                              = require(BASE_PATH + '/config/game.yml');
+
 /**
  * The telnet server
  * @class Server
@@ -60,7 +62,7 @@ var Server = Extend(EventEmitter, function() {
     this.constructor = Public(function(options) {
         Log.debug('constructor');
 
-        this.options                    = Util.extend(require(BASE_PATH + '/config/game.yml'), options);
+        this.options                    = Util.extend(config, options);
 
         this.server                     = Net.createServer();
         this.server.on('connection', this.handleConnection);
