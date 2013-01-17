@@ -34,13 +34,13 @@
 
 /** @ignore */
 var FileSystem                          = require('fs');
+var YAML                                = require('js-yaml');
 global.BASE_PATH                        = FileSystem.realpathSync(__dirname + '/../');
 
 /** @ignore */
 var Classical                           = require('classical');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('jasmine');
 var Server                              = require(BASE_PATH + '/src/Server');
-var YAML                                = require('js-yaml');
 
 /**
  * Starts up the server
@@ -73,6 +73,7 @@ var jasmine = Class(function() {
      */
     this.sigTerm = Protected(function() {
         Log.debug('sigTerm');
+
         this.server.shutdown();
 
         if (FileSystem.existsSync(BASE_PATH + '/jasmine.pid')) {
