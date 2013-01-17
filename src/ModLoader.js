@@ -81,25 +81,20 @@ var ModLoader = Extend(EventEmitter, function() {
         Log.debug('analyzeMod');
 
         if (stats && stats.isDirectory()) {
-            var modConfig               = Util.extend(require(Util.format('%s/config.yml', path)), config);
-
-            // Abort if it's disabled.
-            if (modConfig['mod'] && modConfig['mod'][mod] && modConfig['mod'][mod] === false) {
-                /**
-                 * Notify that the module has failed to load
-                 *
-                 * @event ModLoader#module&period;failed
-                 * @property    {String}    mod
-                 */
-                this.emit('module.failed', mod);
-                return;
-            }
-
             try {
-                var ModClass                = require(Util.format('%s/%s', path, mod));
-                var instance                = new ModClass(modConfig);
+                var mergedConfig        = Util.extend(require(Util.format('%s/config/game.yml', path)), config);
 
-                this.modules[mod]           = instance;
+                // Abort if it's disabled.
+                if (mergedConfig['mod'] && mergedConfig['mod'][mod] && mergedConfig['mod'][mod] === false) {
+                    throw new Error('disabled')
+                    return;
+                }
+
+                var ModClass            = require(Util.format('%s/src/%s', path, mod));
+                var modConfig           = (mergedConfig['mod'] && mergedConfig['mod'][mod]) ? mergedConfig['mod'][mod] : {};
+                var instance            = new ModClass(modConfig);
+
+                this.modules[mod]       = instance;
 
                 /**
                  * Notify that the module has been loaded
@@ -111,6 +106,7 @@ var ModLoader = Extend(EventEmitter, function() {
                 Log.info('Loaded %s module', mod);
             }
             catch (e) {
+
                 /**
                  * Notify that the module has failed to load
                  *
