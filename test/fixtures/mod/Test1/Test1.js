@@ -6,8 +6,8 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2012-11-21
- * @edited      2012-11-21
+ * @created     2013-01-16
+ * @edited      2013-01-16
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -32,25 +32,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-require('./setup');
-var Assert                              = require('assert');
-var Net                                 = require('net');
-var Session                             = require(BASE_PATH + '/src/Session');
-var sess                                = null;
+var Module                              = require(BASE_PATH + '/hdr/Module');
 
-suite('Session');
-
-before(function() {
-    var socket                          = new Net.Socket;
-    sess                                = new Session(socket);
+var Test1 = Implement(Module, function() {
+    this.constructor = Public(function(config) {});
 });
 
-test('Create', function() {
-    Assert.ok(sess instanceof Session);
-    Assert.equal(sess.getStatus(), Session.Status.NEW);
-});
-
-test('Change status', function() {
-    sess.getSocket().emit('login');
-    Assert.equal(sess.getStatus(), Session.Status.CONNECTING);
-});
+module.exports                          = Test1;

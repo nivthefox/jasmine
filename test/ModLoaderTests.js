@@ -38,23 +38,11 @@ var ModLoader                           = require(BASE_PATH + '/src/ModLoader');
 
 suite('ModLoader');
 
-test('Load', function() {
+test('Load', function(done) {
     ModLoader.load(BASE_PATH + '/test/fixtures/mod');
 
-    Assert.ok(ModLoader.isLoaded('test1'));
-    Assert.ok(ModLoader.isLoaded('test2'));
-});
-
-test('Unload', function() {
-    ModLoader.unload();
-
-    Assert.ifError(ModLoader.isLoaded('test1'));
-    Assert.ifError(ModLoader.isLoaded('test2'));
-});
-
-test('Reload', function() {
-    ModLoader.load(BASE_PATH + '/test/fixtures/mod');
-
-    Assert.ok(ModLoader.isLoaded('test1'));
-    Assert.ok(ModLoader.isLoaded('test2'));
+    ModLoader.once('modload.complete', function(mods) {
+        Assert.ok(ModLoader.isLoaded('Test1'));
+        done();
+    });
 });

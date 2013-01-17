@@ -79,7 +79,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 44</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 49</li></ul></dd>
 	
     
     
@@ -118,56 +118,6 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="config"><span class="type-signature"></span>config<span class="type-signature"> :<a href="Config.html">Config</a></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The main game configuration object.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 106</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="MOD_PATH"><span class="type-signature">&lt;constant> </span>MOD_PATH<span class="type-signature"> :String</span></h4>
     
     
@@ -201,7 +151,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 100</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 234</li></ul></dd>
 	
     
     
@@ -251,7 +201,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 112</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 240</li></ul></dd>
 	
     
     
@@ -437,7 +387,506 @@ default configuration to setup the mod.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 73</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 65</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    <h5>Fires:</h5>
+    <ul>
+        
+<li>
+    <a href="ModLoader.html#event:module&period;loaded">ModLoader#event:module&period;loaded</a>
+</li>
+    </ul>
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="handleFailed"><span class="type-signature">&lt;protected> </span>handleFailed<span class="signature">(files, loaded, failed, mod)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Records a module's failure to load.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>files</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>loaded</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>failed</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>mod</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 201</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+<div class="param-desc">
+    ModLoader#modload&period;complete
+</div>
+
+
+
+        
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="handleLoaded"><span class="type-signature">&lt;protected> </span>handleLoaded<span class="signature">(files, loaded, failed, mod)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Records a module's successful load
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>files</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>loaded</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>failed</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>mod</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 173</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+<div class="param-desc">
+    ModLoader#modload&period;complete
+</div>
+
+
+
+        
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isLoaded"><span class="type-signature"></span>isLoaded<span class="signature">(mod)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Reports whether a mod has been loaded.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>mod</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 134</li></ul></dd>
 	
     
     
@@ -558,7 +1007,7 @@ default configuration to setup the mod.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 52</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 51</li></ul></dd>
 	
     
     
@@ -718,7 +1167,7 @@ default configuration to setup the mod.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 88</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 149</li></ul></dd>
 	
     
     
@@ -744,6 +1193,466 @@ default configuration to setup the mod.
     
     
     
+        <h3 class="subsection-title">Events</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="event:module&period;failed">module&period;failed</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Notify that the module has failed to load
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>mod</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 88</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:module&period;failed">module&period;failed</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Notify that the module has failed to load
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>mod</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 114</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:module&period;failed">module&period;failed</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Notify that the module has failed to load
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>mod</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 124</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:module&period;loaded">module&period;loaded</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Notify that the module has been loaded
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>mod</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>ModLoader.js, line 104</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
 </article>
 
 </section>  
@@ -754,13 +1663,13 @@ default configuration to setup the mod.
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a></li><li><a href="Config.html">Config</a></li><li><a href="Controller.html">Controller</a></li><li><a href="Instruction.html">Instruction</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="Interpreter.CommandList.html">CommandList</a></li><li><a href="jasmine.html">jasmine</a></li><li><a href="Messages.html">Messages</a></li><li><a href="ModLoader.html">ModLoader</a></li><li><a href="Server.html">Server</a></li><li><a href="Session.html">Session</a></li><li><a href="Tokenizer.html">Tokenizer</a></li><li><a href="Tokenizer.Token.html">Token</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3>Events</h3><ul><li><a href="Interpreter.html#event:phrase&period;matched">phrase&period;matched</a></li><li><a href="Interpreter.html#event:phrase&period;unmatched">phrase&period;unmatched</a></li><li><a href="Server.html#event:server&period;opened">server&period;opened</a></li><li><a href="Server.html#event:server&period;shutdown">server&period;shutdown</a></li><li><a href="Server.html#event:session&period;close">session&period;close</a></li><li><a href="Server.html#event:session&period;connected">session&period;connected</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a></li><li><a href="Controller.html">Controller</a></li><li><a href="Instruction.html">Instruction</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="Interpreter.CommandList.html">CommandList</a></li><li><a href="jasmine.html">jasmine</a></li><li><a href="Messages.html">Messages</a></li><li><a href="ModLoader.html">ModLoader</a></li><li><a href="Module.html">Module</a></li><li><a href="Server.html">Server</a></li><li><a href="Session.html">Session</a></li><li><a href="Tokenizer.html">Tokenizer</a></li><li><a href="Tokenizer.Token.html">Token</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3>Events</h3><ul><li><a href="Interpreter.html#event:phrase&period;matched">phrase&period;matched</a></li><li><a href="Interpreter.html#event:phrase&period;unmatched">phrase&period;unmatched</a></li><li><a href="ModLoader.html#event:module&period;failed">module&period;failed</a></li><li><a href="ModLoader.html#event:module&period;loaded">module&period;loaded</a></li><li><a href="Server.html#event:modload&period;complete">modload&period;complete</a></li><li><a href="Server.html#event:server&period;opened">server&period;opened</a></li><li><a href="Server.html#event:server&period;shutdown">server&period;shutdown</a></li><li><a href="Server.html#event:session&period;close">session&period;close</a></li><li><a href="Server.html#event:session&period;connected">session&period;connected</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Jan 16 2013 13:07:42 GMT-0800 (PST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Jan 16 2013 17:08:54 GMT-0800 (PST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -34,7 +34,11 @@
 
 /** @ignore */
 var Classical                           = require('classical');
+var EventEmitter                        = require('events').EventEmitter;
 var FileSystem                          = require('fs');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('ModLoader');
+var Util                                = require(BASE_PATH + '/src/Utilities');
+var Module                              = require(BASE_PATH + '/hdr/Module');
 
 var config                              = require(BASE_PATH + '/config/game.yml');
 
@@ -42,19 +46,19 @@ var config                              = require(BASE_PATH + '/config/game.yml'
  * Manages code modules.
  * @class
  */
-var ModLoader = Class(function() {
+var ModLoader = Extend(EventEmitter, function() {
 
     /**
      * Determines available modules to load.
      * @public
      * @method
+     * @name ModLoader#load
      * @param   {String}        [path]
      */
     this.load = Public(function(path) {
+        Log.debug('load');
 
         path                            = path || this.MOD_PATH;
-        this.config                     = Config.getConfig('game', true);
-
         FileSystem.readdir(path, this.statAvailableMods.bind(this, path));
     });
 
@@ -66,30 +70,159 @@ var ModLoader = Class(function() {
      *
      * @protected
      * @method
+     * @name ModLoader#analyzeMod
      * @param   {String}        mod
      * @param   {String}        path
      * @param   {Error|null}    err
      * @param   {Stats}         stats
+     * @fires   ModLoader#module&period;loaded
      */
     this.analyzeMod = Protected(function(mod, path, err, stats) {
-        if (stats.isDirectory()
-            && (this.config['mod'] && this.config['mod'][mod] && this.config['mod'][mod] !== FALSE)) {
-                var config              = Config.getConfig('')
+        Log.debug('analyzeMod');
+
+        if (stats && stats.isDirectory()) {
+            var modConfig               = Util.extend(require(Util.format('%s/config.yml', path)), config);
+
+            // Abort if it's disabled.
+            if (modConfig['mod'] && modConfig['mod'][mod] && modConfig['mod'][mod] === false) {
+                /**
+                 * Notify that the module has failed to load
+                 *
+                 * @event ModLoader#module&period;failed
+                 * @property    {String}    mod
+                 */
+                this.emit('module.failed', mod);
+                return;
+            }
+
+            try {
+                var ModClass                = require(Util.format('%s/%s', path, mod));
+                var instance                = new ModClass(modConfig);
+
+                this.modules[mod]           = instance;
+
+                /**
+                 * Notify that the module has been loaded
+                 *
+                 * @event ModLoader#module&period;loaded
+                 * @property    {String}    mod
+                 */
+                this.emit('module.loaded', mod);
+                Log.info('Loaded %s module', mod);
+            }
+            catch (e) {
+                /**
+                 * Notify that the module has failed to load
+                 *
+                 * @event ModLoader#module&period;failed
+                 * @property    {String}    mod
+                 */
+                this.emit('module.failed', mod);
+            }
         }
+        else {
+            /**
+             * Notify that the module has failed to load
+             *
+             * @event ModLoader#module&period;failed
+             * @property    {String}    mod
+             */
+            this.emit('module.failed', mod);
+        }
+    });
+
+    /**
+     * Reports whether a mod has been loaded.
+     * @public
+     * @method
+     * @name ModLoader#isLoaded
+     * @param   {String}    mod
+     */
+    this.isLoaded = Public(function(mod) {
+        Log.debug('isLoaded');
+
+        // This is disabled because instanceof is not working with interfaces, right now.
+        // return (this.modules[mod] instanceof Module);
+        return (typeof this.modules[mod] !== 'undefined');
     });
 
     /**
      * Iterates through the available mods and processes their stats.
      * @protected
      * @method
+     * @name ModLoader#statAvailableMods
      * @param   {String}        path
      * @param   {Error|null}    err
      * @param   {String[]}      files
      */
     this.statAvailableMods = Protected(function(path, err, files) {
+        Log.debug('statAvailableMods');
+
+        var loaded                      = [];
+        var failed                      = [];
+
+        this.on('module.loaded', this.handleLoaded.bind(this, files, loaded, failed));
+        this.on('module.failed', this.handleFailed.bind(this, files, loaded, failed));
+
         for (var i in files) {
-            path                        = path + '/' + files[i];
-            FileSystem.stat(path, this.analyzeMod.bind(this, files[i], path));
+            var modpath                 = path + '/' + files[i];
+            FileSystem.stat(path, this.analyzeMod.bind(this, files[i], modpath));
+        }
+    });
+
+    /**
+     * Records a module's successful load
+     * @protected
+     * @method
+     * @name ModLoader#handleLoaded
+     * @param   {String[]}      files
+     * @param   {String[]}      loaded
+     * @param   {String[]}      failed
+     * @param   {String}        mod
+     * @throws  ModLoader#modload&period;complete
+     */
+    this.handleLoaded = Protected(function(files, loaded, failed, mod) {
+        loaded.push(mod);
+
+        if (loaded.length + failed.length == files.length) {
+            /**
+             * Notify that modloading is complete.
+             *
+             * @event Server#modload&period;complete
+             * @property    {String[]}  loaded
+             * @property    {String[]}  failed
+             */
+            this.emit('modload.complete', loaded, failed);
+            this.removeListener('module.loaded', this.handleLoaded);
+            this.removeListener('module.failed', this.handleFailed);
+        }
+    });
+
+    /**
+     * Records a module's failure to load.
+     * @protected
+     * @method
+     * @name ModLoader#handleFailed
+     * @param   {String[]}      files
+     * @param   {String[]}      loaded
+     * @param   {String[]}      failed
+     * @param   {String}        mod
+     * @throws  ModLoader#modload&period;complete
+     */
+    this.handleFailed = Protected(function(files, loaded, failed, mod) {
+        failed.push(mod);
+
+        if (loaded.length + failed.length == files.length) {
+            /**
+             * Notify that modloading is complete.
+             *
+             * @event Server#modload&period;complete
+             * @property    {String[]}  loaded
+             * @property    {String[]}  failed
+             */
+            this.emit('modload.complete', loaded, failed);
+            this.removeListener('module.loaded', this.handleLoaded);
+            this.removeListener('module.failed', this.handleFailed);
         }
     });
 
@@ -101,16 +234,10 @@ var ModLoader = Class(function() {
     this.MOD_PATH                       = BASE_PATH + '/mod';
 
     /**
-     * The main game configuration object.
-     * @type    {Config}
-     */
-     this.config                        = Protected({});
-
-    /**
      * A list of loaded modules.
      * @type    {String[]}
      */
-    this.modules                        = Protected([]);
+    this.modules                        = Protected({});
 });
 
 module.exports                          = new ModLoader;

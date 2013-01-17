@@ -37,8 +37,8 @@ var Controller                          = require(BASE_PATH + '/src/Controller')
 var Instruction                         = require('./fixtures/instruction');
 
 suite('Controller');
-
 test('Define', function() {
+// console.log('=====><=====');
     try {
         Controller.define('test', Instruction);
     }
