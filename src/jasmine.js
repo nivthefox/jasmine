@@ -40,6 +40,7 @@ global.BASE_PATH                        = FileSystem.realpathSync(__dirname + '/
 /** @ignore */
 var Classical                           = require('classical');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('jasmine');
+var ModLoader                           = require(BASE_PATH + '/src/ModLoader');
 var Server                              = require(BASE_PATH + '/src/Server');
 
 /**
@@ -125,6 +126,7 @@ var jasmine = Class(function() {
     this.startup = Public(function() {
         Log.debug('startup');
         this.server                     = new Server;
+        ModLoader.load();
     });
 
     /**

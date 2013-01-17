@@ -178,6 +178,7 @@ var ModLoader = Extend(EventEmitter, function() {
      * @throws  ModLoader#modload&period;complete
      */
     this.handleLoaded = Protected(function(files, loaded, failed, mod) {
+        Log.debug('handleLoaded', mod);
         loaded.push(mod);
 
         if (loaded.length + failed.length == files.length) {
@@ -188,9 +189,11 @@ var ModLoader = Extend(EventEmitter, function() {
              * @property    {String[]}  loaded
              * @property    {String[]}  failed
              */
-            this.emit('modload.complete', loaded, failed);
+            this.emit('modload.complete', loaded.length, failed.length);
             this.removeListener('module.loaded', this.handleLoaded);
             this.removeListener('module.failed', this.handleFailed);
+
+            Log.info('%d modules loaded, %d modules failed.', loaded.length, failed.length);
         }
     });
 
@@ -206,6 +209,7 @@ var ModLoader = Extend(EventEmitter, function() {
      * @throws  ModLoader#modload&period;complete
      */
     this.handleFailed = Protected(function(files, loaded, failed, mod) {
+        Log.debug('handleFailed', mod);
         failed.push(mod);
 
         if (loaded.length + failed.length == files.length) {
@@ -216,9 +220,11 @@ var ModLoader = Extend(EventEmitter, function() {
              * @property    {String[]}  loaded
              * @property    {String[]}  failed
              */
-            this.emit('modload.complete', loaded, failed);
+            this.emit('modload.complete', loaded.length, failed.length);
             this.removeListener('module.loaded', this.handleLoaded);
             this.removeListener('module.failed', this.handleFailed);
+
+            Log.info('%d modules loaded, %d modules failed.', loaded.length, failed.length);
         }
     });
 
