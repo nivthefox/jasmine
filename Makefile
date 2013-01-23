@@ -1,11 +1,11 @@
 SRC					= src
-TESTS				= test
 INTERFACE			= qunit
 REPORTER			= spec
 TIMEOUT				= 5000
 ENV					= test
 JSDOC				= /usr/lib/node_modules/jsdoc/jsdoc
 MOCHA				= ./node_modules/.bin/mocha
+TESTS				:= test $(foreach mod, $(shell ls mod), $(PWD)/mod/$(mod)/test)
 
 all: clean node_modules coverage docs
 
@@ -14,12 +14,17 @@ clean:
 	@rm -f coverage.html
 
 coverage.html:
+	$(error Coverage tests are disabled pending module inclusion)
 	@mkdir -p ./coverage
 	@cp -r $(TESTS) ./coverage/$(TESTS)
 	@cp -r config ./coverage/config
 	@jscoverage hdr ./coverage/hdr
 	@jscoverage src ./coverage/src
-	@$(MAKE) test-core REPORTER=html-cov > coverage.html
+	@NODE_ENV=$(ENV) $(MOCHA) \
+	 	--ui $(INTERFACE) \
+	 	--reporter html-cov \
+	 	--timeout $(TIMEOUT) \
+	 	$(TESTS) > coverage.html
 
 coverage: clean coverage.html
 
@@ -43,27 +48,11 @@ realclean: clean
 	@rm -rf doc
 	@rm -rf node_modules
 
-test: test-core test-modules
-
-test-core:
-	@echo "Testing jasmine core."
+test:
 	@NODE_ENV=$(ENV) $(MOCHA) \
-		--ui $(INTERFACE) \
-		--reporter $(REPORTER) \
-		--timeout $(TIMEOUT) \
-		$(TESTS)
+	 	--ui $(INTERFACE) \
+	 	--reporter $(REPORTER) \
+	 	--timeout $(TIMEOUT) \
+	 	$(TESTS)
 
-test-modules:
-	@echo "Testing currently available modules."
-	@for mod in `ls mod` ; do \
-		if test -d $(PWD)/mod/$$mod ; then \
-			echo "-- Module: $$mod" ; \
-			NODE_ENV=$(ENV) $(MOCHA) \
-				--ui $(INTERFACE) \
-				--reporter $(REPORTER) \
-				--timeout $(TIMEOUT) \
-				$(PWD)/mod/$$mod/test ; \
-		fi ; \
-	done
-
-.PHONY: all clean coverage docs documentation install node_modules realclean test test-core test-modules
+.PHONY: all clean coverage docs documentation install node_modules realclean test
