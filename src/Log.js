@@ -64,6 +64,8 @@ if (process.env.NODE_ENV !== 'test') {
     });
 }
 
+logConfig.levels                        = Util.isArray(config.log.levels) ? config.log.levels : [config.log.levels];
+
 Log.configure(logConfig);
 
 module.exports                          = Log;

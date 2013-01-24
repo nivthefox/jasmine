@@ -2,6 +2,7 @@ port                                    : 7445
 mudname                                 : jasmine
 log:
   file                                  : log/jasmine.log
+  levels                                : 'INFO'
 timeout:
   connect                               : 300
   idle                                  : -1
