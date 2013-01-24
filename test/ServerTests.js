@@ -7,11 +7,11 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-20
- * @edited      2012-11-21
+ * @edited      2013-01-23
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
- * Copyright (C) 2012 Kevin Kragenbrink <kevin@writh.net>
+ * Copyright (C) 2013 Kevin Kragenbrink <kevin@writh.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -57,7 +57,7 @@ test('Connect', function(done) {
         Assert.ok(true);
     });
 
-    srv.on('session.connected', function(session) {
+    process.on('server.session.connected', function(session) {
         session.send('Welcome to test.');
     });
 
@@ -76,7 +76,7 @@ test('Connect', function(done) {
 });
 
 test('Shutdown', function(done) {
-    srv.on('server.shutdown', function() {
+    process.on('server.net.shutdown', function() {
         done();
     });
 

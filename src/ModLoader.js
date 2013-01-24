@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-07
-<* @edited      2013-01-16
+<* @edited      2013-01-23
 =* @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -34,7 +34,6 @@
 
 /** @ignore */
 var Classical                           = require('classical');
-var EventEmitter                        = require('events').EventEmitter;
 var FileSystem                          = require('fs');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('ModLoader');
 var Util                                = require(BASE_PATH + '/src/Utilities');
@@ -46,7 +45,7 @@ var config                              = require(BASE_PATH + '/config/game.yml'
  * Manages code modules.
  * @class
  */
-var ModLoader = Extend(EventEmitter, function() {
+var ModLoader = Class(function() {
 
     /**
      * Determines available modules to load.
@@ -75,7 +74,8 @@ var ModLoader = Extend(EventEmitter, function() {
      * @param   {String}        path
      * @param   {Error|null}    err
      * @param   {Stats}         stats
-     * @fires   ModLoader#module&period;loaded
+     * @fires   ModLoader#modloader&period;module&period;loaded
+     * @fires   ModLoader#modloader&period;module&period;failed
      */
     this.analyzeMod = Protected(function(mod, path, err, stats) {
         Log.debug('analyzeMod');
@@ -99,10 +99,10 @@ var ModLoader = Extend(EventEmitter, function() {
                 /**
                  * Notify that the module has been loaded
                  *
-                 * @event ModLoader#module&period;loaded
+                 * @event ModLoader#modloader&period;module&period;loaded
                  * @property    {String}    mod
                  */
-                this.emit('module.loaded', mod);
+                process.emit('modloader.module.loaded', mod);
                 Log.info('Loaded %s module', mod);
             }
             catch (e) {
@@ -110,20 +110,20 @@ var ModLoader = Extend(EventEmitter, function() {
                 /**
                  * Notify that the module has failed to load
                  *
-                 * @event ModLoader#module&period;failed
+                 * @event ModLoader#modloader&period;module&period;failed
                  * @property    {String}    mod
                  */
-                this.emit('module.failed', mod);
+                process.emit('modloader.module.failed', mod);
             }
         }
         else {
             /**
              * Notify that the module has failed to load
              *
-             * @event ModLoader#module&period;failed
+             * @event ModLoader#modloader&period;module&period;failed
              * @property    {String}    mod
              */
-            this.emit('module.failed', mod);
+            process.emit('modloader.module.failed', mod);
         }
     });
 
@@ -157,8 +157,8 @@ var ModLoader = Extend(EventEmitter, function() {
         var loaded                      = [];
         var failed                      = [];
 
-        this.on('module.loaded', this.handleLoaded.bind(this, files, loaded, failed));
-        this.on('module.failed', this.handleFailed.bind(this, files, loaded, failed));
+        process.on('modloader.module.loaded', this.handleLoaded.bind(this, files, loaded, failed));
+        process.on('modloader.module.failed', this.handleFailed.bind(this, files, loaded, failed));
 
         for (var i in files) {
             var modpath                 = path + '/' + files[i];
@@ -175,7 +175,7 @@ var ModLoader = Extend(EventEmitter, function() {
      * @param   {String[]}      loaded
      * @param   {String[]}      failed
      * @param   {String}        mod
-     * @throws  ModLoader#modload&period;complete
+     * @fires   ModLoader#modloader&period;load&period;complete
      */
     this.handleLoaded = Protected(function(files, loaded, failed, mod) {
         Log.debug('handleLoaded', mod);
@@ -185,13 +185,13 @@ var ModLoader = Extend(EventEmitter, function() {
             /**
              * Notify that modloading is complete.
              *
-             * @event Server#modload&period;complete
+             * @event ModLoader#modloader&period;load&period;complete
              * @property    {String[]}  loaded
              * @property    {String[]}  failed
              */
-            this.emit('modload.complete', loaded.length, failed.length);
-            this.removeListener('module.loaded', this.handleLoaded);
-            this.removeListener('module.failed', this.handleFailed);
+            process.emit('modloader.load.complete', loaded.length, failed.length);
+            process.removeListener('modloader.module.loaded', this.handleLoaded);
+            process.removeListener('modloader.module.failed', this.handleFailed);
 
             Log.info('%d modules loaded, %d modules failed.', loaded.length, failed.length);
         }
@@ -206,7 +206,7 @@ var ModLoader = Extend(EventEmitter, function() {
      * @param   {String[]}      loaded
      * @param   {String[]}      failed
      * @param   {String}        mod
-     * @throws  ModLoader#modload&period;complete
+     * @fires   ModLoader#modloader&period;load&period;complete
      */
     this.handleFailed = Protected(function(files, loaded, failed, mod) {
         Log.debug('handleFailed', mod);
@@ -216,13 +216,13 @@ var ModLoader = Extend(EventEmitter, function() {
             /**
              * Notify that modloading is complete.
              *
-             * @event Server#modload&period;complete
+             * @event ModLoader#modloader&period;load&period;complete
              * @property    {String[]}  loaded
              * @property    {String[]}  failed
              */
-            this.emit('modload.complete', loaded.length, failed.length);
-            this.removeListener('module.loaded', this.handleLoaded);
-            this.removeListener('module.failed', this.handleFailed);
+            process.emit('modloader.load.complete', loaded.length, failed.length);
+            process.removeListener('modloader.module.loaded', this.handleLoaded);
+            process.removeListener('modloader.module.failed', this.handleFailed);
 
             Log.info('%d modules loaded, %d modules failed.', loaded.length, failed.length);
         }

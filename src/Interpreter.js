@@ -7,11 +7,11 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-12-24
- * @edited      2013-01-04
+ * @edited      2013-01-23
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
- * Copyright (C) 2012 Kevin Kragenbrink <kevin@writh.net>
+ * Copyright (C) 2013 Kevin Kragenbrink <kevin@writh.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -35,7 +35,6 @@
 /** @ignore */
 var Classical                           = require('classical');
 var Command                             = require(BASE_PATH + '/hdr/Command');
-var EventEmitter                        = require('events').EventEmitter;
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Interpreter');
 var Util                                = require(BASE_PATH + '/src/Utilities');
 
@@ -85,7 +84,7 @@ var CommandList = function() {
  * @class
  * @singleton
  */
-var Interpreter = Extend(EventEmitter, function() {
+var Interpreter = Class(function() {
 
     /**
      * Adds a command to an CommandList.
@@ -213,8 +212,8 @@ var Interpreter = Extend(EventEmitter, function() {
      * @param   {Session}       session
      * @param   {String}        phrase
      * @param   {Function}      callback
-     * @fires   Interpreter#phrase&period;unmatched
-     * @fires   Interpreter#phrase&period;matched
+     * @fires   Interpreter#interpreter&period;phrase&period;unmatched
+     * @fires   Interpreter#interpreter&period;phrase&period;matched
      */
     this.interpret = Public(function(session, phrase, callback) {
         Log.debug('interpret');
@@ -238,23 +237,23 @@ var Interpreter = Extend(EventEmitter, function() {
             /**
              * The interpreter was unable to match a phrase to a command.
              *
-             * @event Interpreter#phrase&period;unmatched
+             * @event Interpreter#interpreter&period;phrase&period;unmatched
              * @property {Session}  session
              * @property {String}   phrase
              * @property {Function} callback
              */
-            this.emit('phrase.unmatched', session, phrase, callback);
+            process.emit('interpreter.phrase.unmatched', session, phrase, callback);
         }
         else {
             /**
              * The interpreter successfully matched a phrase to a command.
              *
-             * @event Interpreter#phrase&period;matched
+             * @event Interpreter#interpreter&period;phrase&period;matched
              * @property {Session}  session
              * @property {String}   phrase
              * @property {Function} callback
              */
-            this.emit('phrase.matched', session, phrase, callback);
+            process.emit('interpreter.phrase.matched', session, phrase, callback);
             command.run(session, phrase, callback);
         }
     });

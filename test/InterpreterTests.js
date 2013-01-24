@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-12-24
- * @edited      2013-01-04
+ * @edited      2013-01-23
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -76,12 +76,12 @@ test('Run Commands', function(done) {
     sess                                = new Session(socket);
     var success 						= false;
 
-    Interpreter.on('phrase.unmatched', function(session, phrase, callback) {
+    process.on('interpreter.phrase.unmatched', function(session, phrase, callback) {
     	Assert.equal(phrase, 'arith 1 + 1');
     	callback('caught failure');
     });
 
-    Interpreter.on('phrase.matched', function(session, phrase, callback) {
+    process.on('interpreter.phrase.matched', function(session, phrase, callback) {
     	success 						= true;
     });
 

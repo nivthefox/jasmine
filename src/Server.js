@@ -7,11 +7,11 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2013-01-04
+ * @edited      2013-01-23
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
- * Copyright (C) 2012 Kevin Kragenbrink <kevin@writh.net>
+ * Copyright (C) 2013 Kevin Kragenbrink <kevin@writh.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,7 +34,6 @@
 
 /** @ignore */
 var Classical                           = require('classical');
-var EventEmitter                        = require('events').EventEmitter;
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Server');
 var Net                                 = require('net');
 var Session                             = require(BASE_PATH + '/src/Session');
@@ -46,7 +45,7 @@ var config                              = require(BASE_PATH + '/config/game.yml'
  * The telnet server
  * @class Server
  */
-var Server = Extend(EventEmitter, function() {
+var Server = Class(function() {
     /**
      * Loads the options, then creates a socket server.
      *
@@ -57,7 +56,7 @@ var Server = Extend(EventEmitter, function() {
      * @public
      * @method
      * @param   {Object}        options     Options overrides.
-     * @fires   Server#server&period;opened
+     * @fires   Server#server&period;server&period;opened
      */
     this.constructor = Public(function(options) {
         Log.debug('constructor');
@@ -73,10 +72,10 @@ var Server = Extend(EventEmitter, function() {
         /**
          * Notify that the connection has been established.
          *
-         * @event Server#server&period;opened
+         * @event Server#server&period;net&period;listening
          * @property {Integer}  port
          */
-        this.emit('server.opened', this.options.port);
+        process.emit('server.net.listening', this.options.port);
     });
 
     /**
@@ -89,7 +88,7 @@ var Server = Extend(EventEmitter, function() {
      * @protected
      * @method
      * @param   {Net.Socket}    socket      The incoming socket.
-     * @fires   Server#session&period;connected
+     * @fires   Server#server&period;session&period;connected
      */
     this.handleConnection = Protected(function(socket) {
         Log.debug('handleConnection');
@@ -112,10 +111,10 @@ var Server = Extend(EventEmitter, function() {
         /**
          * Notify that the connection has been established.
          *
-         * @event Server#session&period;connected
+         * @event Server#server&period;session&period;connected
          * @property {Session}  session
          */
-        this.emit('session.connected', session);
+        process.emit('server.session.connected', session);
     });
 
     /**
@@ -124,8 +123,8 @@ var Server = Extend(EventEmitter, function() {
      * @name Server#shutdown
      * @public
      * @method
-     * @fires   Server#session&period;close
-     * @fires   Server#server&period;shutdown
+     * @fires   Server#server&period;session&period;close
+     * @fires   Server#server&period;net&period;shutdown
      */
     this.shutdown = Public(function() {
         Log.debug('close');
@@ -134,18 +133,18 @@ var Server = Extend(EventEmitter, function() {
             /**
              * Notify that the connection is closing.
              *
-             * @event Server#session&period;close
+             * @event Server#server&period;session&period;close
              * @property {Session}  session
              */
-            this.emit('session.close', this.sessions[i]);
+            process.emit('server.session.close', this.sessions[i]);
             this.sessions[i].getSocket().end();
         }
         /**
          * Notify that the connection has been established.
          *
-         * @event Server#server&period;shutdown
+         * @event Server#server&period;net&period;shutdown
          */
-        this.emit('server.shutdown');
+        process.emit('server.net.shutdown');
     });
 
     /**

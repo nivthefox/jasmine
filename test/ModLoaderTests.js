@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-07
- * @edited      2013-01-16
+ * @edited      2013-01-23
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -41,7 +41,7 @@ suite('ModLoader');
 test('Load', function(done) {
     ModLoader.load(BASE_PATH + '/test/fixtures/mod');
 
-    ModLoader.once('modload.complete', function(mods) {
+    process.once('modloader.load.complete', function(mods) {
         Assert.ok(ModLoader.isLoaded('Test1'));
         done();
     });
