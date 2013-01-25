@@ -5,7 +5,7 @@ TIMEOUT				= 5000
 ENV					= test
 JSDOC				= /usr/lib/node_modules/jsdoc/jsdoc
 MOCHA				= ./node_modules/.bin/mocha
-TESTS				:= test $(foreach mod, $(shell ls mod), $(PWD)/mod/$(mod)/test)
+TESTS				:= test/*Tests.js $(foreach mod, $(shell ls mod), $(PWD)/mod/$(mod)/test/*Tests.js)
 
 all: clean node_modules coverage docs
 
