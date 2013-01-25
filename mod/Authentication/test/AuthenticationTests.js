@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-23
- * @edited      2013-01-23
+ * @edited      2013-01-25
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -31,12 +31,42 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-require('../../../test/setup');
+
+var globalConfig                        = null;
 var Assert                              = require('assert');
-var Connect                             = require('../src/Connect');
+var Authentication                      = require('../src/Authentication');
+var Net                                 = require('net');
 
-suite('Module:Connect');
+var client                              = new Net.Socket({type : 'tcp4'});
+var modConfig                           = require('../config/game.yml').mod.Authentication;
 
-test('Test', function() {
-    Assert.ok(true);
+
+suite('Modules: Authentication');
+
+before(function() {
+    globalConfig                        = require('../../../test/modSetup');
+    new Authentication(modConfig);
+});
+
+test('Connect', function(done) {
+    var connected                       = false;
+    var received                        = false;
+
+    client.on('connect', function() {
+        connected                       = true;
+        Assert.ok(true);
+    });
+
+    client.on('data', function(data) {
+        received                        = true;
+        Assert.equal(data.toString(),   modConfig.messages.Connect);
+    });
+
+    setTimeout(function() {
+        Assert.ok(connected);
+        Assert.ok(received);
+        done();
+    }, 10);
+
+    client.connect(globalConfig.port);
 });

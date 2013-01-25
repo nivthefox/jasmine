@@ -56,7 +56,9 @@ var Authentication = Implement(Module, function() {
     });
 
     this.renderConnectScreen = Protected(function(session) {
-        Dust.render("Connect", {}, function(err, out) { session.send(out); });
+        Dust.render("Connect", {}, function(err, out) {
+            session.send(out);
+        });
     });
 
     this.config                         = Protected({});

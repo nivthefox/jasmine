@@ -57,7 +57,7 @@ test('Connect', function(done) {
         Assert.ok(true);
     });
 
-    process.on('server.session.connected', function(session) {
+    process.once('server.session.connected', function(session) {
         session.send('Welcome to test.');
     });
 

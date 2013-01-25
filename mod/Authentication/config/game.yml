@@ -5,4 +5,3 @@ mod:
         Welcome to jasmine.
 
         Type "connect <name> <password>" to connect.
-        Type "create <name> <password>" to create a new login.

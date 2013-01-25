@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2013-01-23
+ * @edited      2013-01-25
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -139,6 +139,8 @@ var Server = Class(function() {
             process.emit('server.session.close', this.sessions[i]);
             this.sessions[i].getSocket().end();
         }
+
+        this.server.close();
         /**
          * Notify that the connection has been established.
          *
