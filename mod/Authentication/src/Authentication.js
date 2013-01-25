@@ -31,12 +31,29 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
+/** @ignore */
+var Classical                           = require('classical');
 var Dust                                = require('dustjs-linkedin');
 var Module                              = require(BASE_PATH + '/hdr/Module');
 var Server                              = require(BASE_PATH + '/src/Server');
 
+/**
+ * Adds support for character creation, login authentication, and a connect screen.
+ *
+ * @class Authentication
+ * @subpackage Modules
+ */
 var Authentication = Implement(Module, function() {
 
+    /**
+     * Prepares templates and hooks.
+     *
+     * @name Authentication#constructor
+     * @public
+     * @method
+     * @param   {Object}        config
+     */
     this.constructor = Public(function(config) {
         this.config                     = config;
 
@@ -45,22 +62,45 @@ var Authentication = Implement(Module, function() {
         process.on('server.session.connected', this.renderConnectScreen);
     });
 
+    /**
+     * Compiles Dust templates.
+     *
+     * @name Authentication#compileTemplates
+     * @protected
+     * @method
+     */
     this.compileTemplates = Protected(function() {
         Dust.optimizers.format = function(ctx, node) { return node };
 
         for (var template in this.config.messages) {
-            var compiled                = Dust.compile(this.config.messages[template], template);
+            var compiled                = Dust.compile(this.config.messages[template], 'Authentication.' + template);
             Dust.loadSource(compiled);
         }
         delete compiled;
     });
 
+    /**
+     * Renders the connect message to a newly created session.
+     *
+     * @name Authentication#renderConnectScreen
+     * @protected
+     * @method
+     * @param   {Session}       session
+     */
     this.renderConnectScreen = Protected(function(session) {
-        Dust.render("Connect", {}, function(err, out) {
+        Dust.render("Authentication.Connect", {}, function(err, out) {
             session.send(out);
         });
     });
 
+    /**
+     * Stores the module configuration.
+     *
+     * @name Authentication#config
+     * @protected
+     * @member
+     * @type    {Object}
+     */
     this.config                         = Protected({});
 });
 
