@@ -1,5 +1,5 @@
 mod:
-  Connect:
+  Authentication:
     messages:
       Connect: |
         Welcome to jasmine.

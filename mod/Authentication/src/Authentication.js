@@ -35,7 +35,7 @@ var Dust                                = require('dustjs-linkedin');
 var Module                              = require(BASE_PATH + '/hdr/Module');
 var Server                              = require(BASE_PATH + '/src/Server');
 
-var Connect = Implement(Module, function() {
+var Authentication = Implement(Module, function() {
 
     this.constructor = Public(function(config) {
         this.config                     = config;
@@ -56,12 +56,10 @@ var Connect = Implement(Module, function() {
     });
 
     this.renderConnectScreen = Protected(function(session) {
-        Dust.render("Connect", {}, function(err, out) {
-            session.send(out);
-        });
+        Dust.render("Connect", {}, function(err, out) { session.send(out); });
     });
 
     this.config                         = Protected({});
 });
 
-module.exports                          = Connect;
+module.exports                          = Authentication;
