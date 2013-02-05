@@ -79,6 +79,14 @@ var Session = Extend(EventEmitter, function() {
         this.socket.on('data',          this.handleData.bind(this, this.__classical_public));
     });
 
+    /**
+     * Returns the session ID.
+     * 
+     * @name Session#getId
+     * @public
+     * @method
+     * @return  {Session:id}
+     */
     this.getId = Public(function() {
         Log.debug('getId');
 
@@ -112,10 +120,19 @@ var Session = Extend(EventEmitter, function() {
         return this.status;
     });
 
-    this.handleData = Public(function(session, data) {
+    /**
+     * Handles incoming data streams and passes them to the Interpreter.
+     * 
+     * @name Session#handleData
+     * @protected
+     * @method
+     * @param   {Session}   session
+     * @param   {Buffer}    data
+     */
+    this.handleData = Protected(function(session, data) {
         Log.debug('handleData');
 
-        var data                        = data.toString();
+        data                            = data.toString();
 
         Interpreter.interpret(session, data, function() {});
     });
@@ -123,9 +140,10 @@ var Session = Extend(EventEmitter, function() {
     /**
      * Sends a message along the socket.
      *
-     * @name Session#send
-     * @public
+     * @name    Session#send
      * @method
+     * @public
+     * @param   {String}            message
      */
     this.send = Public(function(message) {
         Log.debug('send', message);
@@ -135,6 +153,10 @@ var Session = Extend(EventEmitter, function() {
 
     /**
      * Sets the current session status.
+     * 
+     * @name    Session#setStatus
+     * @method
+     * @public
      * @param   {Status:value}      status
      * @return  {undefined}
      */
@@ -142,8 +164,34 @@ var Session = Extend(EventEmitter, function() {
         this.status                     = status;
     });
 
+    /**
+     * The session ID
+     * 
+     * @name    Session#id
+     * @member
+     * @protected
+     * @type    {String}
+     */
     this.id                             = Protected(null);
+    
+    /**
+     * The socket associated with this session
+     * 
+     * @name    Session#socket
+     * @member
+     * @protected
+     * @type    {Net.Socket}
+     */
     this.socket                         = Protected({});
+    
+    /**
+     * The status of this session
+     * 
+     * @name    Session#status
+     * @member
+     * @protected
+     * @type    {Status}
+     */
     this.status                         = Protected(Status.NEW);
 });
 
