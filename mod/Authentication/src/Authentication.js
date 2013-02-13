@@ -35,8 +35,11 @@
 /** @ignore */
 var Classical                           = require('classical');
 var Dust                                = require('dustjs-linkedin');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Authentication');
 var Module                              = require(BASE_PATH + '/hdr/Module');
 var Server                              = require(BASE_PATH + '/src/Server');
+
+// var User                                = require('../model/User');
 
 /**
  * Adds support for character creation, login authentication, and a connect screen.
@@ -55,6 +58,7 @@ var Authentication = Implement(Module, function() {
      * @param   {Object}        config
      */
     this.constructor = Public(function(config) {
+        Log.debug('constructor');
         this.config                     = config;
 
         this.compileTemplates();
@@ -70,6 +74,7 @@ var Authentication = Implement(Module, function() {
      * @method
      */
     this.compileTemplates = Protected(function() {
+        Log.debug('compileTemplates');
         Dust.optimizers.format = function(ctx, node) { return node };
 
         for (var template in this.config.messages) {
@@ -88,6 +93,7 @@ var Authentication = Implement(Module, function() {
      * @param   {Session}       session
      */
     this.renderConnectScreen = Protected(function(session) {
+        Log.debug('renderConnectScreen');
         Dust.render("Authentication.Connect", {}, function(err, out) {
             session.send(out);
         });

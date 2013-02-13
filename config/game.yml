@@ -6,3 +6,4 @@ log:
 timeout:
   connect                               : 300
   idle                                  : -1
+database                                : mongodb://localhost/jasmine

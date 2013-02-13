@@ -114,7 +114,7 @@ var ModLoader = Class(function() {
                  * @property    {String}    mod
                  */
                 process.emit('modloader.module.failed', mod);
-                Log.warn('Module %s failed to load: %s', e);
+                Log.warn('Module %s failed to load: %s', mod, e);
             }
         }
         else {
