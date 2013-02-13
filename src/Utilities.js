@@ -63,9 +63,9 @@ var Utilities = Extend(Util, function() {
         var source;
 
         while (source = args.shift()) {
-            if (typeof source == 'object' && (Object.prototype.toString.call(source) == '[object Object]' || Object.prototype.toString.call(source) == '[object Array]')) {
+            if (typeof source == 'object' && source !== null && (Object.prototype.toString.call(source) == '[object Object]' || Object.prototype.toString.call(source) == '[object Array]')) {
                 for (var i in source) {
-                    if (source.hasOwnProperty(i)) {
+                    if (target !== null && source.hasOwnProperty(i)) {
                         target[i]               = target[i] || ((Object.prototype.toString.call(source[i]) == '[object Array]') ? [] : {});
                         target[i]               = arguments.callee(target[i], source[i]);
                     }
