@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-23
- * @edited      2013-01-23
+ * @edited      2013-02-12
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -35,24 +35,24 @@
 /** @ignore */
 var Classical                           = require('classical');
 var Dust                                = require('dustjs-linkedin');
-var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Authentication');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth');
 var Module                              = require(BASE_PATH + '/hdr/Module');
 var Server                              = require(BASE_PATH + '/src/Server');
 
-// var User                                = require('../model/User');
+var User                                = require('../model/User');
 
 /**
- * Adds support for character creation, login authentication, and a connect screen.
+ * Adds support for character creation, login authentication, authorization, and a connect screen.
  *
- * @class Authentication
+ * @class Auth
  * @subpackage Modules
  */
-var Authentication = Implement(Module, function() {
+var Auth = Implement(Module, function() {
 
     /**
      * Prepares templates and hooks.
      *
-     * @name Authentication#constructor
+     * @name Auth#constructor
      * @public
      * @method
      * @param   {Object}        config
@@ -63,13 +63,15 @@ var Authentication = Implement(Module, function() {
 
         this.compileTemplates();
 
+        User.count(this.createFirstUser);
+
         process.on('server.session.connected', this.renderConnectScreen);
     });
 
     /**
      * Compiles Dust templates.
      *
-     * @name Authentication#compileTemplates
+     * @name Auth#compileTemplates
      * @protected
      * @method
      */
@@ -78,23 +80,31 @@ var Authentication = Implement(Module, function() {
         Dust.optimizers.format = function(ctx, node) { return node };
 
         for (var template in this.config.messages) {
-            var compiled                = Dust.compile(this.config.messages[template], 'Authentication.' + template);
+            var compiled                = Dust.compile(this.config.messages[template], 'Auth.' + template);
             Dust.loadSource(compiled);
         }
         delete compiled;
     });
 
+    this.createFirstUser = Protected(function(err, count) {
+        if (count === 0) {
+            Log.debug('createFirstUser');
+            var Owner                   = new User({name : 'Owner', password : 'jasmine'});
+            Owner.save();
+        }
+    });
+
     /**
      * Renders the connect message to a newly created session.
      *
-     * @name Authentication#renderConnectScreen
+     * @name Auth#renderConnectScreen
      * @protected
      * @method
      * @param   {Session}       session
      */
     this.renderConnectScreen = Protected(function(session) {
         Log.debug('renderConnectScreen');
-        Dust.render("Authentication.Connect", {}, function(err, out) {
+        Dust.render("Auth.Connect", {}, function(err, out) {
             session.send(out);
         });
     });
@@ -102,7 +112,7 @@ var Authentication = Implement(Module, function() {
     /**
      * Stores the module configuration.
      *
-     * @name Authentication#config
+     * @name Auth#config
      * @protected
      * @member
      * @type    {Object}
@@ -110,4 +120,4 @@ var Authentication = Implement(Module, function() {
     this.config                         = Protected({});
 });
 
-module.exports                          = Authentication;
+module.exports                          = Auth;

@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-23
- * @edited      2013-01-25
+ * @edited      2013-02-12
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -34,18 +34,18 @@
 
 var globalConfig                        = null;
 var Assert                              = require('assert');
-var Authentication                      = require('../src/Authentication');
+var Auth                                = require('../src/Auth');
 var Net                                 = require('net');
 
 var client                              = new Net.Socket({type : 'tcp4'});
-var modConfig                           = require('../config/game.yml').mod.Authentication;
+var modConfig                           = require('../config/game.yml').mod.Auth;
 
 
-suite('Modules: Authentication');
+suite('Modules: Auth');
 
 before(function() {
     globalConfig                        = require('../../../test/modSetup');
-    new Authentication(modConfig);
+    new Auth(modConfig);
 });
 
 test('Connect', function(done) {
