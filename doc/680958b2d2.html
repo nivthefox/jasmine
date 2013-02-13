@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/Controller.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: src/Controller.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * __          __   _ _   _                  _
+ * \ \        / /  (_) | | |                | |
+ *  \ \  /\  / / __ _| |_| |__    _ __   ___| |_
+ *   \ \/  \/ / '__| | __| '_ \  | '_ \ / _ \ __|
+ *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
+ *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
+ *
+ * @created     2012-12-18
+ * @edited      2012-12-18
+ * @package     JaSMINE
+ * @see         https://github.com/Writh/jasmine
+ *
+ * Copyright (C) 2012 Kevin Kragenbrink &lt;kevin@writh.net>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+/** @ignore */
+var Classical                           = require('classical');
+var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Controller');
+
+/**
+ * Manages internal instructions.
+ *
+ * @class Controller
+ * @singleton
+ */
+var Controller = Class(function() {
+
+    /**
+     * Defines a new instruction which can be used in Instruction Sets.
+     *
+     * @name Controller#define
+     * @public
+     * @method
+     * @param   {String}        name
+     * @param   {Class}         instruction
+     */
+    this.define = Public(function(name, instruction) {
+        Log.debug('define');
+
+        if (this.instructions[name] !== undefined) {
+            throw new Error('Instruction name address collision.  An instruction by that name is already defined.');
+        }
+
+        // TODO: This section should work, but is presently failing. Likely 'Implement' is not maintaining the inheritance chain.
+//        if (!(new instruction instanceof Instruction)) {
+//            throw new Error('Attempted to define non-Instruction as an Instruction.');
+//        }
+
+        this.instructions[name]         = instruction;
+    });
+
+    /**
+     * Prepares an instruction for later processing.
+     *
+     * @name Controller#prepare
+     * @public
+     * @method
+     * @param   {String}        name
+     * @param   {*}             [...]
+     * @return  {Instruction}
+     */
+    this.prepare = Public(function() {
+        Log.debug('prepare');
+
+        var args                        = Array.prototype.slice.call(arguments);
+        var name                        = args.shift();
+
+        if (this.instructions[name] === undefined) {
+            throw new Error('Attempted to prepare invalid instruction.');
+        }
+
+        var instruction                 = new this.instructions[name];
+        instruction.initialize.apply(instruction, args);
+        return instruction;
+    });
+
+    /**
+     * The collection of available instructions.
+     *
+     * @name Controller#instructions
+     * @private
+     * @member
+     * @type    {Object}
+     */
+    this.instructions                   = Private({});
+});
+
+module.exports                          = new Controller;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a></li><li><a href="Controller.html">Controller</a></li><li><a href="Instruction.html">Instruction</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="Interpreter.CommandList.html">CommandList</a></li><li><a href="jasmine.html">jasmine</a></li><li><a href="Messages.html">Messages</a></li><li><a href="ModLoader.html">ModLoader</a></li><li><a href="Module.html">Module</a></li><li><a href="Server.html">Server</a></li><li><a href="Session.html">Session</a></li><li><a href="Tokenizer.html">Tokenizer</a></li><li><a href="Tokenizer.Token.html">Token</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3>Events</h3><ul><li><a href="Interpreter.html#event:interpreter&period;phrase&period;matched">interpreter&period;phrase&period;matched</a></li><li><a href="Interpreter.html#event:interpreter&period;phrase&period;unmatched">interpreter&period;phrase&period;unmatched</a></li><li><a href="ModLoader.html#event:modloader&period;load&period;complete">modloader&period;load&period;complete</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;failed">modloader&period;module&period;failed</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;loaded">modloader&period;module&period;loaded</a></li><li><a href="Server.html#event:server&period;net&period;listening">server&period;net&period;listening</a></li><li><a href="Server.html#event:server&period;net&period;shutdown">server&period;net&period;shutdown</a></li><li><a href="Server.html#event:server&period;session&period;close">server&period;session&period;close</a></li><li><a href="Server.html#event:server&period;session&period;connected">server&period;session&period;connected</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Feb 12 2013 16:32:19 GMT-0800 (PST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>

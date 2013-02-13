@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/Session.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: src/Session.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * __          __   _ _   _                  _
+ * \ \        / /  (_) | | |                | |
+ *  \ \  /\  / / __ _| |_| |__    _ __   ___| |_
+ *   \ \/  \/ / '__| | __| '_ \  | '_ \ / _ \ __|
+ *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
+ *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
+ *
+ * @created     2012-11-21
+ * @edited      2012-12-12
+ * @package     JaSMINE
+ * @see         https://github.com/Writh/jasmine
+ *
+ * Copyright (C) 2012 Kevin Kragenbrink &lt;kevin@writh.net>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+/** @ignore */
+var Classical                           = require('classical');
+var EventEmitter                        = require('events' ).EventEmitter;
+var Interpreter                         = require(BASE_PATH + '/src/Interpreter');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Session');
+var Net                                 = require('net');
+var Util                                = require(BASE_PATH + '/src/Utilities');
+
+/**
+ * An enum of available statuses.
+ * @memberof Session
+ * @enum {Integer}
+ */
+var Status = {
+    NEW                                 : 0,
+    CONNECTING                          : 1,
+    CONNECTED                           : 2,
+    DISCONNECTED                        : 3,
+    TIMEDOUT                            : 4
+};
+
+/**
+ * A socket wrapper class.
+ * @class
+ */
+var Session = Extend(EventEmitter, function() {
+
+    /**
+     * Instantiates the Session and stores the socket.
+     *
+     * @name Session#constructor
+     * @public
+     * @method
+     * @param   {Net.Socket}        socket
+     */
+    this.constructor = Public(function(socket) {
+        Log.debug('constructor');
+
+        var timestamp                   = process.hrtime();
+        this.id                         = Util.format('%s.%s', timestamp[0], timestamp[1]);
+        this.socket                     = socket;
+        this.socket.on('close',         this.setStatus.bind(this, Status.DISCONNECTED));
+        this.socket.on('login',         this.setStatus.bind(this, Status.CONNECTING));
+        this.socket.on('timeout',       this.setStatus.bind(this, Status.TIMEDOUT));
+        this.socket.on('data',          this.handleData.bind(this, this.__classical_public));
+    });
+
+    /**
+     * Returns the session ID.
+     * 
+     * @name Session#getId
+     * @public
+     * @method
+     * @return  {Session:id}
+     */
+    this.getId = Public(function() {
+        Log.debug('getId');
+
+        return this.id;
+    });
+
+    /**
+     * Retrieves the underlying socket.
+     *
+     * @name Session#getSocket
+     * @public
+     * @method
+     */
+    this.getSocket = Public(function() {
+        Log.debug('getSocket');
+
+        return this.socket;
+    });
+
+    /**
+     * Returns the current status of the socket.
+     *
+     * @name Session#getStatus
+     * @public
+     * @method
+     * @return  {Status}
+     */
+    this.getStatus = Public(function() {
+        Log.debug('getStatus');
+
+        return this.status;
+    });
+
+    /**
+     * Handles incoming data streams and passes them to the Interpreter.
+     * 
+     * @name Session#handleData
+     * @protected
+     * @method
+     * @param   {Session}   session
+     * @param   {Buffer}    data
+     */
+    this.handleData = Protected(function(session, data) {
+        Log.debug('handleData');
+
+        data                            = data.toString();
+
+        Interpreter.interpret(session, data, function() {});
+    });
+
+    /**
+     * Sends a message along the socket.
+     *
+     * @name    Session#send
+     * @method
+     * @public
+     * @param   {String}            message
+     */
+    this.send = Public(function(message) {
+        Log.debug('send', message);
+
+        this.socket.write(message);
+    });
+
+    /**
+     * Sets the current session status.
+     * 
+     * @name    Session#setStatus
+     * @method
+     * @public
+     * @param   {Status:value}      status
+     * @return  {undefined}
+     */
+    this.setStatus = Public(function(status) {
+        this.status                     = status;
+    });
+
+    /**
+     * The session ID
+     * 
+     * @name    Session#id
+     * @member
+     * @protected
+     * @type    {String}
+     */
+    this.id                             = Protected(null);
+    
+    /**
+     * The socket associated with this session
+     * 
+     * @name    Session#socket
+     * @member
+     * @protected
+     * @type    {Net.Socket}
+     */
+    this.socket                         = Protected({});
+    
+    /**
+     * The status of this session
+     * 
+     * @name    Session#status
+     * @member
+     * @protected
+     * @type    {Status}
+     */
+    this.status                         = Protected(Status.NEW);
+});
+
+module.exports                          = Session;
+module.exports.Status                   = Status;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a></li><li><a href="Controller.html">Controller</a></li><li><a href="Instruction.html">Instruction</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="Interpreter.CommandList.html">CommandList</a></li><li><a href="jasmine.html">jasmine</a></li><li><a href="Messages.html">Messages</a></li><li><a href="ModLoader.html">ModLoader</a></li><li><a href="Module.html">Module</a></li><li><a href="Server.html">Server</a></li><li><a href="Session.html">Session</a></li><li><a href="Tokenizer.html">Tokenizer</a></li><li><a href="Tokenizer.Token.html">Token</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3>Events</h3><ul><li><a href="Interpreter.html#event:interpreter&period;phrase&period;matched">interpreter&period;phrase&period;matched</a></li><li><a href="Interpreter.html#event:interpreter&period;phrase&period;unmatched">interpreter&period;phrase&period;unmatched</a></li><li><a href="ModLoader.html#event:modloader&period;load&period;complete">modloader&period;load&period;complete</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;failed">modloader&period;module&period;failed</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;loaded">modloader&period;module&period;loaded</a></li><li><a href="Server.html#event:server&period;net&period;listening">server&period;net&period;listening</a></li><li><a href="Server.html#event:server&period;net&period;shutdown">server&period;net&period;shutdown</a></li><li><a href="Server.html#event:server&period;session&period;close">server&period;session&period;close</a></li><li><a href="Server.html#event:server&period;session&period;connected">server&period;session&period;connected</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Feb 12 2013 16:32:19 GMT-0800 (PST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>
