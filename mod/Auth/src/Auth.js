@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-23
- * @edited      2013-02-12
+ * @edited      2013-02-13
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -35,9 +35,13 @@
 /** @ignore */
 var Classical                           = require('classical');
 var Dust                                = require('dustjs-linkedin');
+var FS                                  = require('fs');
+var Interpreter                         = require(BASE_PATH + '/src/Interpreter');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth');
 var Module                              = require(BASE_PATH + '/hdr/Module');
 var Server                              = require(BASE_PATH + '/src/Server');
+var Session                             = require(BASE_PATH + '/src/Session');
+var Util                                = require(BASE_PATH + '/src/Utilities');
 
 var User                                = require('../model/User');
 
@@ -45,7 +49,7 @@ var User                                = require('../model/User');
  * Adds support for character creation, login authentication, authorization, and a connect screen.
  *
  * @class Auth
- * @subpackage Modules
+ * @subpackage Auth
  */
 var Auth = Implement(Module, function() {
 
@@ -62,10 +66,9 @@ var Auth = Implement(Module, function() {
         this.config                     = config;
 
         this.compileTemplates();
-
-        User.count(this.createFirstUser);
-
-        process.on('server.session.connected', this.renderConnectScreen);
+        this.setupCommands();
+        this.setupHooks();
+        this.setupUsers();
     });
 
     /**
@@ -77,7 +80,7 @@ var Auth = Implement(Module, function() {
      */
     this.compileTemplates = Protected(function() {
         Log.debug('compileTemplates');
-        Dust.optimizers.format = function(ctx, node) { return node };
+        Dust.optimizers.format          = function(ctx, node) { return node };
 
         for (var template in this.config.messages) {
             var compiled                = Dust.compile(this.config.messages[template], 'Auth.' + template);
@@ -94,6 +97,16 @@ var Auth = Implement(Module, function() {
         }
     });
 
+    this.isAtLogin = Protected(function(session, phrase) {
+        Log.debug('isAtLogin');
+        return (session.getStatus() == Session.Status.CONNECTING);
+    });
+
+    this.isAuthAdmin = Protected(function(session, phrase) {
+        Log.debug('isAuthAdmin');
+        return false;
+    });
+
     /**
      * Renders the connect message to a newly created session.
      *
@@ -107,6 +120,38 @@ var Auth = Implement(Module, function() {
         Dust.render("Auth.Connect", {}, function(err, out) {
             session.send(out);
         });
+    });
+
+    this.setupCommands = Protected(function() {
+        Log.debug('setupCommands');
+
+        // Adding command lists to the Interpreter.
+        Interpreter.configure('login',  1,  this.isAtLogin);
+        Interpreter.configure('auth',   1,  this.isAuthAdmin);
+
+        // Adding all commands to the appropriate lists.
+        var lists                       = ['auth', 'cmd', 'login'];
+        var list;
+        while (list = lists.shift()) {
+            FS.readdir(Util.format('%s/%s', __dirname, list), function(list, err, files) {
+                for (var i in files) {
+                    var Command         = require(Util.format('%s/%s/%s', __dirname, list, files[i]));
+                    Interpreter.addCommand(list, Command);
+                }
+            }.bind(this, list));
+        }
+    });
+
+    this.setupHooks = Protected(function() {
+        Log.debug('setupHooks');
+
+        process.on('server.session.connect', this.renderConnectScreen);
+    });
+
+    this.setupUsers = Protected(function() {
+        Log.debug('setupUsers');
+
+        User.count(this.createFirstUser);
     });
 
     /**
