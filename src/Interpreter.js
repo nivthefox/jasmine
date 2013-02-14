@@ -234,6 +234,7 @@ var Interpreter = Class(function() {
         }
 
         if (command === null) {
+            Log.debug('Could not match phrase');
             /**
              * The interpreter was unable to match a phrase to a command.
              *
@@ -245,6 +246,7 @@ var Interpreter = Class(function() {
             process.emit('interpreter.phrase.unmatched', session, phrase, callback);
         }
         else {
+            Log.debug('Successfully matched phrase');
             /**
              * The interpreter successfully matched a phrase to a command.
              *
