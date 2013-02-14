@@ -44,6 +44,12 @@ function check_status {
         fi
 }
 
+function remove_pidfile {
+    if [ -e ${PID_FILE} ]; then
+        rm ${PID_FILE}
+    fi
+}
+
 case "$ACTION" in
     "start")
         if [ -e "${PID_FILE}" ]; then
@@ -56,7 +62,17 @@ case "$ACTION" in
         ;;
 
     "stop")
-        kill -TERM ${PID}
+        STATUS="$(check_status)"
+        case "${STATUS}" in
+            [1-2])
+                echo "jasmine is not running."
+                remove_pidfile
+                ;;
+            *)
+                kill -TERM ${PID}
+                remove_pidfile
+                ;;
+        esac
         ;;
 
     "reload")
@@ -65,7 +81,7 @@ case "$ACTION" in
 
     "restart")
         ./jasmine stop
-        ./jasmine start $*
+        ./jasmine start "${@##${1}}"
         ;;
 
     "status")
@@ -77,15 +93,11 @@ case "$ACTION" in
 
             [1-2])
                 echo "jasmine is not running."
-
-                if [ -e ${PID_FILE} ]; then
-                    rm ${PID_FILE}
-                fi
+                remove_pidfile
                 ;;
         esac
         ;;
-
     *)
-        echo "Usage: ./jasmine (start|stop|restart|reset|status)"
+        echo "Usage: ./jasmine (start|stop|restart|reload|status)"
         ;;
 esac
