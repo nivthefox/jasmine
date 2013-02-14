@@ -75,13 +75,13 @@ var Session = Extend(EventEmitter, function() {
         this.socket                     = socket;
         this.socket.on('close',         this.setStatus.bind(this, Status.DISCONNECTED));
         this.socket.on('login',         this.setStatus.bind(this, Status.CONNECTING));
-        this.socket.on('timeout',       this.setStatus.bind(this, Status.TIMEDOUT));
-        this.socket.on('data',          this.handleData.bind(this, this.__classical_public));
+        // this.socket.on('timeout',       this.setStatus.bind(this, Status.TIMEDOUT));
+        this.socket.on('data',          this.handleData.bind(this, this._classical_public));
     });
 
     /**
      * Returns the session ID.
-     * 
+     *
      * @name Session#getId
      * @public
      * @method
@@ -122,7 +122,7 @@ var Session = Extend(EventEmitter, function() {
 
     /**
      * Handles incoming data streams and passes them to the Interpreter.
-     * 
+     *
      * @name Session#handleData
      * @protected
      * @method
@@ -132,7 +132,7 @@ var Session = Extend(EventEmitter, function() {
     this.handleData = Protected(function(session, data) {
         Log.debug('handleData');
 
-        data                            = data.toString();
+        data                            = data.toString().trim();
 
         Interpreter.interpret(session, data, function() {});
     });
@@ -153,7 +153,7 @@ var Session = Extend(EventEmitter, function() {
 
     /**
      * Sets the current session status.
-     * 
+     *
      * @name    Session#setStatus
      * @method
      * @public
@@ -166,27 +166,27 @@ var Session = Extend(EventEmitter, function() {
 
     /**
      * The session ID
-     * 
+     *
      * @name    Session#id
      * @member
      * @protected
      * @type    {String}
      */
     this.id                             = Protected(null);
-    
+
     /**
      * The socket associated with this session
-     * 
+     *
      * @name    Session#socket
      * @member
      * @protected
      * @type    {Net.Socket}
      */
     this.socket                         = Protected({});
-    
+
     /**
      * The status of this session
-     * 
+     *
      * @name    Session#status
      * @member
      * @protected
