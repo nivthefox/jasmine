@@ -1,7 +1,8 @@
 mod:
   Auth:
     messages:
-      Connect: |
-        Welcome to jasmine.
+      BadLogin                          : Either there is no user with that name or you have used an incorrect password.
+      Connect                           : |
+                                            Welcome to jasmine.
 
-        Type "connect <name> <password>" to connect.
+                                            Type "connect <name> <password>" to connect.

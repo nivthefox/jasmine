@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-23
- * @edited      2013-02-13
+ * @edited      2013-02-15
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -35,6 +35,7 @@
 /** @ignore */
 var Classical                           = require('classical');
 var Command                             = require(BASE_PATH + '/hdr/Command');
+var Controller                          = require(BASE_PATH + '/src/Controller');
 var Dust                                = require('dustjs-linkedin');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth.Connect');
 var User                                = require('../../model/User');
@@ -47,14 +48,42 @@ var User                                = require('../../model/User');
  */
 var Connect = Implement(Command, function() {
 
-    this.expression                     = Static(Public(/^connect ((?:\w| )+"|\w+) (.+)$/));
+    this.expression                     = Static(Public(/^connect ("(?:\w| )+"|\w+) (.+)$/));
 
     this.run = Public(function(session, phrase, callback) {
-        Log.debug('run');
+        Log.debug('run', session);
+
         var parts                       = this.expression.exec(phrase);
-        var username                    = parts[1];
+        var username                    = new RegExp(parts[1], 'i');
         var password                    = parts[2];
+
+        this.session                    = session;
+        this.callback                   = callback;
+        this.password                   = User.hashPassword(password);
+
+        User.findOne({$or : [
+            {name   : { $regex : username}},
+            {alias  : { $regex : username}}
+        ]}, this.validatePassword);
     });
+
+    this.validatePassword = Protected(function(err, user) {
+        Log.debug('validatePassword');
+
+        if (user === null || this.password !== user.password) {
+            Dust.render("Auth.BadLogin", {}, function(err, out) {
+                this.session.send(out);
+            }.bind(this));
+        }
+        else {
+            Log.debug('successful login');
+        }
+    });
+
+    this.session                        = Protected({});
+    this.callback                       = Protected(function() {});
+    this.password                       = Protected(null);
+    this.instructions                   = Protected([]);
 });
 
 module.exports                          = Connect;

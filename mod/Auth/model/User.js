@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-02-12
- * @edited      2013-02-12
+ * @edited      2013-02-15
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -111,10 +111,10 @@ schema.pre('save', function(next) {
     Log.debug('validateName');
 
     var uniqueNameQuery = { $or : [
-        {name : this.name},
-        {name: this.alias},
-        {alias: this.name},
-        {alias: this.alias}
+        {name       : this.name},
+        {name       : this.alias},
+        {alias      : this.name},
+        {alias      : this.alias}
     ]};
     User.count(uniqueNameQuery, function(err, count) {
         if (count > 0) {
@@ -155,4 +155,6 @@ var User                                = Database.model('User', schema);
 User.on('error', function(err) {
     Log.debug('error', err);
 });
+
 module.exports                          = User;
+module.exports.hashPassword             = hashPassword;

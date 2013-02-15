@@ -145,7 +145,7 @@ var Auth = Implement(Module, function() {
     this.setupHooks = Protected(function() {
         Log.debug('setupHooks');
 
-        process.on('server.session.connect', this.renderConnectScreen);
+        process.on('server.session.connected', this.renderConnectScreen);
     });
 
     this.setupUsers = Protected(function() {
