@@ -62,8 +62,8 @@ var Connect = Implement(Command, function() {
         this.password                   = User.hashPassword(password);
 
         User.findOne({$or : [
-            {name   : { $regex : username}},
-            {alias  : { $regex : username}}
+            {name   : {$regex : username}},
+            {alias  : {$regex : username}}
         ]}, this.validatePassword);
     });
 
