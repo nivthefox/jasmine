@@ -59,7 +59,7 @@ test('Connect', function(done) {
 
     client.on('data', function(data) {
         received                        = true;
-        Assert.equal(data.toString(),   modConfig.messages.Connect);
+        Assert.equal(data.toString(),   modConfig.messages.Connect + "\n");
     });
 
     setTimeout(function() {
