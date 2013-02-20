@@ -37,18 +37,18 @@ var Classical                           = require('classical');
 var Command                             = require(BASE_PATH + '/hdr/Command');
 var Controller                          = require(BASE_PATH + '/src/Controller');
 var Dust                                = require('dustjs-linkedin');
-var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth.Connect');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth.Login');
 var User                                = require('../../model/User');
 
 /**
- * A command to enable players to log into the game.
+ * A command to enable players to authenticate their login as a specific user.
  *
- * @class       Connect
+ * @class       Login
  * @subpackage  Auth
  */
-var Connect = Implement(Command, function() {
+var Login = Implement(Command, function() {
 
-    this.expression                     = Static(Public(/^connect ("(?:\w| )+"|\w+) (.+)$/));
+    this.expression                     = Static(Public(/^login ("(?:\w| )+"|\w+) (.+)$/i));
 
     this.run = Public(function(session, phrase, callback) {
         Log.debug('run', session);
@@ -86,4 +86,4 @@ var Connect = Implement(Command, function() {
     this.instructions                   = Protected([]);
 });
 
-module.exports                          = Connect;
+module.exports                          = Login;
