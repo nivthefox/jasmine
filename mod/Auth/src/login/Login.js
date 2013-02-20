@@ -48,7 +48,7 @@ var User                                = require('../../model/User');
  */
 var Login = Implement(Command, function() {
 
-    this.expression                     = Static(Public(/^login ("(?:\w| )+"|\w+) (.+)$/i));
+    this.expression                     = Static(Public(/^(login|connect) ("(?:\w| )+"|\w+) (.+)$/i));
 
     this.run = Public(function(session, phrase, callback) {
         Log.debug('run', session);
