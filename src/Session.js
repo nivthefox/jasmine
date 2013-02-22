@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-12-12
+ * @edited      2013-02-22
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -72,6 +72,7 @@ var Session = Extend(EventEmitter, function() {
 
         var timestamp                   = process.hrtime();
         this.id                         = Util.format('%s.%s', timestamp[0], timestamp[1]);
+        this.data.moniker               = this.id;
         this.socket                     = socket;
         this.socket.on('close',         this.setStatus.bind(this, Status.DISCONNECTED));
         this.socket.on('login',         this.setStatus.bind(this, Status.CONNECTING));
@@ -82,7 +83,7 @@ var Session = Extend(EventEmitter, function() {
     /**
      * Returns the session ID.
      *
-     * @name Session#getId
+     * @name    Session#getId
      * @public
      * @method
      * @return  {Session:id}
@@ -173,6 +174,16 @@ var Session = Extend(EventEmitter, function() {
      * @type    {String}
      */
     this.id                             = Protected(null);
+
+    /**
+     * Additional data appended to the session for use by modules.
+     *
+     * @name    Session#data
+     * @member
+     * @public
+     * @type    {Object}
+     */
+    this.data                           = Public({});
 
     /**
      * The socket associated with this session
