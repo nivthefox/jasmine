@@ -37,7 +37,7 @@ var Classical                           = require('classical');
 var Command                             = require(BASE_PATH + '/hdr/Command');
 var Controller                          = require(BASE_PATH + '/src/Controller');
 var Dust                                = require('dustjs-linkedin');
-var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth.Login');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth.Quit');
 var Session                             = require(BASE_PATH + '/src/Session');
 var User                                = require('../../model/User');
 

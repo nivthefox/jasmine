@@ -100,7 +100,12 @@ var Auth = Implement(Module, function() {
 
     this.isAtLogin = Protected(function(session, phrase) {
         Log.debug('isAtLogin');
-        return (session.getStatus() == Session.Status.CONNECTING);
+        return (session.getStatus() === Session.Status.CONNECTING);
+    });
+
+    this.isAuth = Protected(function(session, phrase) {
+        Log.debug('isAuth');
+        return (session.getStatus() === Session.Status.CONNECTED);
     });
 
     this.isAuthAdmin = Protected(function(session, phrase) {
@@ -130,6 +135,7 @@ var Auth = Implement(Module, function() {
         // Adding command lists to the Interpreter.
         Interpreter.configure('login',  1,  this.isAtLogin);
         Interpreter.configure('auth',   1,  this.isAuthAdmin);
+        Interpreter.configure('cmd',    1,  this.isAuth);
 
         // Adding all commands to the appropriate lists.
         var lists                       = ['auth', 'cmd', 'login'];
