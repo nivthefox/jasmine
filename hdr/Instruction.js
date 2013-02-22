@@ -38,7 +38,7 @@ var Classical                           = require('classical');
 /**
  * An interface to define the handling for controlled instructions.
  *
- * @class
+ * @class       Instruction
  */
 var Instruction = Interface(function() {
 
@@ -48,21 +48,20 @@ var Instruction = Interface(function() {
      * Called when the instruction is created and assigned to an Instruction
      * Set with all parameters needed to perform the instruction.
      *
-     * @name Instruction#initialize
+     * @name    Instruction#initialize
      * @method
      * @public
      */
-    this.initialize = Public(function() {});
+    this.initialize                     = Public(function() {});
 
     /**
      * Performs the instruction during the instruction set.
      *
-     * @name Instruction#perform
+     * @name    Instruction#perform
      * @method
      * @public
-     * @param   {Function}  callback
      */
-    this.perform = Public(function(callback) {});
+    this.perform                        = Public(function() {});
 });
 
 module.exports                          = Instruction;

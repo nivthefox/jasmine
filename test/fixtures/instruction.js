@@ -41,10 +41,11 @@ var AddOne = Implement(Instruction, function() {
         // TODO: Classical interfaces prevent us from implementing more parameters than the interface defines.
         var args                        = Array.prototype.slice.call(arguments);
         this.val                        = args.shift();
+        this.callback                   = args.shift();
     });
 
-    this.perform = Public(function(callback) {
-        process.emit('controller.invoke', (this.val + 1), callback);
+    this.perform = Public(function() {
+        process.emit('controller.invoke', (this.val + 1), this.callback);
     });
 });
 

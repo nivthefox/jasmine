@@ -72,7 +72,7 @@ var Login = Implement(Command, function() {
 
         if (user === null || this.password !== user.password) {
             Dust.render("Auth.BadLogin", {}, function(err, out) {
-                this.session.send(out);
+                Controller.prepare('Emit', this.session, out);
             }.bind(this));
         }
         else {

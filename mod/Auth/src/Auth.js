@@ -34,6 +34,7 @@
 
 /** @ignore */
 var Classical                           = require('classical');
+var Controller                          = require(BASE_PATH + '/src/Controller');
 var Dust                                = require('dustjs-linkedin');
 var FS                                  = require('fs');
 var Interpreter                         = require(BASE_PATH + '/src/Interpreter');
@@ -117,8 +118,9 @@ var Auth = Implement(Module, function() {
      */
     this.renderConnectScreen = Protected(function(session) {
         Log.debug('renderConnectScreen');
+
         Dust.render("Auth.Connect", {}, function(err, out) {
-            session.send(out);
+            var instruction             = Controller.prepare('Emit', session, out);
         });
     });
 

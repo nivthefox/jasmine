@@ -48,7 +48,10 @@ var Util                                = require(BASE_PATH + '/src/Utilities');
 var Controller = Class(function() {
 
     /**
-     * Initializes the base instruction sets.
+     * Initializes the base instruction sets and starts the instruction loop,
+     * @name    Controller#constructor
+     * @method
+     * @public
      */
     this.constructor = Public(function() {
         Log.debug('constructor');
@@ -61,6 +64,8 @@ var Controller = Class(function() {
                 this.define(name, instruction);
             }
         }.bind(this));
+
+        process.nextTick(this.processQueue);
     });
 
     /**
@@ -109,18 +114,54 @@ var Controller = Class(function() {
 
         var instruction                 = new this.instructions[name];
         instruction.initialize.apply(instruction, args);
-        return instruction;
+
+        // Toss it into the queue.
+        // @todo    See Controller#processQueue for todo re: priority
+        this.queue.push(instruction);
+    });
+
+    /**
+     * Iterates through the queue and performs all instructions in a loop.
+     *
+     * @name    Controller#processQueue
+     * @protected
+     * @method
+     * @todo    2013-02-22: It might be fun to add some sort of priority
+     *                      system to the queue so that highly important
+     *                      commands (like @flush?) can be processed ahead of
+     *                      the rest of the queue.
+     */
+    this.processQueue = Protected(function() {
+
+        if (this.queue.length > 0) {
+            Log.debug('processQueue');
+
+            var instruction             = this.queue.shift();
+            instruction.perform();
+        }
+
+        process.nextTick(this.processQueue);
     });
 
     /**
      * The collection of available instructions.
      *
      * @name Controller#instructions
-     * @private
+     * @protected
      * @member
      * @type    {Object}
      */
-    this.instructions                   = Private({});
+    this.instructions                   = Protected({});
+
+    /**
+     * A queue of pending instructions.
+     *
+     * @name    Controller#queue
+     * @protected
+     * @member
+     * @type    {Object[]}
+     */
+    this.queue                          = Protected([]);
 });
 
 module.exports                          = new Controller;

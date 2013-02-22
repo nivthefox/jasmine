@@ -40,7 +40,7 @@ suite('Controller');
 test('Define', function() {
 // console.log('=====><=====');
     try {
-        Controller.define('test', Instruction);
+        Controller.define('AddOne', Instruction);
     }
     catch (e) {
         Assert.ok(false, e);
@@ -60,7 +60,7 @@ test('Define', function() {
 
     var caught2 = false;
     try {
-        Controller.define('test', Instruction);
+        Controller.define('AddOne', Instruction);
     }
     catch (e) {
         caught2 = true;
@@ -76,8 +76,7 @@ test('Invoke', function(done) {
         callback(data + 1);
     });
 
-    var test                            = Controller.prepare('test', 1);
-    test.perform(function(data) {
+    Controller.prepare('AddOne', 1, function(data) {
         Assert.equal(data, 3);
         done();
     });

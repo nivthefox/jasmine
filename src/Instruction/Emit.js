@@ -54,9 +54,8 @@ var Emit = Implement(Instruction, function() {
         this.message                    = args[1] + "\n";
     });
 
-    this.perform = Public(function(callback) {
+    this.perform = Public(function() {
         this.target.send(this.message);
-        callback();
     });
 
     this.target                         = Protected({});

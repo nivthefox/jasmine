@@ -168,9 +168,11 @@ to the Controller:
 #### Preparing an Instruction
 Instructions are prepared by calling the Controller:
 
-    var Set = [];
-    Set.push(Controller.prepare(<instruction>, <arguments>));
+    Controller.prepare(<instruction>, [...<arguments>]);
 
 
   * **instruction** (String) The name of the instruction to be prepared.
-  * **arguments** (*[]) Any arguments required to prepare the Instruction.
+  * **arguments** (*) Any arguments required to prepare the Instruction.
+
+On each pass through the event loop, the Controller will perform any
+instructions currently queued.
