@@ -62,6 +62,7 @@ var Login = Implement(Command, function() {
         this.callback                   = callback;
         this.password                   = User.hashPassword(password);
 
+        // TODO: 2013-02-22 Finding  a user should probably be an instruction.
         User.findOne({$or : [
             {name   : {$regex : username}},
             {alias  : {$regex : username}}
@@ -86,10 +87,12 @@ var Login = Implement(Command, function() {
     });
 
     this.emit = Protected(function(err, out) {
-        Controller.prepare('Emit', this.session, out);
+        Controller.prepare('Emit',          this.session,   out);
+        Controller.prepare('Synchronize',   this.callback);
     });
 
     this.session                        = Protected({});
+    this.callback                       = Protected(function() {});
     this.password                       = Protected(null);
     this.instructions                   = Protected([]);
 });

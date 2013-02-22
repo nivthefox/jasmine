@@ -11,7 +11,7 @@
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
- * Copyright (C) 2012 Kevin Kragenbrink <kevin@writh.net>
+ * Copyright (C) 2013 Kevin Kragenbrink <kevin@writh.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,34 +32,44 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
- /** @ignore */
+/** @ignore */
 var Classical                           = require('classical');
-var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
-var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Instruction: Emit');
+var Command                             = require(BASE_PATH + '/hdr/Command');
+var Controller                          = require(BASE_PATH + '/src/Controller');
+var Dust                                = require('dustjs-linkedin');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth.Login');
+var Session                             = require(BASE_PATH + '/src/Session');
+var User                                = require('../../model/User');
 
 /**
- * Sends a string of data to a session socket.
- * @class       Emit
+ * A command to enable players to terminate their session.
+ *
+ * @class       Quit
+ * @subpackage  Auth
  */
-var Emit = Implement(Instruction, function() {
+var Quit = Implement(Command, function() {
 
-    /**
-     * @param   {Session}   target
-     * @param   {String}    message
-     */
-    this.initialize = Public(function() {
-        var args                        = Array.prototype.slice.call(arguments);
+    this.expression                     = Static(Public(/^QUIT$/));
 
-        this.target                     = args.shift();
-        this.message                    = args.shift() + "\n";
+    this.run = Public(function(session, phrase, callback) {
+        Log.debug('run');
+
+        this.session                    = session;
+        this.callback                   = callback;
+
+        Dust.render('Auth.Disonnected', {}, this.handleRendered);
     });
 
-    this.perform = Public(function() {
-        this.target.send(this.message);
+    this.handleRendered = Public(function(err, out) {
+        Log.debug('emit');
+
+        Controller.prepare('Emit',          this.session,   out);
+        Controller.prepare('Disconnect',    this.session);
+        Controller.prepare('Synchronize',   this.callback);
     });
 
-    this.target                         = Protected({});
-    this.message                        = Protected(null);
+    this.session                        = Protected({});
+    this.callback                       = Protected(function() {});
 });
 
-module.exports                          = Emit;
+module.exports                          = Quit;

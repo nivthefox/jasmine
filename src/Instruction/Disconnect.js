@@ -6,8 +6,8 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2013-01-04
- * @edited      2013-01-04
+ * @created     2013-02-22
+ * @edited      2013-02-22
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -32,15 +32,31 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-var Command 							= require(BASE_PATH + '/hdr/Command');
+ /** @ignore */
+var Classical                           = require('classical');
+var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Instruction: Emit');
 
-module.exports.Arith = Implement(Command, function() {
-	this.expression					= Static(Public(/^arith ([0-9. +-\/*^\(\)]+)/));
+/**
+ * Disconnects a session from the game.
+ * @class       Disconnect
+ */
+var Disconnect = Implement(Instruction, function() {
 
-	this.run = Public(function(session, phrase, callback) {
-		var matches 				= this.expression.exec(phrase);
-		if (matches && matches[1]) {
-			callback(matches[1]);
-		}
-	});
+    /**
+     * @param   {Session}   target
+     */
+    this.initialize = Public(function() {
+        var args                        = Array.prototype.slice.call(arguments);
+
+        this.target                     = args.shift();
+    });
+
+    this.perform = Public(function() {
+        this.target.getSocket().end();
+    });
+
+    this.target                         = Protected({});
 });
+
+module.exports                          = Disconnect;

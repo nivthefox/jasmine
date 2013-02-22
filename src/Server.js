@@ -34,6 +34,7 @@
 
 /** @ignore */
 var Classical                           = require('classical');
+var Controller                          = require(BASE_PATH + '/src/Controller');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Server');
 var Net                                 = require('net');
 var Session                             = require(BASE_PATH + '/src/Session');
@@ -143,23 +144,17 @@ var Server = Class(function() {
      * @name Server#shutdown
      * @public
      * @method
-     * @fires   Server#server&period;session&period;close
      * @fires   Server#server&period;net&period;shutdown
      */
     this.shutdown = Public(function() {
         Log.debug('close');
 
         for (var i in this.sessions) {
-            /**
-             * Notify that the connection is closing.
-             *
-             * @event Server#server&period;session&period;close
-             * @property {Session}  session
-             */
-            this.sessions[i].getSocket().end();
+            Controller.prepare('Disconnect', this.sessions[i]);
         }
 
-        this.server.close();
+        Controller.prepare('Shutdown', this.server);
+
         /**
          * Notify that the connection has been established.
          *
