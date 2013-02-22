@@ -48,10 +48,10 @@ var User                                = require('../../model/User');
  */
 var Login = Implement(Command, function() {
 
-    this.expression                     = Static(Public(/^(login|connect) ("(?:\w| )+"|\w+) (.+)$/i));
+    this.expression                     = Static(Public(/^(?:login|connect) ("(?:\w| )+"|\w+) (.+)$/i));
 
     this.run = Public(function(session, phrase, callback) {
-        Log.debug('run', session);
+        Log.debug('run');
 
         var parts                       = this.expression.exec(phrase);
         var username                    = new RegExp(parts[1], 'i');
@@ -71,20 +71,23 @@ var Login = Implement(Command, function() {
         Log.debug('validatePassword');
 
         if (user === null || this.password !== user.password) {
-            Dust.render("Auth.BadLogin", {}, function(err, out) {
-                Controller.prepare('Emit', this.session, out);
-            }.bind(this));
+            Dust.render("Auth.BadLogin", {}, this.emit);
         }
         else {
             Log.debug('successful login');
 
             this.session.data.moniker   = user.name;
             this.session.data.user      = user;
+
+            Dust.render("Auth.Connected", user, this.emit)
         }
     });
 
+    this.emit = Protected(function(err, out) {
+        Controller.prepare('Emit', this.session, out);
+    });
+
     this.session                        = Protected({});
-    this.callback                       = Protected(function() {});
     this.password                       = Protected(null);
     this.instructions                   = Protected([]);
 });

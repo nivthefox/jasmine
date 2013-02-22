@@ -5,4 +5,6 @@ mod:
       Connect                           : |
                                             Welcome to jasmine.
 
-                                            Type "connect <name> <password>" to connect.
+                                            Type "login <name> <password>" to authenticate as a user.
+      Connected                         : Connected as {name}.
+      Disconnected                      : Good bye!
