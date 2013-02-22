@@ -64,10 +64,12 @@ var Server = Class(function() {
         this.options                    = Util.extend(config, options);
 
         this.server                     = Net.createServer();
-        this.server.on('connection', this.handleConnection);
+        this.server.on('connection',    this.handleConnection);
         this.server.listen(this.options.port);
 
         Log.info('Listening on port %d', this.options.port);
+
+        process.on('session.status.changed', this.handleSessionChange);
 
         /**
          * Notify that the connection has been established.
@@ -118,6 +120,24 @@ var Server = Class(function() {
     });
 
     /**
+     * Deletes sessions which have closed.
+     *
+     * @name    Server#handleSessionChange
+     * @protected
+     * @method
+     * @param   {Session}               session
+     * @param   {Session.Status}        status
+     */
+    this.handleSessionChange = Protected(function(session, status) {
+        Log.debug('handleSessionChange');
+
+        if (status === Session.Status.DISCONNECTED) {
+            delete this.sessions[session.getId()];
+            delete session;
+        }
+    });
+
+    /**
      * Shuts down the current server.
      *
      * @name Server#shutdown
@@ -136,7 +156,6 @@ var Server = Class(function() {
              * @event Server#server&period;session&period;close
              * @property {Session}  session
              */
-            process.emit('server.session.close', this.sessions[i]);
             this.sessions[i].getSocket().end();
         }
 

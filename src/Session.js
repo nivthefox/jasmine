@@ -163,6 +163,7 @@ var Session = Extend(EventEmitter, function() {
      */
     this.setStatus = Public(function(status) {
         this.status                     = status;
+        process.emit('session.status.changed', this._classical_public, status);
     });
 
     /**

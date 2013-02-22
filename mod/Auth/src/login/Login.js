@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-23
- * @edited      2013-02-15
+ * @edited      2013-02-22
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -38,6 +38,7 @@ var Command                             = require(BASE_PATH + '/hdr/Command');
 var Controller                          = require(BASE_PATH + '/src/Controller');
 var Dust                                = require('dustjs-linkedin');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Auth.Login');
+var Session                             = require(BASE_PATH + '/src/Session');
 var User                                = require('../../model/User');
 
 /**
@@ -78,6 +79,7 @@ var Login = Implement(Command, function() {
 
             this.session.data.moniker   = user.name;
             this.session.data.user      = user;
+            this.session.setStatus(Session.Status.CONNECTED);
 
             Dust.render("Auth.Connected", user, this.emit)
         }

@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2013-01-23
- * @edited      2013-02-13
+ * @edited      2013-02-22
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
