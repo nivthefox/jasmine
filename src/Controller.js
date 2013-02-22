@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-12-18
- * @edited      2012-12-18
+ * @edited      2013-02-22
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -34,8 +34,10 @@
 
 /** @ignore */
 var Classical                           = require('classical');
+var FS                                  = require('fs');
 var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Controller');
+var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
  * Manages internal instructions.
@@ -44,6 +46,22 @@ var Log                                 = require(BASE_PATH + '/src/Log').getLog
  * @singleton
  */
 var Controller = Class(function() {
+
+    /**
+     * Initializes the base instruction sets.
+     */
+    this.constructor = Public(function() {
+        Log.debug('constructor');
+
+        FS.readdir(BASE_PATH + '/src/Instruction', function(err, files) {
+            for (var i in files) {
+                var file                = files[i];
+                var name                    = file.match(/(.+?)\.js$/)[1];
+                var instruction             = require(Util.format('%s/src/Instruction/%s', BASE_PATH, file));
+                this.define(name, instruction);
+            }
+        }.bind(this));
+    });
 
     /**
      * Defines a new instruction which can be used in Instruction Sets.

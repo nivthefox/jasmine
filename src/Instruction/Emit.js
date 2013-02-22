@@ -6,8 +6,8 @@
  *    \  /\  /| |  | | |_| | | |_| | | |  __/ |_
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
- * @created     2012-12-17
- * @edited      2012-12-17
+ * @created     2013-02-22
+ * @edited      2013-02-22
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -32,37 +32,35 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-/** @ignore */
+ /** @ignore */
 var Classical                           = require('classical');
+var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Instruction: Emit');
 
 /**
- * An interface to define the handling for controlled instructions.
- *
- * @class
+ * Sends a string of data to a session socket.
+ * @class       Emit
  */
-var Instruction = Interface(function() {
+var Emit = Implement(Instruction, function() {
 
     /**
-     * Initializes parameters for an instruction.
-     *
-     * Called when the instruction is created and assigned to an Instruction
-     * Set with all parameters needed to perform the instruction.
-     *
-     * @name Instruction#initialize
-     * @method
-     * @public
+     * @param   {Session}   target
+     * @param   {String}    message
      */
-    this.initialize = Public(function() {});
+    this.initialize = Public(function() {
+        var args                        = Array.prototype.slice.call(arguments);
 
-    /**
-     * Performs the instruction during the instruction set.
-     *
-     * @name Instruction#perform
-     * @method
-     * @public
-     * @param   {Function}  callback
-     */
-    this.perform = Public(function(callback) {});
+        this.target                     = args[0];
+        this.message                    = args[1] + "\n";
+    });
+
+    this.perform = Public(function(callback) {
+        this.target.send(this.message);
+        callback();
+    });
+
+    this.target                         = Protected({});
+    this.message                        = Protected(null);
 });
 
-module.exports                          = Instruction;
+module.exports                          = Emit;

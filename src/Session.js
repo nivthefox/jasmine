@@ -149,7 +149,7 @@ var Session = Extend(EventEmitter, function() {
     this.send = Public(function(message) {
         Log.debug('send', message);
 
-        this.socket.write(message + "\n");
+        this.socket.write(message);
     });
 
     /**

@@ -63,7 +63,7 @@ test('Connect', function(done) {
 
     client.on('data', function(data) {
         received                        = true;
-        Assert.equal(data.toString(), "Welcome to test.\n");
+        Assert.equal(data.toString(), "Welcome to test.");
     });
 
     setTimeout(function() {

@@ -70,7 +70,6 @@ case "$ACTION" in
                 ;;
             *)
                 kill -TERM ${PID}
-                remove_pidfile
                 ;;
         esac
         ;;

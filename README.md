@@ -166,7 +166,7 @@ to the Controller:
   * **name** (String) The name of the Instruction.
 
 #### Preparing an Instruction
-Instructions are prepared by calling the Conƒtroller:
+Instructions are prepared by calling the Controller:
 
     var Set = [];
     Set.push(Controller.prepare(<instruction>, <arguments>));

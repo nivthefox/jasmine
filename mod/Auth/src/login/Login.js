@@ -77,6 +77,9 @@ var Login = Implement(Command, function() {
         }
         else {
             Log.debug('successful login');
+
+            this.session.data.moniker   = user.name;
+            this.session.data.user      = user;
         }
     });
 
