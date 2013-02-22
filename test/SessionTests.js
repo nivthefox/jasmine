@@ -7,7 +7,7 @@
  *     \/  \/ |_|  |_|\__|_| |_(_)_| |_|\___|\__|
  *
  * @created     2012-11-21
- * @edited      2012-11-21
+ * @edited      2013-02-22
  * @package     JaSMINE
  * @see         https://github.com/Writh/jasmine
  *
@@ -53,4 +53,12 @@ test('Create', function() {
 test('Change status', function() {
     sess.getSocket().emit('login');
     Assert.equal(sess.getStatus(), Session.Status.CONNECTING);
+});
+
+test('Data', function() {
+    Assert.equal(sess.data.moniker , sess.getId());
+    sess.data.test                      = 'Test';
+    Assert.equal(sess.data.test, 'Test');
+    sess.data.test2                     = {foo: 'bar'};
+    Assert.deepEqual(sess.data.test2, {foo: 'bar'});
 });
