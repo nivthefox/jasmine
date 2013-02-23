@@ -114,7 +114,7 @@ var Auth = Implement(Module, function() {
     });
 
     /**
-     * Renders the connect message to a newly created session.
+     * Renders the connect message to any session at the login screen.
      *
      * @name Auth#renderConnectScreen
      * @protected
@@ -124,9 +124,11 @@ var Auth = Implement(Module, function() {
     this.renderConnectScreen = Protected(function(session) {
         Log.debug('renderConnectScreen');
 
-        Dust.render("Auth.Connect", {}, function(err, out) {
-            var instruction             = Controller.prepare('Emit', session, out);
-        });
+        if (this.isAtLogin(session)) {
+            Dust.render("Auth.Connect", {}, function(err, out) {
+                Controller.prepare('Emit', session, out);
+            });
+        }
     });
 
     this.setupCommands = Protected(function() {
@@ -153,7 +155,7 @@ var Auth = Implement(Module, function() {
     this.setupHooks = Protected(function() {
         Log.debug('setupHooks');
 
-        process.on('server.session.connected', this.renderConnectScreen);
+        process.on('session.status.changed',    this.renderConnectScreen);
     });
 
     this.setupUsers = Protected(function() {
