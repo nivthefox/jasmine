@@ -61,6 +61,7 @@
 
 /** @ignore */
 var Classical                           = require('classical');
+var Controller                          = require(BASE_PATH + '/src/Controller');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Server');
 var Net                                 = require('net');
 var Session                             = require(BASE_PATH + '/src/Session');
@@ -91,10 +92,12 @@ var Server = Class(function() {
         this.options                    = Util.extend(config, options);
 
         this.server                     = Net.createServer();
-        this.server.on('connection', this.handleConnection);
+        this.server.on('connection',    this.handleConnection);
         this.server.listen(this.options.port);
 
         Log.info('Listening on port %d', this.options.port);
+
+        process.on('session.status.changed', this.handleSessionChange);
 
         /**
          * Notify that the connection has been established.
@@ -145,29 +148,40 @@ var Server = Class(function() {
     });
 
     /**
+     * Deletes sessions which have closed.
+     *
+     * @name    Server#handleSessionChange
+     * @protected
+     * @method
+     * @param   {Session}               session
+     * @param   {Session.Status}        status
+     */
+    this.handleSessionChange = Protected(function(session, status) {
+        Log.debug('handleSessionChange');
+
+        if (status === Session.Status.DISCONNECTED) {
+            delete this.sessions[session.getId()];
+            delete session;
+        }
+    });
+
+    /**
      * Shuts down the current server.
      *
      * @name Server#shutdown
      * @public
      * @method
-     * @fires   Server#server&period;session&period;close
      * @fires   Server#server&period;net&period;shutdown
      */
     this.shutdown = Public(function() {
         Log.debug('close');
 
         for (var i in this.sessions) {
-            /**
-             * Notify that the connection is closing.
-             *
-             * @event Server#server&period;session&period;close
-             * @property {Session}  session
-             */
-            process.emit('server.session.close', this.sessions[i]);
-            this.sessions[i].getSocket().end();
+            Controller.prepare('Disconnect', this.sessions[i]);
         }
 
-        this.server.close();
+        Controller.prepare('Shutdown', this.server);
+
         /**
          * Notify that the connection has been established.
          *
@@ -218,13 +232,13 @@ module.exports                          = Server;
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a></li><li><a href="Controller.html">Controller</a></li><li><a href="Instruction.html">Instruction</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="Interpreter.CommandList.html">CommandList</a></li><li><a href="jasmine.html">jasmine</a></li><li><a href="Messages.html">Messages</a></li><li><a href="ModLoader.html">ModLoader</a></li><li><a href="Module.html">Module</a></li><li><a href="Server.html">Server</a></li><li><a href="Session.html">Session</a></li><li><a href="Tokenizer.html">Tokenizer</a></li><li><a href="Tokenizer.Token.html">Token</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3>Events</h3><ul><li><a href="Interpreter.html#event:interpreter&period;phrase&period;matched">interpreter&period;phrase&period;matched</a></li><li><a href="Interpreter.html#event:interpreter&period;phrase&period;unmatched">interpreter&period;phrase&period;unmatched</a></li><li><a href="ModLoader.html#event:modloader&period;load&period;complete">modloader&period;load&period;complete</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;failed">modloader&period;module&period;failed</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;loaded">modloader&period;module&period;loaded</a></li><li><a href="Server.html#event:server&period;net&period;listening">server&period;net&period;listening</a></li><li><a href="Server.html#event:server&period;net&period;shutdown">server&period;net&period;shutdown</a></li><li><a href="Server.html#event:server&period;session&period;close">server&period;session&period;close</a></li><li><a href="Server.html#event:server&period;session&period;connected">server&period;session&period;connected</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a></li><li><a href="Controller.html">Controller</a></li><li><a href="Disconnect.html">Disconnect</a></li><li><a href="Instruction.html">Instruction</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="Interpreter.CommandList.html">CommandList</a></li><li><a href="jasmine.html">jasmine</a></li><li><a href="Messages.html">Messages</a></li><li><a href="ModLoader.html">ModLoader</a></li><li><a href="Module.html">Module</a></li><li><a href="Send.html">Send</a></li><li><a href="Server.html">Server</a></li><li><a href="Session.html">Session</a></li><li><a href="Shutdown.html">Shutdown</a></li><li><a href="Tokenizer.html">Tokenizer</a></li><li><a href="Tokenizer.Token.html">Token</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3>Events</h3><ul><li><a href="Interpreter.html#event:interpreter&period;phrase&period;matched">interpreter&period;phrase&period;matched</a></li><li><a href="Interpreter.html#event:interpreter&period;phrase&period;unmatched">interpreter&period;phrase&period;unmatched</a></li><li><a href="ModLoader.html#event:modloader&period;load&period;complete">modloader&period;load&period;complete</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;failed">modloader&period;module&period;failed</a></li><li><a href="ModLoader.html#event:modloader&period;module&period;loaded">modloader&period;module&period;loaded</a></li><li><a href="Server.html#event:server&period;net&period;listening">server&period;net&period;listening</a></li><li><a href="Server.html#event:server&period;net&period;shutdown">server&period;net&period;shutdown</a></li><li><a href="Server.html#event:server&period;session&period;connected">server&period;session&period;connected</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Feb 12 2013 16:32:19 GMT-0800 (PST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Feb 22 2013 16:46:11 GMT-0800 (PST)
 </footer>
 
 <script> prettyPrint(); </script>
