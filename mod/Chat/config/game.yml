@@ -1,0 +1,4 @@
+mod:
+  Chat:
+    messages:
+      Unmatched                         : Command not found.
