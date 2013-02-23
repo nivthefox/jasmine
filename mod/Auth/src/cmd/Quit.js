@@ -42,7 +42,7 @@ var Session                             = require(BASE_PATH + '/src/Session');
 var User                                = require('../../model/User');
 
 /**
- * A command to enable players to terminate their session.
+ * Gracefully terminates a session.
  *
  * @class       Quit
  * @subpackage  Auth
@@ -60,7 +60,16 @@ var Quit = Implement(Command, function() {
         Dust.render('Auth.Disonnected', {}, this.handleRendered);
     });
 
-    this.handleRendered = Public(function(err, out) {
+    /**
+     * Emits the disconnect message, then terminates the session.
+     *
+     * @name    Quit#handleRendered
+     * @protected
+     * @method
+     * @param   {Error}                 err
+     * @param   {String}                out
+     */
+    this.handleRendered = Protected(function(err, out) {
         Log.debug('emit');
 
         Controller.prepare('Send',          this.session,   out);

@@ -42,7 +42,7 @@ var Session                             = require(BASE_PATH + '/src/Session');
 var User                                = require('../../model/User');
 
 /**
- * A command to enable players to terminate their session.
+ * Deauthorizes a session without terminating it.
  *
  * @class       Logout
  * @subpackage  Auth

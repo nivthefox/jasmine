@@ -49,15 +49,15 @@ var User                                = require('../model/User');
 /**
  * Adds support for character creation, login authentication, authorization, and a connect screen.
  *
- * @class Auth
- * @subpackage Auth
+ * @class       Auth
+ * @subpackage  Auth
  */
 var Auth = Implement(Module, function() {
 
     /**
      * Prepares templates and hooks.
      *
-     * @name Auth#constructor
+     * @name    Auth#constructor
      * @public
      * @method
      * @param   {Object}        config
@@ -75,7 +75,7 @@ var Auth = Implement(Module, function() {
     /**
      * Compiles Dust templates.
      *
-     * @name Auth#compileTemplates
+     * @name    Auth#compileTemplates
      * @protected
      * @method
      */
@@ -90,25 +90,62 @@ var Auth = Implement(Module, function() {
         delete compiled;
     });
 
+    /**
+     * Creates the 'Owner' account if it does not already exist.
+     *
+     * @name    Auth#createFirstUser
+     * @protected
+     * @method
+     * @param   {Error}                 err
+     * @param   {Integer}               count
+     */
     this.createFirstUser = Protected(function(err, count) {
         if (count === 0) {
             Log.debug('createFirstUser');
             var Owner                   = new User({name : 'Owner', password : 'jasmine'});
             Owner.save();
+            Log.warn('User \"Owner\" created with password \"jasmine\".');
         }
     });
 
-    this.isAtLogin = Protected(function(session, phrase) {
+    /**
+     * Determines whether a session is at the login screen.
+     * 
+     * @name    Auth#isAtLogin
+     * @protected
+     * @method
+     * @param   {Session}               session
+     * @return  {Boolean}
+     */
+    this.isAtLogin = Protected(function(session) {
         Log.debug('isAtLogin');
         return (session.getStatus() === Session.Status.CONNECTING);
     });
 
-    this.isAuth = Protected(function(session, phrase) {
+    /**
+     * Determines whether a session has been authenticated.
+     *
+     * @name    Auth#hasAuth
+     * @protected
+     * @method
+     * @param   {Session}               session
+     * @return  {Boolean}
+     */
+    this.hasAuth = Protected(function(session) {
         Log.debug('isAuth');
         return (session.getStatus() === Session.Status.CONNECTED);
     });
 
-    this.isAuthAdmin = Protected(function(session, phrase) {
+    /**
+     * Determines whether a session has been authenticated with admin permissions.
+     * @name    Auth#isAuthAdmin
+     * @protected
+     * @method
+     * @param   {Session}               session
+     * @return  {Boolean}
+     * @stub
+     */ 
+    this.isAuthAdmin = Protected(function(session) {
         Log.debug('isAuthAdmin');
         return false;
     });
@@ -116,7 +153,7 @@ var Auth = Implement(Module, function() {
     /**
      * Renders the connect message to any session at the login screen.
      *
-     * @name Auth#renderConnectScreen
+     * @name    Auth#renderConnectScreen
      * @protected
      * @method
      * @param   {Session}       session
@@ -131,13 +168,20 @@ var Auth = Implement(Module, function() {
         }
     });
 
+    /**
+     * Sets up all commands in the Auth module, and creates new command lists.
+     *
+     * @name    Auth#setupCommands
+     * @protected
+     * @method
+     */
     this.setupCommands = Protected(function() {
         Log.debug('setupCommands');
 
         // Adding command lists to the Interpreter.
         Interpreter.configure('login',  1,  this.isAtLogin);
         Interpreter.configure('auth',   1,  this.isAuthAdmin);
-        Interpreter.configure('cmd',    1,  this.isAuth);
+        Interpreter.configure('cmd',    1,  this.hasAuth);
 
         // Adding all commands to the appropriate lists.
         var lists                       = ['auth', 'cmd', 'login'];
@@ -152,12 +196,26 @@ var Auth = Implement(Module, function() {
         }
     });
 
+    /**
+     * Sets up hooks to listen for the need to display the login screen.
+     *
+     * @name    Auth#setupHooks
+     * @protected
+     * @method
+     */
     this.setupHooks = Protected(function() {
         Log.debug('setupHooks');
 
         process.on('session.status.changed',    this.renderConnectScreen);
     });
 
+    /**
+     * Sets up the User store.
+     *
+     * @name    Auth#setupUsers
+     * @protected
+     * @method
+     */
     this.setupUsers = Protected(function() {
         Log.debug('setupUsers');
 

@@ -95,6 +95,14 @@ var schema = new Database.Schema({
     }
 });
 
+/**
+ * Validates a given string against the user's password.
+ * @name    User#checkPassword
+ * @public
+ * @method
+ * @param   {String}                    val
+ * @return  {Boolean}
+ */
 schema.method('checkPassword', function(val) {
     var check                           = hashPassword(val);
     return check === this.password;
@@ -116,6 +124,7 @@ schema.pre('save', function(next) {
         {alias      : this.name},
         {alias      : this.alias}
     ]};
+
     User.count(uniqueNameQuery, function(err, count) {
         if (count > 0) {
             next(new Error('That name or alias is already taken.'));

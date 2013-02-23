@@ -66,10 +66,19 @@ var Login = Implement(Command, function() {
         User.findOne({$or : [
             {name   : {$regex : username}},
             {alias  : {$regex : username}}
-        ]}, this.validatePassword);
+        ]}, this.authenticate);
     });
 
-    this.validatePassword = Protected(function(err, user) {
+    /**
+     * Validates the user's password and authenticates.
+     *
+     * @name    Login#authenticate
+     * @protected
+     * @method
+     * @param   {Error}                 err
+     * @param   {User}                  user
+     */
+    this.authenticate = Protected(function(err, user) {
         Log.debug('validatePassword');
 
         if (user === null || this.password !== user.password) {
@@ -86,6 +95,15 @@ var Login = Implement(Command, function() {
         }
     });
 
+    /**
+     * Sends the connect message.
+     *
+     * @name    Login#emit
+     * @protected
+     * @method
+     * @param   {Error}                 err
+     * @param   {String}                out
+     */
     this.emit = Protected(function(err, out) {
         Controller.prepare('Send',          this.session,   out);
         Controller.prepare('Synchronize',   this.callback);
