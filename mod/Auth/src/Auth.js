@@ -110,7 +110,7 @@ var Auth = Implement(Module, function() {
 
     /**
      * Determines whether a session is at the login screen.
-     * 
+     *
      * @name    Auth#isAtLogin
      * @protected
      * @method
@@ -144,7 +144,7 @@ var Auth = Implement(Module, function() {
      * @param   {Session}               session
      * @return  {Boolean}
      * @stub
-     */ 
+     */
     this.isAuthAdmin = Protected(function(session) {
         Log.debug('isAuthAdmin');
         return false;
@@ -181,7 +181,7 @@ var Auth = Implement(Module, function() {
         // Adding command lists to the Interpreter.
         Interpreter.configure('login',  1,  this.isAtLogin);
         Interpreter.configure('auth',   1,  this.isAuthAdmin);
-        Interpreter.configure('cmd',    1,  this.hasAuth);
+        Interpreter.configure('cmd', 9999,  this.hasAuth);
 
         // Adding all commands to the appropriate lists.
         var lists                       = ['auth', 'cmd', 'login'];
