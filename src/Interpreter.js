@@ -39,46 +39,6 @@ var Log                                 = require(BASE_PATH + '/src/Log').getLog
 var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
- * The definition of an interpreter list.
- * @name CommandList
- * @memberof Interpreter
- * @class
- * @struct
- */
-var CommandList = function() {
-    /**
-     * The Name of the command list
-     * @name CommandList#name
-     * @type {String}
-     */
-    this.name                           = 'default';
-
-    /**
-     * The priority of the command list
-     * @name CommandList#priority
-     * @type {Integer}
-     */
-    this.priority                       = 9999;
-
-    /**
-     * The test to determine whether the command list should be searched.
-     * @name CommandList#test
-     * @type {Function}
-     * @param   {Session}   session
-     * @param   {String}    phrase
-     * @return  {Boolean}
-     */
-    this.test                           = function(session, phrase) { return true; };
-
-    /**
-     * The list of commands.
-     * @name CommandList#commands
-     * @type {Command[]}
-     */
-    this.commands                       = [];
-};
-
-/**
  * The command interpreter.
  *
  * @class
@@ -97,6 +57,11 @@ var Interpreter = Class(function() {
      */
     this.addCommand = Public(function(name, command) {
         Log.debug('addCommand');
+
+        if (typeof name !== 'string') {
+            command                     = name;
+            name                        = this.DEFAULT_COMMAND_LIST;
+        }
 
         // Validate our command.
         var err                         = new TypeError('Attempted to add an invalid command.');
@@ -286,6 +251,59 @@ var Interpreter = Class(function() {
      * @type {CommandList[]}
      */
     this.lists                          = Protected([]);
+
+    /**
+     * The default command list name.
+     *
+     * @name    Interpreter#DEFAULT_COMMAND_LIST
+     * @public
+     * @static
+     * @member
+     * @const
+     * @type    {String}
+     */
+    this.DEFAULT_COMMAND_LIST           = Static(Public('cmd'));
 });
+
+
+/**
+ * The definition of an interpreter list.
+ * @name CommandList
+ * @memberof Interpreter
+ * @class
+ * @struct
+ */
+var CommandList = function() {
+    /**
+     * The Name of the command list
+     * @name CommandList#name
+     * @type {String}
+     */
+    this.name                           = Interpreter.DEFAULT_COMMAND_LIST;
+
+    /**
+     * The priority of the command list
+     * @name CommandList#priority
+     * @type {Integer}
+     */
+    this.priority                       = 9999;
+
+    /**
+     * The test to determine whether the command list should be searched.
+     * @name CommandList#test
+     * @type {Function}
+     * @param   {Session}   session
+     * @param   {String}    phrase
+     * @return  {Boolean}
+     */
+    this.test                           = function(session, phrase) { return true; };
+
+    /**
+     * The list of commands.
+     * @name CommandList#commands
+     * @type {Command[]}
+     */
+    this.commands                       = [];
+};
 
 module.exports                          = new Interpreter;

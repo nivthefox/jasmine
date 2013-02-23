@@ -179,20 +179,22 @@ var Auth = Implement(Module, function() {
         Log.debug('setupCommands');
 
         // Adding command lists to the Interpreter.
-        Interpreter.configure('login',  1,  this.isAtLogin);
-        Interpreter.configure('auth',   1,  this.isAuthAdmin);
-        Interpreter.configure('cmd', 9999,  this.hasAuth);
+        Interpreter.configure('login',                              1,  this.isAtLogin);
+        Interpreter.configure('auth',                               1,  this.isAuthAdmin);
+        Interpreter.configure(Interpreter.DEFAULT_COMMAND_LIST,  9999,  this.hasAuth);
 
         // Adding all commands to the appropriate lists.
-        var lists                       = ['auth', 'cmd', 'login'];
+        var lists                       = ['auth', Interpreter.DEFAULT_COMMAND_LIST, 'login'];
         var list;
         while (list = lists.shift()) {
-            FS.readdir(Util.format('%s/%s', __dirname, list), function(list, err, files) {
+            // Map the default command list to the 'cmd' directory
+            var directory               = (list === Interpreter.DEFAULT_COMMAND_LIST) ? 'cmd' : list;
+            FS.readdir(Util.format('%s/%s', __dirname, directory), function(list, directory, err, files) {
                 for (var i in files) {
-                    var Command         = require(Util.format('%s/%s/%s', __dirname, list, files[i]));
+                    var Command         = require(Util.format('%s/%s/%s', __dirname, directory, files[i]));
                     Interpreter.addCommand(list, Command);
                 }
-            }.bind(this, list));
+            }.bind(this, list, directory));
         }
     });
 
