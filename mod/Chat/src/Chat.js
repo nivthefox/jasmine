@@ -138,7 +138,11 @@ var Chat = Implement(Module, function() {
         Log.debug('matchChannel');
 
         if (this.canChat(session) &&  this.isChannelAttempt(phrase)) {
-            Log.debug('Possible channel attempt.');
+            var parts                   = this.CHANNEL_EXPRESSION.exec(phrase);
+
+            var channel                 = parts[1].length > 0 ? parts[1].trim() : null;
+            var command                 = parts[2].trim();
+            var message                 = parts[3].trim();
         }
         else {
             Dust.render('Chat.Unmatched', {phrase: phrase}, this.handleUnmatchedPhrase.bind(this, session, callback));
