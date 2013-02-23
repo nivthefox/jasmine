@@ -49,14 +49,14 @@ var User                                = require('../../model/User');
  */
 var Login = Implement(Command, function() {
 
-    this.expression                     = Static(Public(/^(?:login|connect) ("(?:\w| )+"|\w+) (.+)$/i));
+    this.expression                     = Static(Public(/^(?:login|connect) ("?)([\w ]+?)\1 (.+)$/i));
 
     this.run = Public(function(session, phrase, callback) {
         Log.debug('run');
 
         var parts                       = this.expression.exec(phrase);
-        var username                    = new RegExp(parts[1], 'i');
-        var password                    = parts[2];
+        var username                    = new RegExp(parts[2], 'i');
+        var password                    = parts[3];
 
         this.session                    = session;
         this.callback                   = callback;
