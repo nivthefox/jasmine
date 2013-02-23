@@ -63,7 +63,7 @@ var Quit = Implement(Command, function() {
     this.handleRendered = Public(function(err, out) {
         Log.debug('emit');
 
-        Controller.prepare('Emit',          this.session,   out);
+        Controller.prepare('Send',          this.session,   out);
         Controller.prepare('Disconnect',    this.session);
         Controller.prepare('Synchronize',   this.callback);
     });

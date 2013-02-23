@@ -64,8 +64,8 @@ var Auth = Implement(Module, function() {
      */
     this.constructor = Public(function(config) {
         Log.debug('constructor');
-        this.config                     = config;
 
+        this.config                     = config;
         this.compileTemplates();
         this.setupCommands();
         this.setupHooks();
@@ -126,7 +126,7 @@ var Auth = Implement(Module, function() {
 
         if (this.isAtLogin(session)) {
             Dust.render("Auth.Connect", {}, function(err, out) {
-                Controller.prepare('Emit', session, out);
+                Controller.prepare('Send', session, out);
             });
         }
     });

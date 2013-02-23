@@ -39,9 +39,9 @@ var Log                                 = require(BASE_PATH + '/src/Log').getLog
 
 /**
  * Sends a string of data to a session socket.
- * @class       Emit
+ * @class       Send
  */
-var Emit = Implement(Instruction, function() {
+var Send = Implement(Instruction, function() {
 
     /**
      * @param   {Session}   target
@@ -62,4 +62,4 @@ var Emit = Implement(Instruction, function() {
     this.message                        = Protected(null);
 });
 
-module.exports                          = Emit;
+module.exports                          = Send;

@@ -87,7 +87,7 @@ var Login = Implement(Command, function() {
     });
 
     this.emit = Protected(function(err, out) {
-        Controller.prepare('Emit',          this.session,   out);
+        Controller.prepare('Send',          this.session,   out);
         Controller.prepare('Synchronize',   this.callback);
     });
 
