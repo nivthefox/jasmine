@@ -113,6 +113,19 @@ var Chat = Implement(Module, function() {
     });
 
     /**
+     * Determines whether an unmatched command might be an attempt at using a channel.
+     *
+     * @name    Chat#isChannelAttempt
+     * @protected
+     * @method
+     * @param   {String}                phrase
+     * @return  {Boolean}
+     */
+    this.isChannelAttempt = Protected(function(phrase) {
+        return this.CHANNEL_EXPRESSION.test(phrase);
+    });
+
+    /**
      * Attempts to match the phrase to a channel before displaying a failure message.
      * @name    Chat#matchChannel
      * @protected
@@ -124,8 +137,8 @@ var Chat = Implement(Module, function() {
     this.matchChannel = Protected(function(session, phrase, callback) {
         Log.debug('matchChannel');
 
-        if (this.canChat(session)) {
-
+        if (this.canChat(session) &&  this.isChannelAttempt(phrase)) {
+            Log.debug('Possible channel attempt.');
         }
         else {
             Dust.render('Chat.Unmatched', {phrase: phrase}, this.handleUnmatchedPhrase.bind(this, session, callback));
@@ -153,6 +166,16 @@ var Chat = Implement(Module, function() {
      * @type    {Object}
      */
     this.config                         = Protected({});
+
+    /**
+     * Matches attempts to use channels.
+     * @name    Chat#CHANNEL_EXPRESSION
+     * @protected
+     * @member
+     * @const
+     * @type    {RegExp}
+     */
+    this.CHANNEL_EXPRESSION             = Protected(/^(\w+ )?(say |pose |@emit |[":;\|\\]|\\\\)?(.*)/i);
 });
 
 module.exports                          = Chat;
