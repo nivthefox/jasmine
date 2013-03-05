@@ -35,7 +35,7 @@
  /** @ignore */
 var Classical                           = require('classical');
 var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
-var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Instruction: Emit');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Instruction.Send');
 
 /**
  * Sends a string of data to a session socket.

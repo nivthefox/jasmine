@@ -35,7 +35,7 @@
  /** @ignore */
 var Classical                           = require('classical');
 var Instruction                         = require(BASE_PATH + '/hdr/Instruction');
-var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Instruction: Emit');
+var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Instruction.Synchronize');
 
 /**
  * Calls a function after prior instructions in the queue have been completed.
