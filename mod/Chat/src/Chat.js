@@ -60,6 +60,7 @@ var Chat = Implement(Module, function() {
         Log.debug('constructor');
 
         this.config                     = config;
+        this.config.expression          = new RegExp(this.config.expression, 'i');
         this.compileTemplates();
         this.setupHooks();
     });
@@ -92,6 +93,7 @@ var Chat = Implement(Module, function() {
      */
     this.canChat = Protected(function(session) {
         Log.debug('canChat');
+
         return (session.getStatus() === Session.Status.CONNECTED);
     });
 
@@ -122,7 +124,9 @@ var Chat = Implement(Module, function() {
      * @return  {Boolean}
      */
     this.isChannelAttempt = Protected(function(phrase) {
-        return this.CHANNEL_EXPRESSION.test(phrase);
+        Log.debug('isChannelAttempt');
+
+        return this.config.expression.test(phrase);
     });
 
     /**
@@ -138,11 +142,13 @@ var Chat = Implement(Module, function() {
         Log.debug('matchChannel');
 
         if (this.canChat(session) &&  this.isChannelAttempt(phrase)) {
-            var parts                   = this.CHANNEL_EXPRESSION.exec(phrase);
+            var parts                   = this.config.expression.exec(phrase);
 
-            var channel                 = parts[1].length > 0 ? parts[1].trim() : null;
-            var command                 = parts[2].trim();
+            var channel                 = (parts[2] && parts[2].length > 0) ? parts[2].trim() : '';
+            var command                 = (parts[1].length > channel.length) ? parts[1].substring(parts[1].indexOf(channel) + channel.length).trim() : 'say';
             var message                 = parts[3].trim();
+
+            Log.debug('matchChannel', 'channel=', channel, 'command=', command, 'message=', message);
         }
         else {
             Dust.render('Chat.Unmatched', {phrase: phrase}, this.handleUnmatchedPhrase.bind(this, session, callback));
@@ -170,16 +176,6 @@ var Chat = Implement(Module, function() {
      * @type    {Object}
      */
     this.config                         = Protected({});
-
-    /**
-     * Matches attempts to use channels.
-     * @name    Chat#CHANNEL_EXPRESSION
-     * @protected
-     * @member
-     * @const
-     * @type    {RegExp}
-     */
-    this.CHANNEL_EXPRESSION             = Protected(/^(\w+ )?(say |pose |@emit |[":;\|\\]|\\\\)?(.*)/i);
 });
 
 module.exports                          = Chat;

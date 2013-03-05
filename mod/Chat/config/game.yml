@@ -1,4 +1,5 @@
 mod:
   Chat:
+    expression                          : '^(say |pose |@emit |\\\\|[":;\|\\]|(\w+)(?: [":;])?)(.*)'
     messages:
       Unmatched                         : Command not found.

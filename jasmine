@@ -80,7 +80,7 @@ case "$ACTION" in
 
     "restart")
         ./jasmine stop
-        ./jasmine start "${@##${1}}"
+        ./jasmine start ${@##${1}}
         ;;
 
     "status")
