@@ -1,5 +1,9 @@
 mod:
   Chat:
-    expression                          : '^(say |pose |@emit |\\\\|[":;\|\\]|(\w+)(?: [":;])?)(.*)'
+    expression                          : '^(say |pose |@emit |\\\\|[":;\|\\]|(\w+)(?: [":;]| on| off| who)?)(.*)'
     messages:
+      Say                               : '{author.data.moniker} says, "{message|s}"'
+      Pose                              : '{author.data.moniker} {message|s}'
+      SemiPose                          : '{author.data.moniker}{message|s}'
+      Emit                              : '{message|s}'
       Unmatched                         : Command not found.

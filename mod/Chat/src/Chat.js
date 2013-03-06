@@ -38,7 +38,9 @@ var Controller                          = require(BASE_PATH + '/src/Controller')
 var Dust                                = require('dustjs-linkedin');
 var Log                                 = require(BASE_PATH + '/src/Log').getLogger('Chat');
 var Module                              = require(BASE_PATH + '/hdr/Module');
+var Server                              = require(BASE_PATH + '/src/Server');
 var Session                             = require(BASE_PATH + '/src/Session');
+var Util                                = require(BASE_PATH + '/src/Utilities');
 
 /**
  * Adds support for channels and communication.
@@ -144,14 +146,77 @@ var Chat = Implement(Module, function() {
         if (this.canChat(session) &&  this.isChannelAttempt(phrase)) {
             var parts                   = this.config.expression.exec(phrase);
 
-            var channel                 = (parts[2] && parts[2].length > 0) ? parts[2].trim() : '';
-            var command                 = (parts[1].length > channel.length) ? parts[1].substring(parts[1].indexOf(channel) + channel.length).trim() : 'say';
-            var message                 = parts[3].trim();
+            var packet                  = {};
+            packet.author               = session;
+            packet.callback             = callback;
+            packet.channel              = (parts[2] && parts[2].length > 0) ? parts[2].trim() : '';
+            packet.command              = (parts[1].length > packet.channel.length) ? parts[1].substring(parts[1].indexOf(packet.channel) + packet.channel.length).trim() : 'say';
+            packet.command              = packet.command.toLowerCase();
+            packet.message              = parts[3].trim();
 
-            Log.debug('matchChannel', 'channel=', channel, 'command=', command, 'message=', message);
+            var channelName             = null;
+            if (packet.channel && packet.channel.length > 0) {
+                for (var i in session.data.channels) {
+                    if (session.data.channels[i].aliases.indexOf(packet.channel) > -1) {
+                        channelName     = i;
+                    }
+                }
+            }
+
+            if (packet.channel && channelName !== null && session.data.channels[channelName].listening === true) {
+                packet.channel          = channelName;
+            }
+            else if (packet.channel && packet.channel.length > 0) {
+                Dust.render('Chat.Unmatched', {phrase: phrase}, this.handleUnmatchedPhrase.bind(this, session, callback));
+                return;
+            }
+
+            Controller.prepare('Synchronize', this.prepareChannelMessage.bind(this, packet));
         }
         else {
             Dust.render('Chat.Unmatched', {phrase: phrase}, this.handleUnmatchedPhrase.bind(this, session, callback));
+        }
+    });
+
+    /**
+     *
+     */
+    this.prepareChannelMessage = Protected(function(packet) {
+        Log.debug('prepareChannelMessage');
+
+        var sessions                    = {};
+        for (var i in Server.sessions) {
+            if (this.filterSessions(packet, Server.sessions[i]) === true) {
+                sessions[i]             = Server.sessions[i];
+            }
+        }
+
+        var command                     = this.COMMAND_MAP[packet.command];
+        Dust.render(command, packet, this.handleMessagePrepared.bind(this, sessions, packet));
+    });
+
+    this.handleMessagePrepared = Protected(function(sessions, packet, err, message) {
+        Log.debug('handleMessagePrepared');
+        for (var i in sessions) {
+            Controller.prepare('Send', sessions[i], message);
+        }
+        Controller.prepare('Synchronize', packet.callback);
+    });
+
+    /**
+     *
+     */
+    this.filterSessions = Protected(function(packet, session) {
+        if (packet.channel && packet.channel.length > 0) {
+            return (session.data.channels[packet.channel] && session.data.channels[packet.channel].listening === true);
+        }
+        else if (packet.author.data.location !== undefined) {
+            return (packet.author.data.location === session.data.location);
+        }
+        else {
+            // Locations aren't installed and it's not a channel.
+            // Basically we have to treat the entire INE as a massive chat.
+            return true;
         }
     });
 
@@ -176,6 +241,17 @@ var Chat = Implement(Module, function() {
      * @type    {Object}
      */
     this.config                         = Protected({});
+
+    this.COMMAND_MAP = Protected({
+        '"'                             : 'Chat.Say',
+        'say'                           : 'Chat.Say',
+        ':'                             : 'Chat.Pose',
+        'pose'                          : 'Chat.Pose',
+        ';'                             : 'Chat.SemiPose',
+        '@emit'                         : 'Chat.Emit',
+        '\\'                            : 'Chat.Emit',
+        '\\\\'                          : 'Chat.Emit'
+    });
 });
 
 module.exports                          = Chat;
