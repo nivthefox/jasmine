@@ -1,0 +1,30 @@
+{
+    "version" : "0.1.0",
+    "name" : "JaSMINE",
+    "description" : "JAvaScript Mass Interactive Narative Environment",
+    "keywords" : [
+        "mud",
+        "interactive",
+        "narative",
+        "telnet"
+    ],
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/kkragenbrink/jasmine"
+    },
+    "author" : [
+        {
+            "name" : "Kevin Kragenbrink, II",
+            "email" : "kevin@writh.net"
+        }
+    ],
+    "main" : "./jasmine",
+    "dependencies" : {
+        "commander": "~2.0.0",
+        "js-yaml" : "~2.1.2",
+        "log4js": "~0.6.9"
+    },
+    "devDependencies" : {
+        "mocha" : "~1.13.0"
+    }
+}
