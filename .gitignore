@@ -3,3 +3,4 @@ coverage
 node_modules
 nodem.pid
 *.sublime-*
+.idea/*
