@@ -1,0 +1,6 @@
+.idea/*
+log/*
+coverage
+node_modules
+jasmin.pid
+*.sublime-*
