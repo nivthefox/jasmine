@@ -27,22 +27,17 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-require('js-yaml');
-
 /**
  * Initial entrypoint for the application.
  * @constructor
+ * @param   {Object}                    config
  */
-var Main = function (configPath) {
+var Main = function (config) {
     var config;
 
-    this.getConfig = function () {
-        return config;
-    };
-
     {
-        if (configPath) {
-            config = require(configPath);
+        if (!config) {
+            throw new Error('Invalid configuration object.');
         }
     }
 };

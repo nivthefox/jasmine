@@ -34,19 +34,14 @@ var Assert = require('assert');
 var Main = require($SRC_DIR + '/Main');
 var fixtures = require($ROOT_DIR + '/test/fixtures/Main');
 
-test(': Can be constructed', function () {
-    var instance = new Main;
+test(': Can be constructed with config object.', function () {
+    var instance = new Main(fixtures);
     Assert.ok(instance instanceof Main);
 });
 
-test(': Accepts a config path', function () {
-    var instance = new Main($ROOT_DIR + '/test/fixtures/Main');
-    Assert.ok(instance instanceof Main);
-    Assert.deepEqual(instance.getConfig(), fixtures);
-});
-
-test(': Throw an error on an invalid path', function () {
+test(': Cannot be constructed without config object.', function () {
     Assert.throws(function () {
-        var instance = new Main('/path/to/bad/config');
-    });
+        var instance = new Main();
+    }, 'Invalid configuration object.');
 });
+
