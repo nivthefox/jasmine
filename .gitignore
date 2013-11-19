@@ -1,6 +1,7 @@
 .idea/*
 log/*
 coverage
+coverage.html
 node_modules
 jasmin.pid
 *.sublime-*
