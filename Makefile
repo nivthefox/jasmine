@@ -11,9 +11,8 @@ coverage.html: clean
 	@$(MAKE) coverage COVERAGE=html-cov > coverage.html
 
 coverage:
-	@rm -rf ./cov
 	@jscoverage src ./cov
-	NODE_ENV=$(ENV) COVERAGE=1 ./node_modules/.bin/mocha \
+	@NODE_ENV=$(ENV) COVERAGE=1 ./node_modules/.bin/mocha \
 		--ui $(INTERFACE) \
 		--reporter $(COVERAGE) \
 		$(TESTS)
@@ -34,6 +33,7 @@ node_modules:
 	fi
 
 clean:
+	@rm -rf ./cov
 	@rm -f coverage.html
 
 realclean:
