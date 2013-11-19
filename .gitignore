@@ -1,6 +1,6 @@
 .idea/*
 log/*
-coverage
+cov
 coverage.html
 node_modules
 jasmin.pid

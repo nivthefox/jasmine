@@ -28,7 +28,7 @@
  */
 
 suite('Main');
-require('./config.js');
+require('../config.js');
 
 var Assert = require('assert');
 var Main = require($SRC_DIR + '/Main');

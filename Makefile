@@ -4,7 +4,6 @@ INTERFACE			= qunit
 REPORTER			= spec
 COVERAGE			= json-cov
 TESTS               = test
-COVTESTS			= coverage/test
 
 default: install
 
@@ -12,15 +11,12 @@ coverage.html: clean
 	@$(MAKE) coverage COVERAGE=html-cov > coverage.html
 
 coverage:
-	@mkdir -p ./coverage/noop
-	@rm -r ./coverage/*
-	@cp -r test ./coverage/test
-	@cp -r cfg ./coverage/cfg
-	@jscoverage src ./coverage/src
-	@NODE_ENV=$(ENV) ./node_modules/.bin/mocha \
+	@rm -rf ./cov
+	@jscoverage src ./cov
+	NODE_ENV=$(ENV) COVERAGE=1 ./node_modules/.bin/mocha \
 		--ui $(INTERFACE) \
 		--reporter $(COVERAGE) \
-		$(COVTESTS)
+		$(TESTS)
 
 docs:
 	@echo Generating documentation.
