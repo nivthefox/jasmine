@@ -1,4 +1,4 @@
-Copyright (C) 2012 Kevin Kragenbrink <kevin@writh.net>
+Copyright (C) 2013 Kevin Kragenbrink <kevin@writh.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
