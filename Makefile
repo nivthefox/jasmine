@@ -15,7 +15,7 @@ coverage:
 	@mkdir -p ./coverage/noop
 	@rm -r ./coverage/*
 	@cp -r test ./coverage/test
-	@cp -r config ./coverage/config
+	@cp -r cfg ./coverage/cfg
 	@jscoverage src ./coverage/src
 	@NODE_ENV=$(ENV) ./node_modules/.bin/mocha \
 		--ui $(INTERFACE) \
