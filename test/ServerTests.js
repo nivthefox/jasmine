@@ -27,43 +27,21 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-suite('Main');
+suite('Server');
 require('../config.js');
 
 var Assert = require('assert');
-var Main = require($SRC_DIR + '/Main');
-var events = require('events');
-var fixtures = require($ROOT_DIR + '/test/fixtures/Main');
-
-test(': Cannot be constructed without process object.', function () {
-    Assert.throws(function () {
-        var instance = new Main();
-    }, 'Invalid process object.');
-});
+var Server = require($SRC_DIR + '/Server');
+var fixtures = require($ROOT_DIR + '/test/fixtures/Server');
 
 test(': Cannot be constructed without config object.', function () {
     Assert.throws(function () {
-        var instance = new Main(process);
+        var instance = new Server;
     }, 'Invalid configuration object.');
 });
 
-test(': Can be constructed with config and process object.', function () {
-    var instance = new Main(process, fixtures);
-    Assert.ok(instance instanceof Main);
-});
-
-test(': Successfully unlinks the pidfile before shutting down.', function (done) {
-    var fs = require('fs');
-
-    var proc = new events.EventEmitter;
-        proc.exit = function () {
-            Assert.ok(!fs.existsSync(fixtures.pid));
-            done();
-        };
-
-    fs.writeFileSync(fixtures.pid, '1234');
-    Assert.ok(fs.existsSync(fixtures.pid));
-    var instance = new Main(proc, fixtures);
-    proc.emit('SIGTERM');
+test(': Can be constructed with a config object.', function () {
+    var instance = new Server(fixtures);
+    Assert.ok(instance instanceof Server);
 });
 
