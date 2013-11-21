@@ -1,3 +1,4 @@
+
 /**
  * __          __   _ _   _                  _
  * \ \        / /  (_) | | |                | |
@@ -27,18 +28,45 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+var fs = require('fs');
+
 /**
  * Initial entrypoint for the application.
- * @constructor
- * @param   {Object}                    config
+ * @name Jasmine
+ * @param {process} process
+ * @param {Object} config
  */
-var Main = function (config) {
-    var config;
+var Main = function (process, config) {
 
+    /**
+     * Shuts down the server and removes the PID file before exiting the process.
+     * @name SIGTERM
+     * @method
+     * @private
+     */
+    var SIGTERM = function SIGTERM() {
+        fs.existsSync(config.pid) && fs.unlinkSync(config.pid);
+        process.exit();
+    };
+
+    /**
+     * Shuts down the server, then starts it back up, without terminating the node process.
+     * @name SIGHUP
+     * @method
+     * @private
+     */
+    var SIGHUP = function SIGHUP() {
+    };
+
+    /**
+     * @constructor
+     */
     {
-        if (!config) {
-            throw new Error('Invalid configuration object.');
-        }
+        if (!process)   throw new Error('Invalid process object');
+        if (!config)    throw new Error('Invalid configuration object.');
+
+        process.on('SIGTERM',   SIGTERM);
+        process.on('SIGHUP',    SIGHUP);
     }
 };
 

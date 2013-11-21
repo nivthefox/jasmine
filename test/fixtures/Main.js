@@ -1,3 +1,4 @@
 module.exports = {
-    test : 'Hello, World'
+    test : 'Hello, World',
+    'pid' : './jasmine.pid'
 };
