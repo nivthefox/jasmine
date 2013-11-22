@@ -58,22 +58,11 @@ var Session = function (socket) {
         return status;
     });
 
-    var disconnect = function () {
+    this.disconnect = function () {
         setStatus(Status.DISCONNECTING);
-        socket.end(t('core.disconnect') + '\n');
-    };
-
-    /**
-     * Sets the current session status.
-     * @name setStatus
-     * @method
-     * @private
-     * @param {Status.value} s
-     * @fires session.status.changed
-     */
-    var setStatus = function (s) {
-        status = s;
-        process.emit('session.status.changed', this);
+        this.send(t('core.disconnect'), function () {
+            socket.end();
+        });
     };
 
     /**
@@ -89,6 +78,28 @@ var Session = function (socket) {
         process.emit('session.data.received', data);
     };
 
+    this.send = function (msg, cb) {
+        socket.write(msg + '\n', cb);
+    };
+
+    /**
+     * Sets the current session status.
+     * @name setStatus
+     * @method
+     * @private
+     * @param {Status.value} s
+     * @fires session.status.changed
+     */
+    var setStatus = function (s) {
+        status = s;
+        process.emit('session.status.changed', this);
+    };
+
+
+    var shutdown = function () {
+        this.send(t('core.shutdown'), this.disconnect.bind(this));
+    };
+
     // @constructor
     {
         if (!socket)    throw new Error('Invalid socket object.');
@@ -100,7 +111,7 @@ var Session = function (socket) {
         socket.on('login',  setStatus.bind(this, Status.CONNECTING));
         socket.on('data',   handleData.bind(this));
 
-        process.once('server.server.closing', disconnect);
+        process.once('server.server.closing', shutdown.bind(this));
 
         t = new I18n(DEFAULT_LANGUAGE);
     }

@@ -72,13 +72,13 @@ test(': Can connect to the server and then stop it.', function (done) {
     process.once('server.server.listening', function (port, ip) {
         var socket = new net.Socket({type : 'tcp4'});
         socket.on('connect', function () {
-            socket.on('data', function (data) {
-                Assert.equal(data, '** You have been disconnected from the server.\n');
-            });
             process.once('server.server.closed', function () {
                 done();
             });
             instance.stop();
+        });
+        socket.on('data', function (data) {
+            Assert.equal(data.toString(), '** The server is shutting down.\n** You have been disconnected from the server.\n');
         });
         socket.connect(port, ip);
     });
