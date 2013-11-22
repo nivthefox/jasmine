@@ -87,6 +87,14 @@ var Server = function ( config) {
         }
     };
 
+    /**
+     * Instructs the server to stop listening and stop when all sessions have ended.
+     * @name stop
+     * @method
+     * @public
+     * @fires server.server.closing
+     * @fires server.server.closed
+     */
     this.stop = function () {
         process.emit('server.server.closing');
         server.removeListener('connection', handleConnection);
