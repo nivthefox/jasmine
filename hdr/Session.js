@@ -8,6 +8,7 @@ module.exports.Status = {
     NEW : 0,
     CONNECTING : 1,
     CONNECTED : 2,
-    DISCONNECTED : 3,
-    TIMEDOUT : 4
+    DISCONNECTING : 3,
+    DISCONNECTED : 4,
+    TIMEDOUT : 5
 };

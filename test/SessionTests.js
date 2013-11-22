@@ -33,17 +33,42 @@ require('../config.js');
 var Assert = require('assert');
 var EventEmitter = require('events').EventEmitter;
 var Session = require($SRC_DIR + '/Session');
+var SessionHdrs = require($HDR_DIR + '/Session');
 //var fixtures = require($ROOT_DIR + '/test/fixtures/Session');
+var socket;
+
+beforeEach(function () {
+    socket = new EventEmitter;
+});
 
 test(': Cannot be constructed without a socket', function () {
     Assert.throws(function () {
-        var instance = new Session;
+        instance = new Session;
     }, 'Invalid socket object.');
-
 });
 
 test(': Can be constructed and is an EventEmitter.', function () {
-    var instance = new Session(new EventEmitter);
+    var instance = new Session(socket);
     Assert.ok(instance instanceof Session);
     Assert.ok(instance instanceof EventEmitter);
+});
+
+test(': Has an ID and a Status. Status changes as expected.', function () {
+    var instance = new Session(socket);
+    Assert.ok(/\d+\.\d+/.test(instance.id));
+    Assert.equal(instance.status, SessionHdrs.Status.NEW);
+    socket.emit('login');
+    Assert.equal(instance.status, SessionHdrs.Status.CONNECTING);
+    socket.emit('close');
+    Assert.equal(instance.status, SessionHdrs.Status.DISCONNECTED);
+});
+
+test(': Can handle incoming data streams.', function (done) {
+    var instance = new Session(socket);
+    process.on('session.data.received', function (data) {
+        Assert.equal(data, 'test');
+        done();
+    });
+
+    socket.emit('data', 'test');
 });

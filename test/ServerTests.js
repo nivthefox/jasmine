@@ -33,6 +33,7 @@ require('../config.js');
 var Assert = require('assert');
 var Server = require($SRC_DIR + '/Server');
 var fixtures = require($ROOT_DIR + '/test/fixtures/Server');
+var net = require('net');
 
 test(': Cannot be constructed without config object.', function () {
     Assert.throws(function () {
@@ -45,3 +46,38 @@ test(': Can be constructed with a config object.', function () {
     Assert.ok(instance instanceof Server);
 });
 
+test(': Can start and stop the server.', function (done) {
+    var instance = new Server(fixtures);
+    process.once('server.server.listening', function (port, ip) {
+        Assert.equal(port, fixtures.servers[0].port);
+        Assert.equal(ip, fixtures.servers[0].ip);
+
+        process.once('server.server.closed', function () {
+            var socket = new net.Socket({type : 'tcp4'});
+            socket.setTimeout(1);
+            socket.on('error', function (err) {
+                Assert.equal(err.code, 'ECONNREFUSED');
+                done();
+            });
+            socket.connect(port, ip);
+        });
+        Assert.doesNotThrow(instance.stop);
+    });
+    Assert.doesNotThrow(instance.start);
+});
+
+test(': Can connect to the server and then stop it.', function (done) {
+    var instance = new Server(fixtures);
+
+    process.once('server.server.listening', function (port, ip) {
+        var socket = new net.Socket({type : 'tcp4'});
+        socket.on('connect', function () {
+            process.once('server.server.closed', function () {
+                done();
+            });
+            instance.stop();
+        });
+        socket.connect(port, ip);
+    });
+    instance.start();
+});

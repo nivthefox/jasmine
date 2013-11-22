@@ -48,10 +48,16 @@ var Session = function (socket) {
      * @type {Integer}
      * @getter
      */
-    var status = null;
+    var status = Status.NEW;
     this.__defineGetter__('status', function () {
         return status;
     });
+
+    var disconnect = function disconnect() {
+        setStatus(Status.DISCONNECTING);
+        // TODO: Send shutdown message.
+        socket.end();
+    };
 
     /**
      * Sets the current session status.
@@ -86,9 +92,11 @@ var Session = function (socket) {
         var timestamp = process.hrtime();
         this.id = util.format('%s.%s', timestamp[0], timestamp[1]);
 
-        socket.on('close',  setStatus.bind(this, Status.DISONNECTED));
+        socket.on('close',  setStatus.bind(this, Status.DISCONNECTED));
         socket.on('login',  setStatus.bind(this, Status.CONNECTING));
         socket.on('data',   handleData.bind(this));
+
+        process.once('server.server.closing', disconnect);
     }
 };
 

@@ -29,6 +29,7 @@
 
 var net = require('net');
 var log = require($SRC_DIR + '/Log').getLogger('Server');
+var Session = require($SRC_DIR + '/Session');
 
 /**
  * A telnet server.
@@ -57,8 +58,8 @@ var Server = function ( config) {
      * @fires server.session.connected
      */
     var handleConnection = function (socket) {
-
-        // TODO: Institute sessions
+        var session = new Session(socket);
+        sessions.push(session);
     };
 
     /**
@@ -76,28 +77,22 @@ var Server = function ( config) {
 
         for (var i in config.servers) {
             var port = config.servers[i].port;
-            var ip = config.servers[i].host || '0.0.0.0';
+            var ip = config.servers[i].ip || '0.0.0.0';
 
-            server.listen(port, host, function (port, ip) {
+            server.listen(port, ip, function (port, ip) {
 
                 process.emit('server.server.listening', port, ip);
                 log.info('Listening on %s port %d.', ip, port);
-            }.bind(this, port, host));
+            }.bind(this, port, ip));
         }
     };
 
-    this.stop = function (callback) {
-
+    this.stop = function () {
         process.emit('server.server.closing');
         server.removeListener('connection', handleConnection);
 
-        for (var i in sessions) {
-            sessions[i].disconnect();
-        }
-
         server.close(function () {
             process.emit('server.server.closed');
-            callback();
         });
     };
 
