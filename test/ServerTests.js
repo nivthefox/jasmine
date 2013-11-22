@@ -48,11 +48,11 @@ test(': Can be constructed with a config object.', function () {
 
 test(': Can start and stop the server.', function (done) {
     var instance = new Server(fixtures);
-    process.once('server.server.listening', function (port, ip) {
+    process.once('server.listening.netserver', function (port, ip) {
         Assert.equal(port, fixtures.servers[0].port);
         Assert.equal(ip, fixtures.servers[0].ip);
 
-        process.once('server.server.closed', function () {
+        process.once('server.closed.netserver', function () {
             var socket = new net.Socket({type : 'tcp4'});
             socket.setTimeout(1);
             socket.on('error', function (err) {
@@ -69,10 +69,10 @@ test(': Can start and stop the server.', function (done) {
 test(': Can connect to the server and then stop it.', function (done) {
     var instance = new Server(fixtures);
 
-    process.once('server.server.listening', function (port, ip) {
+    process.once('server.listening.netserver', function (port, ip) {
         var socket = new net.Socket({type : 'tcp4'});
         socket.on('connect', function () {
-            process.once('server.server.closed', function () {
+            process.once('server.closed.netserver', function () {
                 done();
             });
             instance.stop();

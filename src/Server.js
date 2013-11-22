@@ -79,12 +79,12 @@ var Server = function (config) {
             var port = config.servers[i].port;
             var ip = config.servers[i].ip || '0.0.0.0';
 
-            server.listen(port, ip, function (port, ip) {
-
-                process.emit('server.server.listening', port, ip);
-                log.info('Listening on %s port %d.', ip, port);
-            }.bind(this, port, ip));
         }
+        server.listen(port, ip, function (port, ip) {
+
+            process.emit('server.listening.netserver', port, ip);
+            log.info('Listening on %s port %d.', ip, port);
+        }.bind(this, port, ip));
     };
 
     /**
@@ -92,15 +92,15 @@ var Server = function (config) {
      * @name stop
      * @method
      * @public
-     * @fires server.server.closing
-     * @fires server.server.closed
+     * @fires server.closing.server
+     * @fires server.closed.server
      */
     this.stop = function () {
-        process.emit('server.server.closing');
+        process.emit('server.closing.netserver');
         server.removeListener('connection', handleConnection);
 
         server.close(function () {
-            process.emit('server.server.closed');
+            process.emit('server.closed.netserver');
         });
     };
 

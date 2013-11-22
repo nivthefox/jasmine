@@ -75,7 +75,7 @@ var Session = function (socket) {
      */
     var handleData = function (data) {
         data = data.toString().trim();
-        process.emit('session.data.received', this, data);
+        process.emit('session.received.data', this, data);
     };
 
     this.send = function (msg, cb) {
@@ -92,7 +92,7 @@ var Session = function (socket) {
      */
     var setStatus = function (s) {
         status = s;
-        process.emit('session.status.changed', this);
+        process.emit('session.changed.status', this);
     };
 
 
@@ -111,7 +111,7 @@ var Session = function (socket) {
         socket.on('login',  setStatus.bind(this, Status.CONNECTING));
         socket.on('data',   handleData.bind(this));
 
-        process.once('server.server.closing', shutdown.bind(this));
+        process.once('server.closing.netserver', shutdown.bind(this));
 
         t = new I18n(DEFAULT_LANGUAGE);
     }
