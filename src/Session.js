@@ -75,7 +75,7 @@ var Session = function (socket) {
      */
     var handleData = function (data) {
         data = data.toString().trim();
-        process.emit('session.data.received', data);
+        process.emit('session.data.received', this, data);
     };
 
     this.send = function (msg, cb) {
