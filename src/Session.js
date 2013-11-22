@@ -30,6 +30,9 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var Status = require($HDR_DIR + '/Session').Status;
+var I18n = require($SRC_DIR + '/I18n');
+
+I18n.addPath($ROOT_DIR + '/msg', 'core');
 
 /**
  * A connection manager.
@@ -37,6 +40,8 @@ var Status = require($HDR_DIR + '/Session').Status;
  * @param {net.Socket} socket
  */
 var Session = function (socket) {
+    var t;
+
     /**
      * The session id
      * @type {Number}
@@ -53,10 +58,9 @@ var Session = function (socket) {
         return status;
     });
 
-    var disconnect = function disconnect() {
+    var disconnect = function () {
         setStatus(Status.DISCONNECTING);
-        // TODO: Send shutdown message.
-        socket.end();
+        socket.end(t('core.disconnect') + '\n');
     };
 
     /**
@@ -97,6 +101,8 @@ var Session = function (socket) {
         socket.on('data',   handleData.bind(this));
 
         process.once('server.server.closing', disconnect);
+
+        t = new I18n(DEFAULT_LANGUAGE);
     }
 };
 

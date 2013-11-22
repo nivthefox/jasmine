@@ -44,7 +44,7 @@ var loadNamespace = function (namespace, lang) {
     });
 
     if (path.length !== 1) {
-        throw new Error('Could not load namespace' + namespace);
+        throw new Error('Could not load namespace ' + namespace);
     }
 
     path = path[0].path;

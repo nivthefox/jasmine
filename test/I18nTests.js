@@ -36,7 +36,10 @@ var I18n = require($SRC_DIR + '/I18n');
 
 test(': Can statically add a configuration path.', function () {
     Assert.doesNotThrow(function () { I18n.addPath($ROOT_DIR + '/test/fixtures/I18n', 'test') });
-    Assert.deepEqual(I18n.getPaths(), [{namespace : 'test', path : $ROOT_DIR + '/test/fixtures/I18n'}]);
+    Assert.deepEqual(I18n.getPaths(), [
+        {namespace : 'core', path : $ROOT_DIR + '/msg'},
+        {namespace : 'test', path : $ROOT_DIR + '/test/fixtures/I18n'}
+    ]);
 });
 
 test(': Cannot add a bad path, or a work without a namespace, or re-use a namespace.', function () {
