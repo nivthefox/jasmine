@@ -36,7 +36,7 @@ var Session = require($SRC_DIR + '/Session');
  * @name Server
  * @param {Object} config
  */
-var Server = function ( config) {
+var Server = function (config) {
     /**
      * The net server instance.
      * @type {net.Server}
