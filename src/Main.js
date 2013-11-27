@@ -1,4 +1,3 @@
-
 /**
  * __          __   _ _   _                  _
  * \ \        / /  (_) | | |                | |
@@ -30,6 +29,7 @@
 
 var fs = require('fs');
 var log = require($SRC_DIR + '/Log').getLogger('Main');
+var util = require('util');
 
 /**
  * Initial entrypoint for the application.
@@ -66,7 +66,16 @@ var Main = function (process, config, Server) {
     };
 
     this.restart = function () {
+        // Destroy the server.
         server = null;
+
+        // Invalidate require cache.
+        var i = require.cache.length;
+        while (i--) {
+            delete require.cache[i];
+        }
+
+        // Start back up.
         this.start();
     };
 
@@ -74,12 +83,22 @@ var Main = function (process, config, Server) {
         if (server instanceof Server) {
             throw new Error('Server already started.');
         }
-        process.once('server.started.*', function () {
-            log.info('startup banner goes here.');
-        });
-        server = new Server(config);
-        server.start();
 
+        fs.readdir($MOD_DIR, function (err, modules) {
+            var i, module;
+            for (i in modules) {
+                module = modules[i];
+                if (config.modules[module] === false) continue;
+                require(util.format('%s/%s/module.js', $MOD_DIR, module));
+            }
+
+            process.once('server.started.*', function () {
+                log.info('startup banner goes here.');
+            });
+
+            server = new Server(config);
+            server.start();
+        });
     };
 
     /**
