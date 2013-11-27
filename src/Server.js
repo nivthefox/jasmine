@@ -55,11 +55,12 @@ var Server = function (config) {
      * @method
      * @private
      * @param {net.Socket} socket
-     * @fires server.session.connected
+     * @fires server:connected:session
      */
     var handleConnection = function (socket) {
         var session = new Session(socket);
         sessions.push(session);
+        process.emit('server:connected:session', session);
         log.info('New connection from %s. (%s)', socket.address().address, session.id);
     };
 
@@ -68,7 +69,7 @@ var Server = function (config) {
      * @name start
      * @method
      * @public
-     * @fires server.net.listening
+     * @fires server:started:net
      */
     this.start = function () {
 
@@ -83,7 +84,7 @@ var Server = function (config) {
         }
         server.listen(port, ip, function (port, ip) {
 
-            process.emit('server.started.netserver', port, ip);
+            process.emit('server:started:net', port, ip);
             log.info('Listening on %s port %d.', ip, port);
         }.bind(this, port, ip));
     };
@@ -93,15 +94,15 @@ var Server = function (config) {
      * @name stop
      * @method
      * @public
-     * @fires server.closing.server
-     * @fires server.closed.server
+     * @fires server:stopping:net
+     * @fires server:stopped:net
      */
     this.stop = function () {
-        process.emit('server.stopping.netserver');
+        process.emit('server:stopping:net');
         server.removeListener('connection', handleConnection);
 
         server.close(function () {
-            process.emit('server.stopped.netserver');
+            process.emit('server:stopped:net');
         });
     };
 

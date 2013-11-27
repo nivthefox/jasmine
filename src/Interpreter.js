@@ -28,12 +28,11 @@
  */
 
 var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require($HDR_DIR + '/events').EventEmitter;
 var log = require($SRC_DIR + '/Log').getLogger('Main');
 var commands = new EventEmitter;
-commands.emit = process.emit;
 
-process.on('session.received.data', function (session, data) {
+process.on('session:received:command', function (session, data) {
         data = data.split(' ');
     var cmd = data.shift();
         data = data.join(' ');

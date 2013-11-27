@@ -31,7 +31,7 @@ suite('Session');
 require('../config.js');
 
 var Assert = require('assert');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require($HDR_DIR + '/events').EventEmitter;
 var Session = require($SRC_DIR + '/Session');
 var SessionHdrs = require($HDR_DIR + '/Session');
 //var fixtures = require($ROOT_DIR + '/test/fixtures/Session');
@@ -65,7 +65,7 @@ test(': Has an ID and a Status. Status changes as expected.', function () {
 
 test(': Can handle incoming data streams.', function (done) {
     var instance = new Session(socket);
-    process.on('session.received.data', function (session, data) {
+    process.on('session:received:data', function (session, data) {
         Assert.ok(session instanceof Session);
         Assert.equal(data, 'test');
         done();

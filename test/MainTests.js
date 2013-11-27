@@ -32,7 +32,7 @@ require('../config.js');
 
 var Assert = require('assert');
 var Main = require($SRC_DIR + '/Main');
-var events = require('events');
+var events = require($HDR_DIR + '/events');
 var fixtures = require($ROOT_DIR + '/test/fixtures/Main');
 
 test(': Cannot be constructed without process object.', function () {
@@ -62,7 +62,6 @@ test(': Successfully unlinks the pidfile before shutting down.', function (done)
     var fs = require('fs');
 
     var proc = new events.EventEmitter;
-    proc.emit = process.emit.bind(proc);
     proc.exit = function () {
         Assert.ok(!fs.existsSync(fixtures.pid));
         done();
@@ -71,7 +70,7 @@ test(': Successfully unlinks the pidfile before shutting down.', function (done)
     var server = function () {
         this.start = function () {};
         this.stop = function () {
-            proc.emit('server.stopped.test')
+            proc.emit('server:stopped:test')
         };
     };
 

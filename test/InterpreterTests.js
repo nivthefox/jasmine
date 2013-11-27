@@ -43,5 +43,5 @@ test(': Can create and remove an interpreter.', function (done) {
         Assert.doesNotThrow(interpreter.remove);
         done();
     })});
-    process.emit('session.received.data', 'test', 'test test');
+    process.emit('session:received:command', 'test', 'test test');
 });

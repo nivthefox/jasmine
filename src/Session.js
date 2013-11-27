@@ -78,11 +78,11 @@ var Session = function (socket) {
      * @method
      * @private
      * @param {Buffer} data
-     * @fires session.data.received
+     * @fires session:received:command
      */
     var handleData = function (data) {
         data = data.toString().trim();
-        process.emit('session.received.data', this, data);
+        process.emit('session:received:command', this, data);
     };
 
     this.send = function (msg, cb) {
@@ -95,11 +95,11 @@ var Session = function (socket) {
      * @method
      * @private
      * @param {Status.value} s
-     * @fires session.status.changed
+     * @fires session:changed:status
      */
     var setStatus = function (s) {
         status = s;
-        process.emit('session.changed.status', this);
+        process.emit('session:changed:status', this);
     };
 
     /**
@@ -120,7 +120,7 @@ var Session = function (socket) {
         socket.on('login',  setStatus.bind(this, Status.CONNECTING));
         socket.on('data',   handleData.bind(this));
 
-        process.once('server.stopping.netserver', shutdown.bind(this));
+        process.once('server:stopping:net', shutdown.bind(this));
 
         t = new I18n(DEFAULT_LANGUAGE);
     }

@@ -48,7 +48,7 @@ var Main = function (process, config, Server) {
      * @private
      */
     var SIGTERM = function SIGTERM() {
-        process.once('server.stopped.*', function () {
+        process.once(/server:stopped:.*/, function () {
             fs.existsSync(config.pid) && fs.unlinkSync(config.pid);
             process.exit();
         });
@@ -62,7 +62,7 @@ var Main = function (process, config, Server) {
      * @private
      */
     var SIGHUP = function SIGHUP() {
-        process.once('server.stopped.*', this.restart);
+        process.once(/server:stopped:.*/, this.restart);
     };
 
     this.restart = function () {
@@ -84,20 +84,22 @@ var Main = function (process, config, Server) {
             throw new Error('Server already started.');
         }
 
-        fs.readdir($MOD_DIR, function (err, modules) {
-            for (i in modules) {
-                module = modules[i];
-                if (config.modules && config.modules[module] === false) continue;
-                require(util.format('%s/%s/module.js', $MOD_DIR, module));
-            }
-
-            process.once('server.started.*', function () {
-                log.info('startup banner goes here.');
-            });
-
-            server = new Server(config);
-            server.start();
-        });
+//        fs.readdir($MOD_DIR, function (err, modules) {
+//            for (i in modules) {
+//                module = modules[i];
+//                if (config.modules && config.modules[module] === false) continue;
+//                require(util.format('%s/%s/module.js', $MOD_DIR, module));
+//            }
+//
+//            process.once(/server:started:.*/, function () {
+//                log.info('startup banner goes here.');
+//            });
+//
+//            server = new Server(config);
+//            server.start();
+//        });
+        server = new Server(config);
+        server.start();
     };
 
     /**
