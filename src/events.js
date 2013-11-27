@@ -35,7 +35,7 @@ function isObject(arg) {
 util.isObject = isObject;
 
 process.emit = function(type) {
-    var er, handler, handles, len, args, i, listeners, pattern;
+    var er, handler, handles, len, matches, args, i, listeners, pattern, regReg;
 
     if (!this._events)
         this._events = {};
@@ -59,9 +59,15 @@ process.emit = function(type) {
     }
 
     handles = [];
+    regReg = /^\/(.*)\/([gi]+)$/;
     for (i in this._events) {
-        pattern = i.replace(/\./g, '\\.').replace(/\*/g, '.+');
-        pattern = new RegExp('^' + pattern + '$');
+        if (matches = regReg.exec(i)) {
+            pattern = new RegExp(matches[1], matches[2]);
+        } else {
+            pattern = i.replace(/\./g, '\\.').replace(/\*/g, '.+');
+            pattern = new RegExp('^' + pattern + '$');
+        }
+
         if (pattern.test(type)) {
             handles.push(this._events[i]);
         }
