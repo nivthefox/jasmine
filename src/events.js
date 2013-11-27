@@ -35,7 +35,7 @@ function isObject(arg) {
 util.isObject = isObject;
 
 process.emit = function(type) {
-    var er, handler, len, args, i, listeners;
+    var er, handler, handles, len, args, i, listeners, pattern;
 
     if (!this._events)
         this._events = {};
@@ -58,18 +58,15 @@ process.emit = function(type) {
         return false;
     }
 
-    /*** WRITH HACKS HERE ***/
-//    handler = this._events[type];
-    var w = [], pattern;
+    handles = [];
     for (i in this._events) {
-        pattern = i.replace(/\./g, '\\.').replace('*', '.+');
+        pattern = i.replace(/\./g, '\\.').replace(/\*/g, '.+');
         pattern = new RegExp('^' + pattern + '$');
         if (pattern.test(type)) {
-            w.push(this._events[i])
+            handles.push(this._events[i]);
         }
     }
-    handler = (w.length === 1) ? w[0] : w;
-    /*** END WRITH HACKS HERE ***/
+    handler = (handles.length === 1) ? handles[0] : handles;
 
     if (util.isUndefined(handler))
         return false;
