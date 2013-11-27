@@ -36,7 +36,7 @@ var logConfig = {
 };
 
 // Development mode, log to console.
-if (!process.env.NODE_ENV === 'dev') {
+if (process.env.NODE_ENV === 'dev') {
     logConfig.appenders.push({type : 'console'});
 }
 
@@ -56,7 +56,6 @@ if (process.env.NODE_ENV !== 'test' && $LOG_DIR) {
 }
 
 logConfig.levels = ['ALL']; // TODO: This should come from a config somewhere.
-
 Log.configure(logConfig);
 
 module.exports = Log;
