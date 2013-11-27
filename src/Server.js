@@ -60,6 +60,7 @@ var Server = function (config) {
     var handleConnection = function (socket) {
         var session = new Session(socket);
         sessions.push(session);
+        log.info('New connection from %s. (%s)', socket.address().address, session.id);
     };
 
     /**

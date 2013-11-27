@@ -29,6 +29,7 @@
  */
 
 var fs = require('fs');
+var log = require($SRC_DIR + '/Log').getLogger('Main');
 
 /**
  * Initial entrypoint for the application.
@@ -73,8 +74,12 @@ var Main = function (process, config, Server) {
         if (server instanceof Server) {
             throw new Error('Server already started.');
         }
+        process.once('server.started.*', function () {
+            log.info('startup banner goes here.');
+        });
         server = new Server(config);
         server.start();
+
     };
 
     /**
