@@ -35,8 +35,10 @@ var fs = require('fs');
  * @name Jasmine
  * @param {process} process
  * @param {Object} config
+ * @param {Server} Server
  */
-var Main = function (process, config) {
+var Main = function (process, config, Server) {
+    var server;
 
     /**
      * Shuts down the server and removes the PID file before exiting the process.
@@ -45,8 +47,11 @@ var Main = function (process, config) {
      * @private
      */
     var SIGTERM = function SIGTERM() {
-        fs.existsSync(config.pid) && fs.unlinkSync(config.pid);
-        process.exit();
+        process.once('server.stopped.*', function () {
+            fs.existsSync(config.pid) && fs.unlinkSync(config.pid);
+            process.exit();
+        });
+        server.stop();
     };
 
     /**
@@ -56,6 +61,20 @@ var Main = function (process, config) {
      * @private
      */
     var SIGHUP = function SIGHUP() {
+        process.once('server.stopped.*', this.restart);
+    };
+
+    this.restart = function () {
+        server = null;
+        this.start();
+    };
+
+    this.start = function () {
+        if (server instanceof Server) {
+            throw new Error('Server already started.');
+        }
+        server = new Server(config);
+        server.start();
     };
 
     /**
@@ -64,9 +83,10 @@ var Main = function (process, config) {
     {
         if (!process)   throw new Error('Invalid process object');
         if (!config)    throw new Error('Invalid configuration object.');
+        if (!Server || typeof Server !== 'function') throw new Error('Invalid Server class.');
 
-        process.on('SIGTERM',   SIGTERM);
-        process.on('SIGHUP',    SIGHUP);
+        process.on('SIGTERM',   SIGTERM.bind(this));
+        process.on('SIGHUP',    SIGHUP.bind(this));
     }
 };
 

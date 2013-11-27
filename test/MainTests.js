@@ -47,8 +47,14 @@ test(': Cannot be constructed without config object.', function () {
     }, 'Invalid configuration object.');
 });
 
+test(': Cannot be constructed without Server class.', function () {
+    Assert.throws(function () {
+        var instance = new Main(process, fixtures);
+    }, 'Invalid Server class.');
+});
+
 test(': Can be constructed with config and process object.', function () {
-    var instance = new Main(process, fixtures);
+    var instance = new Main(process, fixtures, function () {});
     Assert.ok(instance instanceof Main);
 });
 
@@ -56,14 +62,23 @@ test(': Successfully unlinks the pidfile before shutting down.', function (done)
     var fs = require('fs');
 
     var proc = new events.EventEmitter;
-        proc.exit = function () {
-            Assert.ok(!fs.existsSync(fixtures.pid));
-            done();
+    proc.emit = process.emit.bind(proc);
+    proc.exit = function () {
+        Assert.ok(!fs.existsSync(fixtures.pid));
+        done();
+    };
+
+    var server = function () {
+        this.start = function () {};
+        this.stop = function () {
+            proc.emit('server.stopped.test')
         };
+    };
 
     fs.writeFileSync(fixtures.pid, '1234');
     Assert.ok(fs.existsSync(fixtures.pid));
-    var instance = new Main(proc, fixtures);
+    var instance = new Main(proc, fixtures, server);
+    instance.start();
     proc.emit('SIGTERM');
 });
 
