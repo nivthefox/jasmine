@@ -85,10 +85,9 @@ var Main = function (process, config, Server) {
         }
 
         fs.readdir($MOD_DIR, function (err, modules) {
-            var i, module;
             for (i in modules) {
                 module = modules[i];
-                if (config.modules[module] === false) continue;
+                if (config.modules && config.modules[module] === false) continue;
                 require(util.format('%s/%s/module.js', $MOD_DIR, module));
             }
 

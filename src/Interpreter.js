@@ -29,12 +29,15 @@
 
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
+var log = require($SRC_DIR + '/Log').getLogger('Main');
 var commands = new EventEmitter;
 commands.emit = process.emit;
 
 process.on('session.received.data', function (session, data) {
-    var cmd = data.substr(0, data.indexOf(' '));
-        data = data.substr(cmd.length+1);
+        data = data.split(' ');
+    var cmd = data.shift();
+        data = data.join(' ');
+    log.debug('Received command %s', cmd);
     commands.emit(cmd, session, data);
 });
 
