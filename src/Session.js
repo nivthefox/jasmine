@@ -120,7 +120,7 @@ var Session = function (socket) {
         socket.on('login',  setStatus.bind(this, Status.CONNECTING));
         socket.on('data',   handleData.bind(this));
 
-        process.once('server.closing.netserver', shutdown.bind(this));
+        process.once('server.stopping.netserver', shutdown.bind(this));
 
         t = new I18n(DEFAULT_LANGUAGE);
     }

@@ -82,7 +82,7 @@ var Server = function (config) {
         }
         server.listen(port, ip, function (port, ip) {
 
-            process.emit('server.listening.netserver', port, ip);
+            process.emit('server.started.netserver', port, ip);
             log.info('Listening on %s port %d.', ip, port);
         }.bind(this, port, ip));
     };
@@ -96,11 +96,11 @@ var Server = function (config) {
      * @fires server.closed.server
      */
     this.stop = function () {
-        process.emit('server.closing.netserver');
+        process.emit('server.stopping.netserver');
         server.removeListener('connection', handleConnection);
 
         server.close(function () {
-            process.emit('server.closed.netserver');
+            process.emit('server.stopped.netserver');
         });
     };
 
