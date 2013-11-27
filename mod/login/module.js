@@ -29,7 +29,7 @@
 
 var Interpreter = require($SRC_DIR + '/Interpreter');
 
-new Interpreter(/^QUIT$/, function (session) {
+new Interpreter(/^QUIT$/i, function (session) {
     session.disconnect();
 });
 //
