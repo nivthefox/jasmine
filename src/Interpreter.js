@@ -36,7 +36,7 @@ process.on('session:received:command', function (session, data) {
         data = data.split(' ');
     var cmd = data.shift();
         data = data.join(' ');
-    log.debug('Received command %s', cmd);
+    log.debug('Received command %s from %s', cmd, session.id);
     commands.emit(cmd, session, data);
 });
 
