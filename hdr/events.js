@@ -183,7 +183,7 @@ events.EventEmitter.prototype.emit = function(type) {
             if (this._regevents[len].regexp.test(type)) {
                 if (!handler)
                     handler = this._regevents[len].listeners;
-                else if (handler === 'function')
+                else if (typeof handler === 'function')
                     handler = [handler].concat(this._regevents[len].listeners);
                 else
                     handler = handler.concat(this._regevents[len].listeners);

@@ -84,22 +84,22 @@ var Main = function (process, config, Server) {
             throw new Error('Server already started.');
         }
 
-//        fs.readdir($MOD_DIR, function (err, modules) {
-//            for (i in modules) {
-//                module = modules[i];
-//                if (config.modules && config.modules[module] === false) continue;
-//                require(util.format('%s/%s/module.js', $MOD_DIR, module));
-//            }
-//
-//            process.once(/server:started:.*/, function () {
-//                log.info('startup banner goes here.');
-//            });
-//
-//            server = new Server(config);
-//            server.start();
-//        });
-        server = new Server(config);
-        server.start();
+        fs.readdir($MOD_DIR, function (err, modules) {
+            for (i in modules) {
+                module = modules[i];
+                if (config.modules && config.modules[module] === false) continue;
+                require(util.format('%s/%s/module.js', $MOD_DIR, module));
+            }
+
+            process.once(/server:started:.*/, function () {
+                log.info('startup banner goes here.');
+            });
+
+            server = new Server(config);
+            server.start();
+        });
+//        server = new Server(config);
+//        server.start();
     };
 
     /**

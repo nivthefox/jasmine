@@ -67,17 +67,20 @@ test(': Successfully unlinks the pidfile before shutting down.', function (done)
         done();
     };
 
-    var server = function () {
-        this.start = function () {};
-        this.stop = function () {
-            proc.emit('server:stopped:test')
-        };
+    var server = function () {};
+    server.prototype.start = function () {
+        proc.emit('server:started:test')
+    };
+    server.prototype.stop = function () {
+        proc.emit('server:stopped:test')
     };
 
     fs.writeFileSync(fixtures.pid, '1234');
     Assert.ok(fs.existsSync(fixtures.pid));
     var instance = new Main(proc, fixtures, server);
     instance.start();
-    proc.emit('SIGTERM');
+    proc.on('server:started:test', function () {
+        proc.emit('SIGTERM');
+    });
 });
 
