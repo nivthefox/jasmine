@@ -65,7 +65,7 @@ test(': Has an ID and a Status. Status changes as expected.', function () {
 
 test(': Can handle incoming data streams.', function (done) {
     var instance = new Session(socket);
-    process.on('session:received:data', function (session, data) {
+    process.on('session:received:command', function (session, data) {
         Assert.ok(session instanceof Session);
         Assert.equal(data, 'test');
         done();
