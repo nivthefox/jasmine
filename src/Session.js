@@ -40,6 +40,10 @@ I18n.addPath($ROOT_DIR + '/msg', 'core');
  * @param {net.Socket} socket
  */
 var Session = function (socket) {
+    /**
+     * An i18n translation method for core messages.
+     * @type {Function}
+     */
     var t;
 
     /**
@@ -58,6 +62,9 @@ var Session = function (socket) {
         return status;
     });
 
+    /**
+     * Sends a disconnect message, then ends the socket.
+     */
     this.disconnect = function () {
         setStatus(Status.DISCONNECTING);
         this.send(t('core.disconnect'), function () {
@@ -95,7 +102,9 @@ var Session = function (socket) {
         process.emit('session.changed.status', this);
     };
 
-
+    /**
+     * Instructs all sessions to disconnect on server shutdown.
+     */
     var shutdown = function () {
         this.send(t('core.shutdown'), this.disconnect.bind(this));
     };

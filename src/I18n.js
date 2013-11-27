@@ -36,32 +36,52 @@ var loaded = [];
 var paths = [];
 var languages = {};
 
-var loadNamespace = function (namespace, lang) {
-    if (languages[lang][namespace]) return;
-
-    var path = paths.filter(function (path) {
-        return (path.namespace === namespace);
-    });
-
-    if (path.length !== 1) {
-        throw new Error('Could not load namespace ' + namespace);
-    }
-
-    path = path[0].path;
-
-    if (fs.existsSync(util.format('%s/%s.yml', path, lang))) {
-        languages[lang][namespace] = require(util.format('%s/%s.yml', path, lang));
-    }
-    else {
-        languages[lang][namespace] = require(util.format('%s/%s.yml', path, DEFAULT_LANGUAGE));
-    }
-};
-
+/**
+ * An i18n manager.
+ * @name I18n
+ * @param {String} lang
+ * @returns {Function}
+ */
 var I18n = function (lang) {
     if (!languages[lang]) {
         languages[lang] = {};
     }
 
+    /**
+     * Loads language-specific data for a given namespace.
+     * @name loadNamespace
+     * @method
+     * @private
+     * @param {String} namespace
+     * @param {String} lang
+     */
+    var loadNamespace = function (namespace, lang) {
+        if (languages[lang][namespace]) return;
+
+        var path = paths.filter(function (path) {
+            return (path.namespace === namespace);
+        });
+
+        if (path.length !== 1) {
+            throw new Error('Could not load namespace ' + namespace);
+        }
+
+        path = path[0].path;
+
+        if (fs.existsSync(util.format('%s/%s.yml', path, lang))) {
+            languages[lang][namespace] = require(util.format('%s/%s.yml', path, lang));
+        }
+        else {
+            languages[lang][namespace] = require(util.format('%s/%s.yml', path, DEFAULT_LANGUAGE));
+        }
+    };
+
+    /**
+     * Provides translated data, with formatting..
+     * @constructor
+     * @param {String} message
+     * @returns {String}
+     */
     return function () {
         var args = Array.prototype.slice.call(arguments);
         var message = args.shift().split('.');
@@ -78,10 +98,19 @@ var I18n = function (lang) {
     }
 };
 
+/**
+ * Gets the currently available I18n paths and namespaces.
+ * @returns {Array}
+ */
 I18n.getPaths = function () {
     return paths;
 };
 
+/**
+ * Adds a path to the list, represented as a namespace.
+ * @param {String} path
+ * @param {String} namespace
+ */
 I18n.addPath = function (path, namespace) {
     if (!fs.existsSync(path) || !fs.existsSync(util.format('%s/%s.yml', path, DEFAULT_LANGUAGE))) {
         throw new Error('Invalid i18n path.');
