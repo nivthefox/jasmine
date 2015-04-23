@@ -1,0 +1,38 @@
+{
+  "version": "0.1.0",
+  "name": "JaSMINE",
+  "description": "JAvaScript Mass Interactive Narative Environment",
+  "keywords": [
+    "mud",
+    "interactive",
+    "narative",
+    "telnet"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/kkragenbrink/jasmine"
+  },
+  "author": [
+    {
+      "name": "Kevin Kragenbrink, II",
+      "email": "kevin@writh.net"
+    }
+  ],
+  "dependencies": {
+    "commander": "^2.8.0",
+    "js-yaml": "^3.2.7",
+    "log4js": "^0.6.24"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.13",
+    "mocha": "^2.2.4",
+    "proxyquire": "^1.4.0"
+  },
+  "scripts": {
+    "ci-test": "NODE_PATH=. ./node_modules/instanbul/lib/cli.js cover ./node_modules/.bin/_mocha --report lcovonly -- --sort --check-leaks $(find tst -name *.tests.js) && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "coverage": "NODE_PATH=. ./node_modules/instanbul/lib/cli.js cover ./node_modules/.bin/_mocha -- --sort --check-leaks $(find tst -name *.tests.js)",
+    "test": "NODE_PATH=. ./node_modules/.bin/mocha --recursive --sort --check-leaks $(find tst -name *.tests.js)",
+    "start": "NODE_PATH=. node server.js"
+  }
+}
