@@ -30,9 +30,6 @@
     "proxyquire": "^1.4.0"
   },
   "scripts": {
-    "ci-test": "NODE_PATH=. ./node_modules/instanbul/lib/cli.js cover ./node_modules/.bin/_mocha --report lcovonly -- --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "coverage": "NODE_PATH=. ./node_modules/instanbul/lib/cli.js cover ./node_modules/.bin/_mocha -- --recursive",
-    "test": "NODE_PATH=. ./node_modules/.bin/mocha --recursive",
-    "start": "NODE_PATH=. node server.js"
+    "ci-test": "node_modules/istanbul/lib/cli.js cover -- node_modules/mocha/bin/_mocha test/index.js --reporter spec"
   }
 }
