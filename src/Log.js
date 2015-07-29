@@ -1,3 +1,5 @@
+'use strict';
+
 var log = require('log4js');
 var path = require('path');
 
