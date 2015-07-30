@@ -40,7 +40,8 @@ class BasePlayer extends AbstractObject {
      * @param object
      * @param from
      */
-        enter (object) {
+    enter (object) {
+        // todo: Implement locks
         let from = object.location;
 
         this._contents.add(object);
