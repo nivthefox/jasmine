@@ -3,10 +3,12 @@
 const assert = require('chai').assert;
 const proxyquire = require('proxyquire');
 
-const AbstractObject = require('jasmine/types/AbstractObject');
+const TestAbstractObject = require('jasmine/test/mock/types/TestAbstractObject');
 
 describe("jasmine.types.BaseObject", function () {
-    const BaseObject = proxyquire('jasmine/types/BaseObject', {});
+    const BaseObject = proxyquire('jasmine/types/BaseObject', {
+        'jasmine/types/AbstractObject' : TestAbstractObject
+    });
 
     it('should be instantiated as a child of AbstractObject', function () {
         let instance;
@@ -15,7 +17,7 @@ describe("jasmine.types.BaseObject", function () {
             instance = new BaseObject;
         });
 
-        assert.instanceOf(instance, AbstractObject);
+        assert.instanceOf(instance, TestAbstractObject);
     });
 
     it('should be able to enter or leave another object', function () {
