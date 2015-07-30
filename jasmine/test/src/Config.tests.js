@@ -14,7 +14,7 @@ var MockFS = sinon.mock(Promise.promisifyAll(fs));
 //var MockYaml = sinon.mock(yaml);
 
 describe('src.Config', function () {
-    var Config = proxyquire('src/Config', {
+    var Config = proxyquire('jasmine/src/Config', {
         'fs' : MockFS,
         'path' : path,
         'js-yaml' : yaml

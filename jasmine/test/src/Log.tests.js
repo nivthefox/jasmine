@@ -1,14 +1,14 @@
 'use strict';
 
 var assert = require('assert');
+var log4js = require('jasmine/test/mock/node_modules/log4js');
 var path = require('path');
 var proxyquire = require('proxyquire');
 
 describe('src.Log', function () {
 
-    var log4js = require('tst/mock/node_modules/log4js');
 
-    var Log = proxyquire('src/Log', {
+    var Log = proxyquire('jasmine/src/Log', {
         'log4js' : log4js
     });
 

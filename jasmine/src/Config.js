@@ -1,14 +1,14 @@
 'use strict';
 
-var Promise = require('bluebird');
-var fs = require('fs');
+const Promise = require('bluebird');
+let fs = require('fs');
 if (!fs.readFileAsync) {
     fs = Promise.promisifyAll(fs);
 }
-var path = require('path');
-var yaml = require('js-yaml');
+const path = require('path');
+const yaml = require('js-yaml');
 
-var Config = {};
+let Config;
 
 module.exports.get = function (val) {
     return Config[val];
