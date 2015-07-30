@@ -5,10 +5,10 @@ var log4js = require('jasmine/test/mock/node_modules/log4js');
 var path = require('path');
 var proxyquire = require('proxyquire');
 
-describe('src.Log', function () {
+describe('jasmine.Log', function () {
 
 
-    var Log = proxyquire('jasmine/src/Log', {
+    var Log = proxyquire('jasmine/Log', {
         'log4js' : log4js
     });
 
@@ -36,7 +36,7 @@ describe('src.Log', function () {
         Log.configure(config);
 
         assert.ok(log4js.configure.called);
-        assert.equal(Log.config.log.appenders[0].type, path.resolve(__dirname, '../../src/appenders/console'));
+        assert.equal(Log.config.log.appenders[0].type, path.resolve(__dirname, '../appenders/console'));
         assert.ok(log.setLevel.called);
         assert.ok(log.setLevel.args[0], config.log.levels.default);
     });
