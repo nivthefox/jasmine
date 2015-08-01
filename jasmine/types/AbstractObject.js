@@ -52,7 +52,10 @@ class AbstractObject {
     }
 
     msg (message, from) {}
-    search (string, global, types, location) {}
+
+    search (string, global, types, location) {
+
+    }
 }
 
 module.exports = AbstractObject;
