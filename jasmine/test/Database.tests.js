@@ -15,9 +15,6 @@ describe('src.Database', function () {
         let instance1 = new Database;
         let instance2 = new Database;
 
-        instance1.save();
-        instance2.save();
-
         assert.typeOf(instance1.dbref, 'number');
         assert.typeOf(instance2.dbref, 'number');
         assert.notEqual(instance1.dbref, instance2.dbref);
@@ -26,7 +23,6 @@ describe('src.Database', function () {
     it ('should allow you to load existing objects by dbref', function () {
         let instance1 = new Database;
             instance1.name = 'test';
-            instance1.save();
 
         let instance2 = Database.load(instance1.dbref);
         assert.strictEqual(instance1, instance2);
@@ -42,11 +38,6 @@ describe('src.Database', function () {
         instance2.name = 'Bar';
         instance3.name = 'Baz';
         instance4.name = 'Qux';
-
-        instance1.save();
-        instance2.save();
-        instance3.save();
-        instance4.save();
 
         var dbs = Database.find({'name' : 'Foo'});
         assert.ok(util.isArray(dbs));

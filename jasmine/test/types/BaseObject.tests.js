@@ -25,20 +25,14 @@ describe("jasmine.types.BaseObject", function () {
         let instance2 = new BaseObject;
         let instance3 = new BaseObject;
 
-        assert.doesNotThrow(function () {
-            instance1.enter(instance2);
-        });
-
+        instance1.enter(instance2);
         assert.equal(instance2.location, instance1);
-        assert.ok(instance1.contents.has(instance2));
-        assert.ok(!instance3.contents.has(instance2));
+        assert.isAbove(instance1.contents.indexOf(instance2), -1);
+        assert.equal(instance3.contents.indexOf(instance2), -1);
 
-        assert.doesNotThrow(function () {
-            instance3.enter(instance2);
-        });
-
+        instance3.enter(instance2);
         assert.equal(instance2.location, instance3);
-        assert.ok(!instance1.contents.has(instance2));
-        assert.ok(instance3.contents.has(instance2));
+        assert.equal(instance1.contents.indexOf(instance2), -1);
+        assert.isAbove(instance3.contents.indexOf(instance2), -1);
     });
 });

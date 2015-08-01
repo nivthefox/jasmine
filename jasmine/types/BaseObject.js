@@ -6,15 +6,13 @@ class BasePlayer extends AbstractObject {
     constructor() {
         super();
 
-        this.db.set('type', 'BasePlayer');
-
-        this._contents = new WeakSet;
-        this._location = this._db.get('location');
+        this.db.object_type = 'jasmine/types/BasePlayer';
+        this._contents = [];
     }
 
     /**
      * The set of contents associated with this object.
-     * @returns {WeakSet}
+     * @returns {Array}
      */
     get contents () {
         return this._contents;
@@ -25,27 +23,26 @@ class BasePlayer extends AbstractObject {
      * @returns {*}
      */
     get location () {
-        return this._location;
+        return this.db.location;
     }
 
     set location (object) {
         if (!(object instanceof AbstractObject)) {
             throw new TypeError('Invalid location.');
         }
-        this._location = object;
+        this.db.location = object;
     }
 
     /**
      * Places an object inside of this object.
      * @param object
-     * @param from
      */
     enter (object) {
         // todo: Implement locks
-        let from = object.location;
+        let from = object.db.location;
 
-        this._contents.add(object);
-        object.location = this;
+        this._contents.push(object);
+        object.db.location = this;
 
         if (from instanceof AbstractObject) {
             from.leave(object, this);
@@ -60,9 +57,11 @@ class BasePlayer extends AbstractObject {
      * @param to
      */
     leave (object, to) {
-        this._contents.delete(object);
-
-        this.at_leave(object, to);
+        const idx = this._contents.indexOf(object);
+        if (idx > -1) {
+            this._contents.splice(idx, 1);
+            this.at_leave(object, to);
+        }
     }
 
     /**

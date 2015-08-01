@@ -2,17 +2,20 @@
 
 const util = require('util');
 
+const Database = require('jasmine/Database');
+
 class AbstractObject {
-    constructor () {
+    constructor (db) {
         if (this.constructor === AbstractObject) {
             throw new TypeError("Cannot construct Abstract instances directly.");
         }
 
         // todo: this.command_set = jasmine.CommandSet
-        this._db = new Map; // todo: Replace this with the database object.
 
-        this._dbref = this._db.get('dbref');
-        this._sessions = new WeakSet;
+        if (db instanceof Database) { this._db = db; }
+        else { this._db = new Database; }
+
+        this._sessions = [];
     }
 
     /**
@@ -28,13 +31,13 @@ class AbstractObject {
      * @returns {String}
      */
     get dbref () {
-        return util.format('#%d', this._dbref);
+        return util.format('#%d', this.db.dbref);
     }
 
     /**
      * The set of sessions associated with this object.
      * Usually empty.
-     * @returns {WeakSet}
+     * @returns {Array}
      */
     get sessions () {
         return this._sessions;
@@ -45,7 +48,7 @@ class AbstractObject {
      * @returns {boolean}
      */
     hasPlayer () {
-        return this._sessions.size > 0;
+        return this._sessions.length > 0;
     }
 
     msg (message, from) {}

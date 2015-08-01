@@ -9,6 +9,14 @@ let dbrefs = 0;
 let data = {};
 
 class Database {
+    constructor () {
+        if (!this.dbref) {
+            this.dbref = dbrefs++;
+        }
+
+        data[this.dbref] = this;
+    }
+
     static find(query) {
         return Object.keys(data)
             .filter(function (key) {
@@ -49,15 +57,14 @@ class Database {
     }
 
     static load (dbref) {
-        return data[dbref];
-    }
+        var object = data[dbref];
 
-    save () {
-        if (!this.dbref) {
-            this.dbref = dbrefs++;
+        if (object.type) {
+            var type = require(object.type);
+            return new type(object);
         }
 
-        return data[this.dbref] = this;
+        return object;
     }
 
     static __wipe () {
