@@ -1,45 +1,68 @@
 'use strict';
 
 const fs = require('fs');
-const loki = require('lokijs');
 const path = require('path');
 const util = require('util');
 
-let instances = new Map;
+// todo: stubs should be replaced with lokijs
+let dbrefs = 0;
+let data = {};
 
 class Database {
-    constructor(game, name) {
-        this.file = path.resolve(util.format('%s/data/%s.json', name));
+    static find(query) {
+        return Object.keys(data)
+            .filter(function (key) {
+                var value = data[key];
+                var keep = false;
 
-        if (!this.file) {
-            throw new Error('Invalid database filename.');
-        }
+                for (var qk in query) {
+                    var qv = query[qk];
+                    if (typeof qv === 'object') {
+                        switch (true) {
+                            case qv.hasOwnProperty('$in'):
+                                keep = (qv.$in.indexOf(value[qk]) > -1);
+                                break;
+                            case qv.hasOwnProperty('$gt'):
+                                keep = (value[qk] > qv.$gt);
+                                break;
+                            case qv.hasOwnProperty('$gte'):
+                                keep = (value[qk] >= qv.$gte);
+                                break;
+                            case qv.hasOwnProperty('$lt'):
+                                keep = (value[qk] < qv.$lt);
+                                break;
+                            case qv.hasOwnProperty('$lte'):
+                                keep = (value[qk] <= qv.$lte);
+                                break;
+                        }
+                    }
+                    else if (typeof qv !== 'undefined') {
+                        keep = (qv === value[qk]);
+                    }
+                }
 
-        this.db = new loki(this.file);
-        this.db.loadDatabase();
+                return keep;
+            })
+            .map(function (key) {
+                return data[key];
+            });
     }
 
-    static getInstance (game, name) {
-        let instance;
-        let key = util.format('%s:%s', game, name);
-
-        if (!instances.has(key)) {
-            instance = new Database(game, name);
-            instances.set(key, instance);
-        }
-
-        return instances.get(key);
+    static load (dbref) {
+        return data[dbref];
     }
 
-    static getCollection (game, db, name) {
-        let instance = Database.getInstance(game, db);
-        let collection = instance.db.getCollection(name);
-
-        if (collection === null) {
-            collection = instance.db.addCollection(name);
+    save () {
+        if (!this.dbref) {
+            this.dbref = dbrefs++;
         }
 
-        return collection;
+        return data[this.dbref] = this;
+    }
+
+    static __wipe () {
+        dbrefs = 0;
+        data = {};
     }
 }
 

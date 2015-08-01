@@ -2,39 +2,86 @@
 
 const assert = require('chai').assert;
 const proxyquire = require('proxyquire');
+const util = require('util');
 
 describe('src.Database', function () {
     var Database = proxyquire('jasmine/Database', {});
 
-    it ('should serve as a factory', function () {
-        let instance1 = Database.getInstance('test', 'test');
-        let instance2 = Database.getInstance('test', 'test');
-        let instance3 = Database.getInstance('test', 'test2');
-
-        assert.instanceOf(instance1, Database);
-        assert.instanceOf(instance2, Database);
-        assert.instanceOf(instance3, Database);
-        assert.strictEqual(instance1, instance2);
-        assert.notStrictEqual(instance1, instance3);
+    afterEach(function () {
+        Database.__wipe();
     });
 
-    it ('should retrieve collections', function () {
-        let collection = Database.getCollection('game', 'db', 'collection');
-        let joe = {name: 'joe', age: 42};
-        let jack = {name: 'jack', age: 32};
-        collection.insert(joe);
-        collection.insert(jack);
+    it ('should always give a unique dbref', function () {
+        let instance1 = new Database;
+        let instance2 = new Database;
 
-        let result = collection.find({age: {$gt: 35}});
-        assert.equal(result.length, 1);
-        assert.equal(result[0].name, 'joe');
+        instance1.save();
+        instance2.save();
 
-        jack.age = 37;
-        collection.update(jack);
+        assert.typeOf(instance1.dbref, 'number');
+        assert.typeOf(instance2.dbref, 'number');
+        assert.notEqual(instance1.dbref, instance2.dbref);
+    });
 
-        result = collection.find({age: {$gt: 35}});
-        assert.equal(result.length, 2);
-        assert.equal(result[0].name, 'jack');
-        assert.equal(result[1].name, 'joe');
+    it ('should allow you to load existing objects by dbref', function () {
+        let instance1 = new Database;
+            instance1.name = 'test';
+            instance1.save();
+
+        let instance2 = Database.load(instance1.dbref);
+        assert.strictEqual(instance1, instance2);
+    });
+
+    it ('should be able to search the database', function () {
+        var instance1 = new Database();
+        var instance2 = new Database();
+        var instance3 = new Database();
+        var instance4 = new Database();
+
+        instance1.name = 'Foo';
+        instance2.name = 'Bar';
+        instance3.name = 'Baz';
+        instance4.name = 'Qux';
+
+        instance1.save();
+        instance2.save();
+        instance3.save();
+        instance4.save();
+
+        var dbs = Database.find({'name' : 'Foo'});
+        assert.ok(util.isArray(dbs));
+        assert.equal(dbs.length, 1);
+        assert.ok(dbs[0] instanceof Database);
+        assert.strictEqual(dbs[0], instance1);
+
+        dbs = Database.find({'name' : {'$in' : ['Bar', 'Baz', 'Moo']}});
+        assert.ok(util.isArray(dbs));
+        assert.equal(dbs.length, 2);
+        assert.strictEqual(dbs[0], instance2);
+        assert.strictEqual(dbs[1], instance3);
+
+        dbs = Database.find({'dbref' : {'$lt' : 2}});
+        assert.ok(util.isArray(dbs));
+        assert.equal(dbs.length, 2);
+        assert.strictEqual(dbs[0], instance1);
+        assert.strictEqual(dbs[1], instance2);
+
+        dbs = Database.find({'dbref' : {'$lte' : 2}});
+        assert.ok(util.isArray(dbs));
+        assert.equal(dbs.length, 3);
+        assert.strictEqual(dbs[0], instance1);
+        assert.strictEqual(dbs[1], instance2);
+        assert.strictEqual(dbs[2], instance3);
+
+        dbs = Database.find({'dbref' : {'$gt' : 2}});
+        assert.ok(util.isArray(dbs));
+        assert.equal(dbs.length, 1);
+        assert.strictEqual(dbs[0], instance4);
+
+        dbs = Database.find({'dbref' : {'$gte' : 2}});
+        assert.ok(util.isArray(dbs));
+        assert.equal(dbs.length, 2);
+        assert.strictEqual(dbs[0], instance3);
+        assert.strictEqual(dbs[1], instance4);
     });
 });
