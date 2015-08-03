@@ -4,7 +4,7 @@ const assert = require('chai').assert;
 const proxyquire = require('proxyquire');
 const util = require('util');
 
-describe('src.Database', function () {
+describe('jasmine.Database', function () {
     var Database = proxyquire('jasmine/Database', {});
 
     afterEach(function () {

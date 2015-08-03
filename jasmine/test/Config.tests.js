@@ -13,7 +13,7 @@ var Promise = require('bluebird');
 var MockFS = sinon.mock(Promise.promisifyAll(fs));
 //var MockYaml = sinon.mock(yaml);
 
-describe('src.Config', function () {
+describe('jasmine.Config', function () {
     var Config = proxyquire('jasmine/Config', {
         'fs' : MockFS,
         'path' : path,
