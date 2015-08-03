@@ -51,11 +51,19 @@ class AbstractObject {
         return this._sessions.length > 0;
     }
 
-    msg (message, from) {}
-
-    search (string, global, types, location) {
-
+    msg (message, from) {
+        this.on_receive(message, from);
     }
+
+    search (query) {
+        return Database.find(query);
+    }
+
+    /**
+     * HOOK METHODS
+     * These may optionally be implemented.
+     */
+    on_receive (message, from) {}
 }
 
 module.exports = AbstractObject;

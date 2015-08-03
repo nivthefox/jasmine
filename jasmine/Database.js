@@ -52,7 +52,7 @@ class Database {
                 return keep;
             })
             .map(function (key) {
-                return data[key];
+                return Database.load(data[key].dbref);
             });
     }
 

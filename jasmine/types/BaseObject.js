@@ -1,15 +1,21 @@
 'use strict';
 
 const AbstractObject = require('jasmine/types/AbstractObject');
+const Database = require('jasmine/Database');
 
 class BaseObject extends AbstractObject {
     constructor () {
         super();
 
         this.db.object_type = 'jasmine/types/BaseObject';
-        this.db.name = '';
 
-        this._contents = [];
+        if (!this.db.name) {
+            this.db.name = '';
+            this.db.desc = '';
+            this.db.location = '';
+        }
+
+        this._contents = Database.find({location: this});
     }
 
     /**
@@ -73,6 +79,14 @@ class BaseObject extends AbstractObject {
             this._contents.splice(idx, 1);
             this.at_leave(object, to);
         }
+    }
+
+    search (query, global) {
+        if (global !== true) {
+            query.location = this.location;
+        }
+
+        return super.search(query);
     }
 
     /**
