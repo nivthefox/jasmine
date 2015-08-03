@@ -22,8 +22,14 @@ class Session {
         return this._socket;
     }
 
+    send (message) {
+        this._socket.write(message + '\n');
+    }
+
     processInput (input) {
+
         this._inputBuffer = input
+            .toString('utf8')
             .split('\n')
             .filter(function (command) {
                 return command.length > 0;
