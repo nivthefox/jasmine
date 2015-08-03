@@ -5,6 +5,11 @@ const net = require('net');
 class Server {
     constructor (config) {
         this.config = config;
+        this._sessions = [];
+    }
+
+    get sessions () {
+        return this._sessions;
     }
 
     onSocketConnect (socket) {};
