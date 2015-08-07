@@ -22,6 +22,10 @@ class Session {
         return this._socket;
     }
 
+    close () {
+        this.socket.end();
+    }
+
     send (message) {
         this._socket.write(message + '\n');
     }

@@ -1,6 +1,7 @@
 'use strict';
 
 const net = require('net');
+const Session = require('game/Session');
 
 class Server {
     constructor (config) {
@@ -12,15 +13,23 @@ class Server {
         return this._sessions;
     }
 
-    onSocketConnect (socket) {};
+    onSocketConnect (socket) {
+        let session = new Session(socket);
+        this._sessions.push(session);
+    };
 
     start () {
         this.server = net.createServer();
         this.server.on('connection', this.onSocketConnect.bind(this));
-        this.server.listen(this.config.port);
+        this.server.listen(this.config.port, this.config.address);
     }
 
     stop() {
+        let session;
+        while (session = this._sessions.pop()) {
+            session.close();
+        }
+
         this.server.removeListener('connection', this.onSocketConnect);
         this.server.close();
     }
