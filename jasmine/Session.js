@@ -1,6 +1,11 @@
 'use strict';
 
 const net = require('net');
+const util = require('util');
+
+const AbstractCommand = require('jasmine/commands/AbstractCommand');
+
+let privateData = new WeakMap();
 
 class Session {
     constructor (socket) {
@@ -8,31 +13,30 @@ class Session {
             throw new TypeError('socket must be an instance of net.Socket');
         }
 
+        let intl = {
+            commands : new Map(),
+            socket : socket
+        };
+        privateData.set(this, intl);
         this._socket = socket;
-        this._inputBuffer = [];
 
-        this._socket.on('data', this.processInput.bind(this));
+        socket.on('data', this.processInput.bind(this));
     }
 
-    get buffer () {
-        return this._inputBuffer;
-    }
-
-    get socket () {
-        return this._socket;
+    get commands () {
+        return privateData.get(this).commands;
     }
 
     close () {
-        this.socket.end();
+        privateData.get(this).socket.end();
     }
 
-    send (message) {
-        this._socket.write(message + '\n');
+    send () {
+        this._socket.write(util.format.apply(this, arguments) + '\n');
     }
 
     processInput (input) {
-
-        this._inputBuffer = input
+        let buffers = input
             .toString('utf8')
             .split('\n')
             .filter(function (command) {
@@ -41,7 +45,35 @@ class Session {
             .reduce(function (collection, item) {
                 collection.push(item);
                 return collection;
-            }, this._inputBuffer);
+            }, buffers);
+    }
+
+    _addCommand (cmdstr, command) {
+        if (this.commands.has(cmdstr)) {
+            throw new Error('Command ' + cmdstr + ' already exists.');
+        }
+        this.commands.set(cmdstr, command);
+    }
+
+    addCommand (command) {
+        let test = new command;
+        if (test instanceof AbstractCommand) {
+            this._addCommand(command.command, command);
+            command.aliases.forEach(function (alias) {
+                this._addCommand(alias, command);
+            }.bind(this));
+        }
+        else {
+            throw new TypeError('Command must be a command.');
+        }
+    }
+
+    removeCommand (command) {
+        this.commands.forEach(function (v, k, commands) {
+            if (v === command) {
+                commands.delete(k);
+            }
+        });
     }
 }
 

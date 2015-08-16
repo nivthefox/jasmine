@@ -4,7 +4,13 @@ const assert = require('chai').assert;
 const net = require('net');
 const proxyquire = require('proxyquire');
 
+const AbstractCommand = require('jasmine/commands/AbstractCommand');
 const Mitm = require('mitm');
+
+class TestCommand extends AbstractCommand {
+    static get command () { return 'test'; }
+    static get aliases () { return ['foo']; }
+}
 
 describe("jasmine.Session", function () {
     let mitm, serverSocket, clientSocket;
@@ -40,10 +46,9 @@ describe("jasmine.Session", function () {
         instance = new Session(serverSocket);
 
         assert.instanceOf(instance, Session);
-        assert.strictEqual(instance.socket, serverSocket);
     });
 
-    it('should place input from a socket into an input buffer', function () {
+    xit('should place input from a socket into an input buffer', function () {
         let instance = new Session(serverSocket);
         const expected = 'test command';
 
@@ -64,5 +69,20 @@ describe("jasmine.Session", function () {
         });
 
         instance.send(expected);
+    });
+
+    it('should allow commands to be added', function () {
+        let instance = new Session(serverSocket);
+        let expected = instance.commands.size + 2;
+        instance.addCommand(TestCommand);
+        assert.strictEqual(instance.commands.size, expected);
+    });
+
+    it('should allow commands to be removed', function () {
+        let instance = new Session(serverSocket);
+        let expected = instance.commands.size;
+        instance.addCommand(TestCommand);
+        instance.removeCommand(TestCommand);
+        assert.strictEqual(instance.commands.size, expected);
     });
 });
