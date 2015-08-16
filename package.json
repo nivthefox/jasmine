@@ -2,6 +2,7 @@
   "version": "0.1.0",
   "name": "JaSMINE",
   "description": "JAvaScript Mass Interactive Narative Environment",
+  "license" : "MIT",
   "keywords": [
     "mud",
     "interactive",
