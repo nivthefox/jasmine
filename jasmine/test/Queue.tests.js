@@ -54,9 +54,12 @@ describe('jasmine.Queue', function () {
         let instance = Queue.instance;
         let buffer1 = new Buffer('test');
         let buffer2 = new Buffer('foo');
+        let queueLength = instance.queue.size;
 
         instance.queueRequest(owner, buffer1);
+        assert.equal(instance.queue.size, queueLength + 1);
         instance.queueRequest(owner, buffer2);
+        assert.equal(instance.queue.size, queueLength + 2);
 
         let called = 0;
         let expected = 2;
@@ -64,7 +67,7 @@ describe('jasmine.Queue', function () {
             called++;
 
             if (called === expected) {
-                process.removeAllListeners();
+                process.removeAllListeners('executed TestCommand');
                 done();
             }
         });
