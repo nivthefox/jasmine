@@ -5,6 +5,7 @@ const util = require('jasmine/Util');
 const Config = require('jasmine/Config');
 const Map = require('jasmine/Map');
 
+const COMMAND_PARSER = /^([^ \/]+)(\/[^ ]+)*(.*)/g;
 const QUEUE_SPEED = 0.01;
 const SINGLETON = Symbol('instance');
 const SINGLETON_ENFORCER  = Symbol('enforcer');
@@ -55,7 +56,7 @@ class Queue {
         });
         let offset = (list.length > 0)
             ? util.getTimeLeft(list[list.length-1].process)
-            : 0;
+            : 10;
         let timeout = QUEUE_SPEED * Config.get('queue_speed') * list.length;
         return timeout + offset;
     }
@@ -75,6 +76,19 @@ class Queue {
     }
 
     process (instruction) {
+        this.queue.delete(instruction.pid);
+
+        let input = instruction.input.toString('utf8');
+        let parsed = input.match(COMMAND_PARSER);
+
+        if (instruction.owner.commands.has(parsed[0])) {
+            let Command = instruction.owner.commands.get(parsed[0]);
+            let instance = new Command(instruction.owner, parsed[1], parsed[2]);
+            instance.execute();
+        }
+        else {
+            instruction.owner.at_command_not_found(parsed[0], parsed[1], parsed[2]);
+        }
     }
 }
 

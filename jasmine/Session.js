@@ -71,6 +71,11 @@ class Session {
             }
         });
     }
+
+    /**
+     * HOOK METHODS
+     */
+    at_command_not_found (command, switches, args) {}
 }
 
 module.exports = Session;
