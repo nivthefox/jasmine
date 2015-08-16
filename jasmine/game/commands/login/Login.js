@@ -39,3 +39,5 @@ class Login extends AbstractCommand {
         return this.caller.send('Either that player does not exist, or has a different password.'); // TODO: i18n
     }
 }
+
+module.exports = Login;

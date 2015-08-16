@@ -28,6 +28,11 @@ class Session {
         return privateData.get(this).commands;
     }
 
+    become (obj) {
+        this.player = obj;
+        this.at_become(obj);
+    }
+
     close () {
         privateData.get(this).socket.end();
     }
