@@ -1,10 +1,10 @@
 'use strict';
 
-var assert = require('assert');
-var proxyquire = require('proxyquire');
+const assert = require('assert');
+const proxyquire = require('proxyquire');
 
 describe("jasmine.types.AbstractObject", function () {
-    var AbstractObject = proxyquire('jasmine/types/AbstractObject', {});
+    const AbstractObject = proxyquire('jasmine/types/AbstractObject', {});
 
     class TestObject extends AbstractObject {}
 
