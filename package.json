@@ -2,7 +2,7 @@
   "version": "0.1.0",
   "name": "JaSMINE",
   "description": "JAvaScript Mass Interactive Narative Environment",
-  "license" : "MIT",
+  "license": "MIT",
   "keywords": [
     "mud",
     "interactive",
@@ -24,6 +24,7 @@
     "chai": "^3.2.0",
     "commander": "^2.8.0",
     "js-yaml": "^3.2.7",
+    "jsdoc-parse": "^1.0.0",
     "log4js": "^0.6.24",
     "lokijs": "^1.3.7"
   },
