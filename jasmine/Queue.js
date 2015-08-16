@@ -5,7 +5,7 @@ const util = require('jasmine/Util');
 const Config = require('jasmine/Config');
 const Map = require('jasmine/Map');
 
-const COMMAND_PARSER = /^([^ \/]+)(\/[^ ]+)*(.*)/g;
+const COMMAND_PARSER = /^([^ /]+)(\/[^ ]+)*(.*)/;
 const QUEUE_SPEED = 0.01;
 const SINGLETON = Symbol('instance');
 const SINGLETON_ENFORCER  = Symbol('enforcer');
@@ -75,19 +75,44 @@ class Queue {
         return instruction.pid;
     }
 
+    tryCommand (session, command, switches, args) {
+        if (!session.commands.has(command)) {
+            return false;
+        }
+
+        let Command = session.commands.get(command);
+        let instance = new Command(session, switches, args);
+        instance.execute();
+        return true;
+    }
+
     process (instruction) {
         this.queue.delete(instruction.pid);
 
-        let input = instruction.input.toString('utf8');
+        let input = instruction.input.toString();
         let parsed = input.match(COMMAND_PARSER);
+        let session = instruction.owner;
+        let command = parsed[1].toLowerCase();
+        let switches = parsed[2];
+        let args = parsed[3] || '';
 
-        if (instruction.owner.commands.has(parsed[0])) {
-            let Command = instruction.owner.commands.get(parsed[0]);
-            let instance = new Command(instruction.owner, parsed[1], parsed[2]);
-            instance.execute();
-        }
-        else {
-            instruction.owner.at_command_not_found(parsed[0], parsed[1], parsed[2]);
+        if (!this.tryCommand(session, command, switches, args)) {
+            let len = 0;
+            let cmdstr;
+            let found = false;
+
+            while (len < command.length) {
+                cmdstr = command.substr(0, ++len);
+
+                if (this.tryCommand(session, cmdstr, switches, command.substr(len) + args)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                session.at_command_not_found(command, switches, args);
+            }
         }
     }
 }

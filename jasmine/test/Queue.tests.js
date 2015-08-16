@@ -14,7 +14,10 @@ describe('jasmine.Queue', function () {
         send : function () {}
     };
     owner.commands.set('test', TestCommand);
-    owner.commands.set('foo', TestCommand);
+    TestCommand.aliases.forEach(function (alias) {
+        owner.commands.set(alias, TestCommand);
+    });
+
     Config.config = { queue_speed: 1 };
 
     const Queue = proxyquire('jasmine/Queue', {
@@ -52,8 +55,8 @@ describe('jasmine.Queue', function () {
 
     it('should execute the command if it exists', function (done) {
         let instance = Queue.instance;
-        let buffer1 = new Buffer('test');
-        let buffer2 = new Buffer('foo');
+        let buffer1 = new Buffer('test command');
+        let buffer2 = new Buffer('FOO'); // tests case insensitivity
         let queueLength = instance.queue.size;
 
         instance.queueRequest(owner, buffer1);
@@ -63,6 +66,32 @@ describe('jasmine.Queue', function () {
 
         let called = 0;
         let expected = 2;
+        process.on('executed TestCommand', function () {
+            called++;
+
+            if (called === expected) {
+                process.removeAllListeners('executed TestCommand');
+                done();
+            }
+        });
+    });
+
+    it('should correctly parse symbols as commands', function (done) {
+        let instance = Queue.instance;
+        let buffer1 = new Buffer(':test');
+        let buffer2 = new Buffer('@test/bar');
+        let buffer3 = new Buffer('"bar');
+        let queueLength = instance.queue.size;
+
+        instance.queueRequest(owner, buffer1);
+        assert.equal(instance.queue.size, queueLength + 1);
+        instance.queueRequest(owner, buffer2);
+        assert.equal(instance.queue.size, queueLength + 2);
+        instance.queueRequest(owner, buffer3);
+        assert.equal(instance.queue.size, queueLength + 3);
+
+        let called = 0;
+        let expected = 3;
         process.on('executed TestCommand', function () {
             called++;
 

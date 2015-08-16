@@ -67,7 +67,7 @@ describe("jasmine.Session", function () {
 
     it('should allow commands to be added', function () {
         let instance = new Session(serverSocket);
-        let expected = instance.commands.size + 2;
+        let expected = instance.commands.size + 1 + TestCommand.aliases.length;
         instance.addCommand(TestCommand);
         assert.strictEqual(instance.commands.size, expected);
     });
