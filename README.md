@@ -3,6 +3,7 @@ JavaScript Mass Interactive Narrative Environment
 
 [![Build Status](https://travis-ci.org/kkragenbrink/jasmine.svg?branch=master)](https://travis-ci.org/kkragenbrink/jasmine)
 [![Coverage Status](https://coveralls.io/repos/kkragenbrink/jasmine/badge.svg?branch=master&service=github)](https://coveralls.io/github/kkragenbrink/jasmine?branch=master)
+[![Dependency Status](https://david-dm.org/kkragenbrink/jasmine.svg)](https://david-dm.org/kkragenbrink/jasmine)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kkragenbrink/jasmine/blob/master/LICENSE.txt)
 
 ## Directory Structure
