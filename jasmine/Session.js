@@ -33,6 +33,7 @@ class Session {
     }
 
     send () {
+        // TODO: Add support for color.
         this._socket.write(util.format.apply(this, arguments) + '\n');
     }
 
@@ -76,6 +77,7 @@ class Session {
      * HOOK METHODS
      */
     at_command_not_found (command, switches, args) {}
+    at_connect () {}
 }
 
 module.exports = Session;

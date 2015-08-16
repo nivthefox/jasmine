@@ -15,6 +15,7 @@ class Server {
 
     onSocketConnect (socket) {
         let session = new Session(socket);
+        session.at_connect();
         this._sessions.push(session);
     };
 
