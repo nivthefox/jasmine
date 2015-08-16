@@ -1,6 +1,7 @@
 'use strict';
 
 const net = require('net');
+const queue = require('jasmine/Queue').instance;
 const util = require('util');
 
 const AbstractCommand = require('jasmine/commands/AbstractCommand');
@@ -36,16 +37,11 @@ class Session {
     }
 
     processInput (input) {
-        let buffers = input
-            .toString('utf8')
-            .split('\n')
+        input.toString('utf8').split('\n')
             .filter(function (command) {
                 return command.length > 0;
             })
-            .reduce(function (collection, item) {
-                collection.push(item);
-                return collection;
-            }, buffers);
+            .forEach(queue.queueRequest.bind(queue, this));
     }
 
     _addCommand (cmdstr, command) {
