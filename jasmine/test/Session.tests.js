@@ -5,16 +5,8 @@ const net = require('net');
 const proxyquire = require('proxyquire');
 const queue = require('jasmine/Queue').instance;
 
-const AbstractCommand = require('jasmine/commands/AbstractCommand');
+const TestCommand = require('jasmine/test/mock/commands/TestCommand');
 const Mitm = require('mitm');
-
-class TestCommand extends AbstractCommand {
-    static get command () { return 'test'; }
-    static get aliases () { return ['foo']; }
-    execute () {
-        process.emit('executed TestCommand');
-    }
-}
 
 describe("jasmine.Session", function () {
     let mitm, serverSocket, clientSocket;
