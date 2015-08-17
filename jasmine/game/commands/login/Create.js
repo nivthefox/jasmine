@@ -18,8 +18,10 @@ class Create extends AbstractCommand {
     }
 
     execute () {
-        let name = this.args[0];
-        let password = this.args[1];
+        let args = this.args.split(' ');
+
+        let name = args[0];
+        let password = args[1];
         let player = new Player;
 
         player.password = password;

@@ -2,24 +2,36 @@
 
 const util = require('util');
 
-class Pose {
-    constructor () {
-        this.command = 'semipose';
-        this.aliases = [';', 'emote'];
-        this.syntax = ['semipose <message>'];
-        this.help = [
-            'Sends a message to everyone in your current location.'
-        ];
+const AbstractCommand = require('jasmine/commands/AbstractCommand');
+
+/**
+ * Syntax:
+ *   semipose <message>
+ *   ;<message>
+ *
+ * Sends a message to the room you are in, preceeded by your name.
+ *
+ * See Also: pose, say, @emit
+ */
+class Semipose extends AbstractCommand {
+    static get command () {
+        return 'semipose';
+    }
+
+    static get aliases () {
+        return [';'];
     }
 
     execute () {
         if (!this.args) {
-            return this.caller.msg('Pose what?');
+            return this.caller.send('Pose what?');
         }
 
-        const message = util.format('%s %s', this.caller.name, this.args);
-        this.location.contents.forEach(function (target) {
-            target.msg(message, this.caller);
+        let message = util.format('%s%s', this.caller.name, this.args);
+        this.caller.player.location.contents.forEach(function (target) {
+            target.send(message, this.caller);
         });
     }
 }
+
+module.exports = Semipose;

@@ -24,13 +24,16 @@ class Login extends AbstractCommand {
     }
 
     execute () {
-        let name = this.args[0];
-        let password = this.args[1];
+        let args = this.args.split(' ');
+
+        let name = args[0];
+        let password = args[1];
 
         let objs = Database.query([{name: name}, {alias: name}]);
 
         if (objs.length === 1) {
             objs = objs[0];
+
             if (objs.checkPassword && objs.checkPassword(password)) {
                 this.caller.become(objs);
             }

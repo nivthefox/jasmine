@@ -15,7 +15,7 @@ class AbstractObject {
         if (db instanceof Database) { this._db = db; }
         else { this._db = new Database; }
 
-        this._sessions = [];
+        this._sessions = new Map;
     }
 
     /**
@@ -48,11 +48,11 @@ class AbstractObject {
      * @returns {boolean}
      */
     hasPlayer () {
-        return this._sessions.length > 0;
+        return this.sessions.size > 0;
     }
 
-    msg (message, from) {
-        this.on_receive(message, from);
+    send (message, from) {
+        this.at_receive(message, from);
     }
 
     search (query) {
@@ -63,7 +63,7 @@ class AbstractObject {
      * HOOK METHODS
      * These may optionally be implemented.
      */
-    on_receive (message, from) {}
+    at_receive (message, from) {}
 }
 
 module.exports = AbstractObject;

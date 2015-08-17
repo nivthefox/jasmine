@@ -30,6 +30,7 @@ class Session {
 
     become (obj) {
         this.player = obj;
+        obj.sessions.set(this, new Date);
         this.at_become(obj);
     }
 
