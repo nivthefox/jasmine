@@ -1,12 +1,13 @@
 "use strict";
 
+module.paths.unshift('.');
+var pkg = require('package.json');
+var fs = require('fs');
 var util = require('util');
 var Promise = require('bluebird');
+Promise.promisifyAll(fs);
 
 module.exports.init = function (gamename) {
-    var fs = require('fs');
-    Promise.promisifyAll(fs);
-
     var os = require('os');
 
     var ncp = require('ncp').ncp;
@@ -28,7 +29,7 @@ module.exports.init = function (gamename) {
             process.exit(73);
         })
         .then(function () { // Directory created.
-            console.log('game "%s" created', gamename);
+            console.log('Game "%s" created', gamename);
         })
         .done();
 };
@@ -49,6 +50,7 @@ module.exports.test = function (gamename) {
         'text-summary',
         '--',
         'node_modules/mocha/bin/_mocha',
+        '--colors',
         '--recursive',
         util.format('%s/test', gamename),
         'jasmine/test',
@@ -58,4 +60,46 @@ module.exports.test = function (gamename) {
 
     spawn(process.execPath, args, options);
 
+};
+
+module.exports.start = function (gamename) {
+    var pidfile = util.format('run/%s', gamename);
+
+    fs.statAsync(pidfile)
+        .then(function () {
+            console.log('Game %s already started.', gamename);
+            process.exit(1);
+        })
+        .catch(function () {
+            var spawn = require('child_process').spawn;
+
+            var options = {
+                env : {
+                    NODE_PATH : util.format('./%s:.', gamename)
+                },
+                stdio : 'ignore'
+            };
+
+            var args = [util.format('%s/server.js', gamename), gamename];
+
+            console.log('Starting Jasmine %s game %s.', pkg.version, gamename);
+            var proc = spawn(process.execPath, args, options);
+            fs.writeFileAsync(pidfile, proc.pid);
+            proc.unref();
+        });
+
+};
+
+module.exports.stop = function (gamename) {
+    var pidfile = util.format('run/%s', gamename);
+    fs.readFileAsync(pidfile)
+        .then(function (pid) {
+            pid = pid.toString('utf8');
+            console.log('Stopping game %s.', gamename);
+            process.kill(pid, 'SIGINT');
+        })
+        .catch(function () {
+            console.log('Game %s not started.', gamename);
+        })
+        .done();
 };

@@ -21,6 +21,16 @@ program
     .action(commands.init);
 
 program
+    .command('start [gamename]')
+    .description('Starts a game.')
+    .action(commands.start);
+
+program
+    .command('stop [gamename]')
+    .description('Stops a game.')
+    .action(commands.stop);
+
+program
     .command('test [gamename]')
     .description('runs unit tests for the specified game')
     .action(commands.test);
