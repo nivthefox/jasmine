@@ -32,3 +32,30 @@ module.exports.init = function (gamename) {
         })
         .done();
 };
+
+module.exports.test = function (gamename) {
+    var spawn = require('child_process').spawn;
+
+    var options = {
+        env : {
+            NODE_PATH : util.format('./%s:.', gamename)
+        },
+        stdio : 'inherit'
+    };
+    var args = [
+        'node_modules/istanbul-harmony/lib/cli.js',
+        'cover',
+        '--report',
+        'text-summary',
+        '--',
+        'node_modules/mocha/bin/_mocha',
+        '--recursive',
+        util.format('%s/test', gamename),
+        'jasmine/test',
+        '--reporter',
+        'spec'
+    ];
+
+    spawn(process.execPath, args, options);
+
+};
