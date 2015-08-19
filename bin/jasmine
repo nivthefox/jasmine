@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 "use strict";
 
-var commands = require('./jasmine/commands');
+var commands = require('jasmine-mush/jasmine/commands');
 var program = require('commander');
-var pkg = require('./package.json');
+var pkg = require('../package.json');
 var semver = require('semver');
 
 if (!semver.satisfies(process.version, '>=3.0')) {
