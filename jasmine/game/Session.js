@@ -3,10 +3,10 @@
 const JasmineSession = require('jasmine/Session');
 
 // LOGIN COMMANDS
-const CreateCommand = require('game/commands/login/Create');
-const LoginCommand = require('game/commands/login/Login');
-const LogoutCommand = require('game/commands/login/Logout');
-const QuitCommand = require('game/commands/login/Quit');
+const CreateCommand = require('commands/login/Create');
+const LoginCommand = require('commands/login/Login');
+const LogoutCommand = require('commands/login/Logout');
+const QuitCommand = require('commands/login/Quit');
 
 // PLAYER COMMANDS
 

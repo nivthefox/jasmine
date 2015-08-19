@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+"use strict";
+
+var commands = require('./jasmine/commands');
+var program = require('commander');
+var pkg = require('./package.json');
+var semver = require('semver');
+
+if (!semver.satisfies(process.version, '>=3.0')) {
+    console.log('jasmine requires iojs-v3.0 or greater.');
+    process.exit(70);
+}
+
+program
+    .version(pkg.version);
+
+program
+    .command('init [gamename]')
+    .description('creates a new jasmine game in your current directory')
+    .action(commands.init);
+
+program.parse(process.argv);
