@@ -13,26 +13,31 @@ if (!semver.satisfies(process.version, '>=3.0')) {
 }
 
 program
+    .usage('[options] command gamename')
     .version(pkg.version);
 
 program
-    .command('init [gamename]')
+    .command('init')
     .description('creates a new jasmine game in your current directory')
     .action(commands.init);
 
 program
-    .command('start [gamename]')
+    .command('start')
     .description('Starts a game.')
     .action(commands.start);
 
 program
-    .command('stop [gamename]')
+    .command('stop')
     .description('Stops a game.')
     .action(commands.stop);
 
 program
-    .command('test [gamename]')
+    .command('test')
     .description('runs unit tests for the specified game')
     .action(commands.test);
 
 program.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+    program.help();
+}
