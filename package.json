@@ -9,10 +9,7 @@
     "telnet"
   ],
   "author": "Kevin Kragenbrink <kevin@writh.net>",
-  "licenses": [{
-    "type" : "MIT",
-    "url" : "https://raw.github.com/kkragenbrink/jasmine/master/LICENSE.txt"
-  }],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "http://github.com/kkragenbrink/jasmine"
