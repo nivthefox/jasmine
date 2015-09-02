@@ -1,4 +1,5 @@
-"use strict";
+/*eslint no-console: 0*/
+'use strict';
 
 module.paths.unshift('.');
 var pkg = require('package.json');
@@ -34,6 +35,66 @@ module.exports.init = function (gamename) {
         .done();
 };
 
+module.exports.start = function (gamename) {
+    var pidfile = util.format('run/%s', gamename);
+
+    fs.statAsync(pidfile)
+        .then(function () {
+            console.log('Game %s already started.', gamename);
+            process.exit(1);
+        })
+        .catch(function () {
+            var spawn = require('child_process').spawn;
+            var out = fs.openSync('./out.log', 'a');
+            var err = fs.openSync('./out.log', 'a');
+
+            var options = {
+                detached: true,
+                env : {
+                    NODE_PATH : util.format('./%s:.', gamename)
+                },
+                stdio : ['ignore', out, err]
+            };
+
+            var args = [util.format('%s/server.js', gamename), gamename];
+
+            console.log('Starting Jasmine %s game %s.', pkg.version, gamename);
+
+            var proc = spawn(process.execPath, args, options);
+            fs.writeFileAsync(pidfile, proc.pid);
+
+            proc.on('exit', function (code) {
+                if (code !== 0) {
+                    console.log('Process exited with status code %d', code);
+                }
+                fs.unlinkAsync(pidfile)
+                    .done();
+            });
+
+            proc.on('message', function () {
+                proc.unref();
+            });
+        });
+};
+
+module.exports.stop = function (gamename) {
+    var pidfile = util.format('run/%s', gamename);
+
+    fs.readFileAsync(pidfile)
+        .then(function (pid) {
+            pid = pid.toString('utf8');
+            console.log('Stopping game %s.', gamename);
+
+
+            process.kill(pid, 'SIGINT');
+
+        })
+        .catch(function () {
+            console.log('Game %s not started.', gamename);
+        })
+        .done();
+};
+
 module.exports.test = function (gamename) {
     var spawn = require('child_process').spawn;
 
@@ -55,51 +116,20 @@ module.exports.test = function (gamename) {
         util.format('%s/test', gamename),
         'jasmine/test',
         '--reporter',
-        'spec'
+        'dot'
     ];
 
-    spawn(process.execPath, args, options);
+    var proc = spawn(process.execPath, args, options);
+    proc.on('exit', function (code) {
+        if (code === 0) {
+            var args = [
+                'node_modules/eslint/bin/eslint.js',
+                '--color',
+                'jasmine',
+                gamename
+            ];
 
-};
-
-module.exports.start = function (gamename) {
-    var pidfile = util.format('run/%s', gamename);
-
-    fs.statAsync(pidfile)
-        .then(function () {
-            console.log('Game %s already started.', gamename);
-            process.exit(1);
-        })
-        .catch(function () {
-            var spawn = require('child_process').spawn;
-
-            var options = {
-                env : {
-                    NODE_PATH : util.format('./%s:.', gamename)
-                },
-                stdio : 'ignore'
-            };
-
-            var args = [util.format('%s/server.js', gamename), gamename];
-
-            console.log('Starting Jasmine %s game %s.', pkg.version, gamename);
-            var proc = spawn(process.execPath, args, options);
-            fs.writeFileAsync(pidfile, proc.pid);
-            proc.unref();
-        });
-
-};
-
-module.exports.stop = function (gamename) {
-    var pidfile = util.format('run/%s', gamename);
-    fs.readFileAsync(pidfile)
-        .then(function (pid) {
-            pid = pid.toString('utf8');
-            console.log('Stopping game %s.', gamename);
-            process.kill(pid, 'SIGINT');
-        })
-        .catch(function () {
-            console.log('Game %s not started.', gamename);
-        })
-        .done();
+            spawn(process.execPath, args, options);
+        }
+    });
 };

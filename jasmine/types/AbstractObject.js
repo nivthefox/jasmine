@@ -7,7 +7,7 @@ const Database = require('jasmine/Database');
 class AbstractObject {
     constructor (db) {
         if (this.constructor === AbstractObject) {
-            throw new TypeError("Cannot construct Abstract instances directly.");
+            throw new TypeError('Cannot construct Abstract instances directly.');
         }
 
         // todo: this.command_set = jasmine.CommandSet
@@ -63,7 +63,7 @@ class AbstractObject {
      * HOOK METHODS
      * These may optionally be implemented.
      */
-    at_receive (message, from) {}
+    at_receive (/* message, from */) {}
 }
 
 module.exports = AbstractObject;

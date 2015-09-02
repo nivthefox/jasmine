@@ -93,8 +93,8 @@ class BaseObject extends AbstractObject {
      * HOOK METHODS
      * These may optionally be implemented.
      */
-    at_enter(object, from) {}
-    at_leave(object, to) {}
+    at_enter(/* object, from */) {}
+    at_leave(/* object, to */) {}
 }
 
 module.exports = BaseObject;

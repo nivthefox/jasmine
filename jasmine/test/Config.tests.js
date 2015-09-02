@@ -24,7 +24,7 @@ describe('jasmine.Config', function () {
         assert.instanceOf(Config.load(), Error);
 
         var stub = sinon.stub(MockFS, 'existsSync');
-            stub.returns(false);
+        stub.returns(false);
         assert.instanceOf(Config.load('foo.yml'), Error);
 
         assert.ok(stub.calledOnce);
@@ -33,11 +33,11 @@ describe('jasmine.Config', function () {
 
     it ('should attempt to load the file', function (done) {
         var exists = sinon.stub(MockFS, 'existsSync');
-            exists.returns(true);
+        exists.returns(true);
 
         var pending = Promise.pending();
         var read = sinon.stub(MockFS, 'readFileAsync');
-            read.returns(pending.promise);
+        read.returns(pending.promise);
 
         var promise = Config.load('config/test.yml');
 
@@ -60,16 +60,16 @@ describe('jasmine.Config', function () {
 
     it ('should get a loaded value', function (done) {
         var exists = sinon.stub(MockFS, 'existsSync');
-            exists.returns(true);
+        exists.returns(true);
         var pending = Promise.pending();
         var read = sinon.stub(MockFS, 'readFileAsync');
         read.returns(pending.promise);
 
         var promise = Config.load('config/test.yml');
         var load = sinon.stub(yaml, 'load');
-            load.returns({
-                abc: 123
-            });
+        load.returns({
+            abc: 123
+        });
 
         promise.then(function () {
             assert.equal(Config.get('abc'), 123);

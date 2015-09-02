@@ -1,9 +1,5 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
-
 // todo: stubs should be replaced with lokijs
 let dbrefs = 0;
 let data = {};
@@ -17,40 +13,42 @@ class Database {
         data[this.dbref] = this;
     }
 
+    static filterData (query, key) {
+        var value = data[key];
+        var keep = false;
+
+        for (var qk in query) {
+            var qv = query[qk];
+            if (typeof qv === 'object') {
+                switch (true) {
+                    case qv.hasOwnProperty('$in'):
+                        keep = (qv.$in.indexOf(value[qk]) > -1);
+                        break;
+                    case qv.hasOwnProperty('$gt'):
+                        keep = (value[qk] > qv.$gt);
+                        break;
+                    case qv.hasOwnProperty('$gte'):
+                        keep = (value[qk] >= qv.$gte);
+                        break;
+                    case qv.hasOwnProperty('$lt'):
+                        keep = (value[qk] < qv.$lt);
+                        break;
+                    case qv.hasOwnProperty('$lte'):
+                        keep = (value[qk] <= qv.$lte);
+                        break;
+                }
+            }
+            else if (typeof qv !== 'undefined') {
+                keep = (qv === value[qk]);
+            }
+        }
+
+        return keep;
+    }
+
     static find(query) {
         return Object.keys(data)
-            .filter(function (key) {
-                var value = data[key];
-                var keep = false;
-
-                for (var qk in query) {
-                    var qv = query[qk];
-                    if (typeof qv === 'object') {
-                        switch (true) {
-                            case qv.hasOwnProperty('$in'):
-                                keep = (qv.$in.indexOf(value[qk]) > -1);
-                                break;
-                            case qv.hasOwnProperty('$gt'):
-                                keep = (value[qk] > qv.$gt);
-                                break;
-                            case qv.hasOwnProperty('$gte'):
-                                keep = (value[qk] >= qv.$gte);
-                                break;
-                            case qv.hasOwnProperty('$lt'):
-                                keep = (value[qk] < qv.$lt);
-                                break;
-                            case qv.hasOwnProperty('$lte'):
-                                keep = (value[qk] <= qv.$lte);
-                                break;
-                        }
-                    }
-                    else if (typeof qv !== 'undefined') {
-                        keep = (qv === value[qk]);
-                    }
-                }
-
-                return keep;
-            })
+            .filter(Database.filterData.bind(null, query))
             .map(function (key) {
                 return Database.load(data[key].dbref);
             });

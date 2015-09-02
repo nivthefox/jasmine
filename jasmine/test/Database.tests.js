@@ -22,7 +22,7 @@ describe('jasmine.Database', function () {
 
     it ('should allow you to load existing objects by dbref', function () {
         let instance1 = new Database;
-            instance1.name = 'test';
+        instance1.name = 'test';
 
         let instance2 = Database.load(instance1.dbref);
         assert.strictEqual(instance1, instance2);

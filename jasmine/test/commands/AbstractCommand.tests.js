@@ -4,7 +4,7 @@ const assert = require('assert');
 const proxyquire = require('proxyquire');
 const TestCommand = require('jasmine/test/mock/commands/TestCommand');
 
-describe("jasmine.commands.AbstractCommand", function () {
+describe('jasmine.commands.AbstractCommand', function () {
     const AbstractCommand = proxyquire('jasmine/commands/AbstractCommand', {});
 
     it('should not allow you to instantiate it directly', function () {

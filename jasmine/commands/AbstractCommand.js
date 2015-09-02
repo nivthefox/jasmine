@@ -3,7 +3,7 @@
 class AbstractCommand {
     constructor (caller, switches, args) {
         if (this.constructor === AbstractCommand) {
-            throw new TypeError("Cannot construct Abstract instances directly.");
+            throw new TypeError('Cannot construct Abstract instances directly.');
         }
 
         this.caller = caller;

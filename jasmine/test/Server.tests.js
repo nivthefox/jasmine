@@ -2,7 +2,6 @@
 
 const assert = require('chai').assert;
 const net = require('net');
-const sinon = require('sinon');
 const proxyquire = require('proxyquire').noCallThru();
 
 const Mitm = require('jasmine/test/mock/node_modules/net');

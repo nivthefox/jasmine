@@ -82,8 +82,8 @@ class Session {
     /**
      * HOOK METHODS
      */
-    at_become (object) {}
-    at_command_not_found (command, switches, args) {}
+    at_become (/* object */) {}
+    at_command_not_found (/* command, switches, args */) {}
     at_connect () {}
 }
 

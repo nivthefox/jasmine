@@ -14,13 +14,13 @@
     "type": "git",
     "url": "http://github.com/kkragenbrink/jasmine"
   },
-  "bin" : {
-    "jasmine" : "./bin/jasmine"
+  "bin": {
+    "jasmine": "./bin/jasmine"
   },
-  "engines" : {
+  "engines": {
     "iojs": ">= 3.0.x"
   },
-  "files" : [
+  "files": [
     "bin",
     "jasmine",
     "LICENSE.txt",
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.2",
+    "eslint": "^1.3.1",
     "istanbul-harmony": "^0.3.16",
     "mitm": "^1.1.0",
     "mocha": "^2.2.4",

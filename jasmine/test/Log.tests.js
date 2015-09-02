@@ -55,7 +55,7 @@ describe('jasmine.Log', function () {
         assert.equal(typeof clog.info, 'function');
         assert.ok(clog.setLevel.called);
         assert.ok(clog.setLevel.args[0], config.log.levels.default);
-    })
+    });
 });
 
 

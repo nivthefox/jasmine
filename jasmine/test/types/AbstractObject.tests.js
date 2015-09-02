@@ -3,7 +3,7 @@
 const assert = require('assert');
 const proxyquire = require('proxyquire');
 
-describe("jasmine.types.AbstractObject", function () {
+describe('jasmine.types.AbstractObject', function () {
     const AbstractObject = proxyquire('jasmine/types/AbstractObject', {});
 
     class TestObject extends AbstractObject {}
@@ -21,5 +21,5 @@ describe("jasmine.types.AbstractObject", function () {
         });
 
         assert.equal(typeof instance.dbref, 'string');
-    })
+    });
 });

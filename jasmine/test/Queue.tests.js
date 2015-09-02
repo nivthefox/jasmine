@@ -2,7 +2,6 @@
 
 const assert = require('chai').assert;
 const proxyquire = require('proxyquire');
-var sinon = require('sinon');
 
 const Config = require('jasmine/test/mock/Config');
 const TestCommand = require('jasmine/test/mock/commands/TestCommand');

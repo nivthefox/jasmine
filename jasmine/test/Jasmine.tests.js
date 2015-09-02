@@ -1,8 +1,13 @@
 'use strict';
 
-var assert = require('assert');
-var proxyquire = require('proxyquire');
+const assert = require('chai').assert;
+const proxyquire = require('proxyquire');
 
-describe("jasmine.Jasmine", function () {
-    var Jasmine = proxyquire('jasmine/Jasmine', {});
+describe('jasmine.Jasmine', function () {
+    const Jasmine = proxyquire('jasmine/Jasmine', {});
+
+    it('should instantiate', function () {
+        let instance = new Jasmine;
+        assert.instanceOf(instance, Jasmine);
+    });
 });

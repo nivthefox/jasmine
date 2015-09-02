@@ -1,7 +1,6 @@
 'use strict';
 
 const AbstractCommand = require('jasmine/commands/AbstractCommand');
-const Database = require('jasmine/Database');
 const Player = require('game/types/Player');
 
 /**

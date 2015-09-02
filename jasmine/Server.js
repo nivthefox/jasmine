@@ -17,7 +17,7 @@ class Server {
         let session = new Session(socket);
         session.at_connect();
         this._sessions.push(session);
-    };
+    }
 
     start () {
         this.server = net.createServer();
@@ -26,9 +26,11 @@ class Server {
     }
 
     stop() {
-        let session;
-        while (session = this._sessions.pop()) {
+        let session = this._sessions.pop();
+
+        while (session) {
             session.close();
+            session = this._sessions.pop();
         }
 
         this.server.removeListener('connection', this.onSocketConnect);

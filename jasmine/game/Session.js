@@ -19,7 +19,7 @@ class Session extends JasmineSession {
         this.addCommand(QuitCommand);
     }
 
-    at_become (obj) {
+    at_become (/* obj */) {
         // Remove login commands.
         this.removeCommand(CreateCommand);
         this.removeCommand(LoginCommand);
@@ -28,7 +28,7 @@ class Session extends JasmineSession {
         this.addCommand(LogoutCommand);
     }
 
-    at_command_not_found () {}
+    at_command_not_found (/* command, switches, args */) {}
     at_connect () {}
 }
 

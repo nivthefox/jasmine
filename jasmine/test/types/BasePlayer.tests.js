@@ -5,7 +5,7 @@ const proxyquire = require('proxyquire');
 
 const BaseObject = require('jasmine/test/mock/types/TestAbstractObject');
 
-describe("jasmine.types.BasePlayer", function () {
+describe('jasmine.types.BasePlayer', function () {
     const BasePlayer = proxyquire('jasmine/types/BasePlayer', {
         'jasmine/types/BaseObject' : BaseObject
     });

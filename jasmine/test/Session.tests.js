@@ -9,7 +9,7 @@ const TestCommand = require('jasmine/test/mock/commands/TestCommand');
 const Mitm = require('mitm');
 
 // TODO: Need to mock out jasmine/Queue.
-describe("jasmine.Session", function () {
+describe('jasmine.Session', function () {
     let mitm, serverSocket, clientSocket;
     const Session = proxyquire('jasmine/Session', {});
 
@@ -40,13 +40,13 @@ describe("jasmine.Session", function () {
             instance = new Session({});
         }, TypeError);
 
-        instance = new Session(serverSocket);
-
-        assert.instanceOf(instance, Session);
+        assert.strictEqual(instance, undefined);
     });
 
     it('should place input from a socket into an input buffer', function () {
         let instance = new Session(serverSocket);
+        assert.instanceOf(instance, Session);
+
         const expected = queue.queue.size + 1;
         clientSocket.write('test command\n');
         assert.equal(queue.queue.size, expected);

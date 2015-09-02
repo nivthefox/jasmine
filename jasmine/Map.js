@@ -8,11 +8,11 @@ class JasmineMap extends Map {
      * @param {*} thisArg
      * @return {JasmineMap}
      */
-    filter (callback, thisArg) {
+    filter (callback) {
         var newMap = new JasmineMap;
 
         this.forEach(function (v, k) {
-            if (callback(v, k, this)) {
+            if (callback(v, k)) {
                 newMap.set(k, v);
             }
         });
